@@ -15,7 +15,7 @@ namespace CoreBridge.Models.Interfaces
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<T> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+        Task<T> GetByIdAsync(string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 仕様に合うものを検索する

@@ -1,0 +1,48 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+*/[Bb]in/
+*/[Oo]bj/
+*/[Oo]ut/
+
+# cache for misc downloads
+artifacts/
+
+# dotnet install directory
+.dotnet/
+
+# Master Seed directory
+Sample/ShopInFoAccess/Csv/
+Sample/ShopInFoAccess/Json/
+Sample/ShopInFoAccess/data/
+Sample/ShopInFoAccess/Json/
+
+# UnitTest
+data/
+
+UploadedFiles/
+
+ # Visual Studio 2015 cache/options directory
+.vs/
+
+# Visual Studio Code cache/options directory
+.vscode/
+
+# Visual Studio debug profile
+**/launchSettings.json
+
+# Test files
+*.trx
+
+# User-specific files
+*.suo
+*.user
+
+# ImageBuilder directory
+.Microsoft.DotNet.ImageBuilder
+
+#Notepad++ backup files
+*.bak
+
+.env

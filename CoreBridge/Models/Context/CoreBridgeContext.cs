@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.Ext;
+﻿using CoreBridge.Models.Entity;
+using CoreBridge.Models.Ext;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreBridge.Models.Context
@@ -7,6 +8,10 @@ namespace CoreBridge.Models.Context
     {
         public CoreBridgeContext(DbContextOptions<CoreBridgeContext> options) : base(options) { }
         protected CoreBridgeContext(DbContextOptions options) : base(options) { }
+
+        // Entity Entry
+        public DbSet<AdminUser> AdminUsers { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

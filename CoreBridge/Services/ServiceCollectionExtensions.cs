@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Google.Cloud.EntityFrameworkCore.Spanner.Extensions;
 using StackExchange.Redis;
 using CloudStructures;
+using CoreBridge.Services.Interfaces;
 
 namespace CoreBridge.Services
 {
@@ -46,7 +47,7 @@ namespace CoreBridge.Services
 
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
-            //services.TryAddScoped<IAdminUserService, AdminUserService>();
+            services.TryAddScoped<IAdminUserService, AdminUserService>();
 
             return services;
         }

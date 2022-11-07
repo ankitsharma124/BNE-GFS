@@ -19,7 +19,7 @@ namespace CoreBridge.Models.Repositories
             _specificationEvaluator = new SpecificationEvaluator();
         }
 
-        public virtual async Task<T> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+        public virtual async Task<T> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Set<T>().AsNoTracking().Where(e => e.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
@@ -152,3 +152,4 @@ namespace CoreBridge.Models.Repositories
                 ApplySpecification(specification).GroupBy(groupBy).Select(select).ToListAsync(cancellationToken);
         }
     }
+}
