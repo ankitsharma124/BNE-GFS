@@ -6,5 +6,7 @@ namespace CoreBridge.Services.Interfaces
     {
         public Task<AdminUserDto> GenerateAdminUser(AdminUserDto dto);
         public Task<AdminUserDto> LoginAdminUser(AdminUserDto dto);
+        public Task<List<AdminUserDto>> ListAsync();
+
     }
 }

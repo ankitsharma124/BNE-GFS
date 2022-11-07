@@ -1,5 +1,8 @@
-﻿namespace CoreBridge.Models.DTO
+﻿using MessagePack;
+
+namespace CoreBridge.Models.DTO
 {
+    [MessagePackObject]
     public class AdminUserDto
     {
         public AdminUserDto() { }
@@ -12,9 +15,13 @@
             ConfirmPassword = confirm_password;
         }
 
+        [Key(0)]
         public String Name { get; set; }
+        [Key(1)]
         public String EMail { get; set; }
+        [Key(2)]
         public String Password { get; set; }
+        [Key(3)]
         public String ConfirmPassword { get; set; }
 
         public bool IsValid()

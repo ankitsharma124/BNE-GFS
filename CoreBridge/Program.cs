@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using CoreBridge.Services;
 using Hangfire;
 using NLog;
+using MessagePack.Resolvers;
+using Microsoft.AspNetCore.Mvc;
+using MessagePack.AspNetCoreMvcFormatter;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -13,8 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 try
 {
     // Add services to the container.
-    builder.Services.AddControllersWithViews();
-    // Add services to the container.
+    //builder.Services.AddControllersWithViews();
+    builder.Services.AddMvc().AddMvcOptions(option =>
+    {
+        option.OutputFormatters.Clear();
+        option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+        option.InputFormatters.Clear();
+        option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+    });
     builder.Services.AddRazorPages();
 
     // Data Accessser Service Add
@@ -62,6 +71,7 @@ try
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
+        // Api Routing Add
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

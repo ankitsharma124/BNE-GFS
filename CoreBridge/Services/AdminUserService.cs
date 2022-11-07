@@ -18,6 +18,19 @@ namespace CoreBridge.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+
+        public async Task<List<AdminUserDto>> ListAsync()
+        {
+            List<AdminUserDto> result = new();
+            var list = await _unitOfWork.AdminUserRepository.ListAsync();
+            foreach(AdminUser entity in list)
+            {
+                result.Add(new(entity.Name, entity.EMail,entity.Password,entity.Password));
+            }
+
+            return result;
+        }
+
         public async Task<AdminUserDto> GenerateAdminUser(AdminUserDto dto)
         {
 
