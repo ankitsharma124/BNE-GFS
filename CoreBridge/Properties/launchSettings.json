@@ -4,7 +4,8 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\opt\\CoreBridge\\CoreBridge\\corebridge-367900-75f6bcea9581.json"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7271;http://localhost:5271"

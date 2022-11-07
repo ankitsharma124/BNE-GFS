@@ -9,9 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CloudStructures" Version="3.0.2" />
-    <PackageReference Include="StackExchange.Redis" Version="2.6.70" />
-    <PackageReference Include="Ardalis.Specification" Version="6.1.0" />
+    <None Remove="C:\Users\makot\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" />
+  </ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="CloudStructures" Version="3.0.2" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="NLog.Config" Version="4.7.15" />
+	  <PackageReference Include="StackExchange.Redis" Version="2.6.70" />
+	  <PackageReference Include="Ardalis.Specification" Version="6.1.0" />
 	  <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
 	  <PackageReference Include="Csv" Version="2.0.87" />
 	  <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
@@ -20,13 +29,20 @@
 	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 	  <PackageReference Include="LitJWT" Version="1.2.0" />
 	  <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />  
-    <PackageReference Include="Google.Cloud.EntityFrameworkCore.Spanner" Version="2.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+	  <PackageReference Include="Google.Cloud.EntityFrameworkCore.Spanner" Version="2.0.3" />
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\Headers\" />
-    <Folder Include="Models\DTO\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Dashboard\Index.cshtml" />
+    <None Include="Views\Login\Create.cshtml" />
+    <None Include="Views\UserRegister\Confirm.cshtml" />
+    <None Include="Views\UserRegister\Create.cshtml" />
+    <None Include="Views\UserRegister\Index.cshtml" />
   </ItemGroup>
 
 </Project>

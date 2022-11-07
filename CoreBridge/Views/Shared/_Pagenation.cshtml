@@ -1,0 +1,74 @@
+﻿@model CodeBridge.Models.DTO.Pagenation
+
+@if (Model != null && Model.pageCount > 0)
+{
+    <nav aria-label="Page navigation">
+        <ul class="inline-flex">
+            <li>
+                @if (Model.currentPage > 0)
+                {
+                    <button class="h-10 px-5 text-indigo-600 transition-colors duration-150 bg-white border border-r-0 border-indigo-600 rounded-l-lg focus:shadow-outline hover:bg-indigo-100">
+                        @Html.ActionLink("|<", Model.Action, Model.Controller, new { paging = "0" ,current = Model.currentPage }, null)
+                    </button>
+                }
+                else
+                {
+                    <button class="h-10 px-5 text-white transition-colors duration-150 bg-indigo-600 border border-r-0 border-indigo-600 rounded-l-lg focus:shadow-outline">|&lt;</button>
+                }
+            </li>
+            <li>
+                @if (Model.currentPage > 0)
+                {
+                    <button class="h-10 px-5 text-indigo-600 transition-colors duration-150 bg-white border border-r-0 border-indigo-600 focus:shadow-outline hover:bg-indigo-100">
+                        @Html.ActionLink("<", Model.Action, Model.Controller, new { paging = "prev" ,current = Model.currentPage }, null)
+                    </button>
+                }
+                else
+                {
+                    <button class="h-10 px-5 text-white transition-colors duration-150 bg-indigo-600 border border-r-0 border-indigo-600 focus:shadow-outline">&lt;</button>
+                }
+            </li>
+
+            @for (var pn = Model.leftMostPage; pn < Model.pageRange; pn++)
+            {
+                <td>
+                    @if (Model.currentPage == pn)
+                    {
+                        // Convert displayed page numbers to 1-based and not 0-based.
+                        <p class="h-10 px-5 text-white transition-colors duration-150 bg-indigo-600 border border-r-0 border-indigo-600 focus:shadow-outline">@(pn + 1)</p>
+                    }
+                    else
+                    {
+                        <p class="h-10 px-5 text-indigo-600 transition-colors duration-150 bg-white border border-r-0 border-indigo-600 focus:shadow-outline hover:bg-indigo-100">
+                            @Html.ActionLink((pn + 1).ToString(), Model.Action, Model.Controller, new { paging = @pn,current = Model.currentPage }, null)
+                        </p>
+                    }
+                </td>
+            }
+            <li>
+                @if (Model.currentPage < Model.pageCount - 1)
+                {
+                    <p class="h-10 px-5 text-indigo-600 transition-colors duration-150 bg-white border border-r-0 border-indigo-600 focus:shadow-outline hover:bg-indigo-100">
+                        @Html.ActionLink(">", Model.Action, Model.Controller, new { paging = "next" ,current = Model.currentPage }, null)
+                    </p>
+                }
+                else
+                {
+                    <p class="h-10 px-5 text-whitetransition-colors duration-150 bg-indigo-600 border border-r-0 border-indigo-600 focus:shadow-outline hover:bg-indigo-100">&gt;</p>
+                }
+            </li>
+            <li>
+                @if (Model.currentPage < Model.pageCount - 1)
+                {
+                    <p class="h-10 px-5 text-indigo-600 transition-colors duration-150 bg-white border border-indigo-600 rounded-r-lg focus:shadow-outline hover:bg-indigo-100">
+                        @Html.ActionLink(">|", Model.Action, Model.Controller, new { paging = Model.pageCount - 1 ,current = Model.currentPage }, null)
+                    </p>
+                }
+                else
+                {
+                    <p class="h-10 px-5 text-whitetransition-colors duration-150 bg-indigo-600 border border-indigo-600 rounded-r-lg focus:shadow-outline hover:bg-indigo-100">&gt;|</p>
+                }
+            </li>
+        </ul>
+    </nav>
+}

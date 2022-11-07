@@ -2,6 +2,7 @@
 using CoreBridge.Models.Context;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Interfaces;
+using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.Repositories
 {
@@ -13,6 +14,10 @@ namespace CoreBridge.Models.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
+
+        private readonly CoreBridgeRepository<AdminUser> _adminUserRepository = null;
+        public ICoreBridgeRepository<AdminUser> AdminUserRepository { get { return GetInstance(_adminUserRepository); } }
 
         private CoreBridgeRepository<T> GetInstance<T>(CoreBridgeRepository<T> repository) where T : CoreBridgeEntity, IAggregateRoot
         {

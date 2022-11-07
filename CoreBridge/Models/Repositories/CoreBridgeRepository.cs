@@ -1,4 +1,6 @@
-﻿using CoreBridge.Models.Context;
+﻿using Ardalis.Specification;
+using CoreBridge.Models.Context;
+using CoreBridge.Models.Ext;
 using CoreBridge.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +12,26 @@ namespace CoreBridge.Models.Repositories
 
         public virtual async Task AddAsync(T entity)
         {
+            if (entity is SpannerEntity spanner_entity)
+            {
+                spanner_entity.SetPrimaryKey();
+                spanner_entity.CreatedAt = DateTimeOffset.UtcNow.DateTime;
+                spanner_entity.UpdatedAt = DateTimeOffset.UtcNow.DateTime;
+                entity = spanner_entity as T;
+            }
+            
             _dbContext.Set<T>().Add(entity);
             await Task.CompletedTask;
         }
 
         public virtual async Task UpdateAsync(T entity)
         {
+            if (entity is SpannerEntity spanner_entity)
+            {
+                spanner_entity.UpdatedAt = DateTimeOffset.UtcNow.DateTime;
+                entity = spanner_entity as T;
+            }
+
             _dbContext.Entry(entity).State = EntityState.Modified;
             await Task.CompletedTask;
         }
