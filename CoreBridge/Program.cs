@@ -33,8 +33,11 @@ try
     // CustomServices
     builder.Services.AddCustomServices();
 
+
+
     // Session(Cookie)
-    builder.Services.AddSession(options => {
+    builder.Services.AddSession(options =>
+    {
         // セッションクッキーの名前を変えるなら
         options.Cookie.Name = "session";
     });
