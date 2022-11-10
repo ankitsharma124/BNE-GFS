@@ -1,4 +1,5 @@
-﻿using CoreBridge.Services.Interfaces;
+﻿using CoreBridge.Models;
+using CoreBridge.Services.Interfaces;
 using MessagePack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,10 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class AdminUserController : BaseControllerForMsgPack
     {
-        private readonly ILogger<AdminUserController> _logger;
+        private readonly ILoggerService _logger;
         private readonly IAdminUserService _adminUserService;
 
-        public AdminUserController(ILogger<AdminUserController> logger, IAdminUserService adminUserService,
+        public AdminUserController(ILoggerService logger, IAdminUserService adminUserService,
             IWebHostEnvironment env) : base(env)
         {
             _logger = logger;
@@ -25,8 +26,16 @@ namespace CoreBridge.Controllers.api
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var list = await _adminUserService.ListAsync();
-            return ReturnMsgPack(list);
+            try
+            {
+                var list = await _adminUserService.ListAsync();
+                return ReturnMsgPack(list);
+            }
+            catch (CoreBridgeException ex)
+            {
+                _logger.LogError("GetAdminUser", ex);
+                return StatusCode(ex.StatusCode); //ToDo: check
+            }
         }
 
     }
