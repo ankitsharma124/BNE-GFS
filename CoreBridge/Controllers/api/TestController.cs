@@ -17,13 +17,20 @@ namespace CoreBridge.Controllers.api
         }
 
 
+        /// <summary>
+        /// コントローラー上でBNエラーを投げるとerror responseが返ってくることを確認
+        /// </summary>
+        /// <exception cref="BNException"></exception>
         [HttpGet]
         public void GetBNErrorTest()
         {
             throw new BNException(1011, BNException.BNErrorCode.TokenErr);
         }
 
-
+        /// <summary>
+        /// コントローラー上でBNエラーを投げるとresponseが返ってくることを確認
+        /// </summary>
+        /// <exception cref="BNException"></exception>
         [HttpGet]
         public void GetBNResponseTest()
         {
