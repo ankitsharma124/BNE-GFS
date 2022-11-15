@@ -5,10 +5,10 @@ provider "google" {
 }
 
 terraform {
- backend "gcs" {
-   bucket  = "tf-state-934af1408b5cdc78" # google_storage_bucket.tfstate.name
-   prefix  = "terraform/state"
- }
+  backend "gcs" {
+    bucket = "tf-state-934af1408b5cdc78" # google_storage_bucket.tfstate.name
+    prefix = "terraform/state"
+  }
 }
 
 resource "random_id" "bucket_suffix" {
