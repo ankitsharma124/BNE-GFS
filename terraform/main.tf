@@ -1,5 +1,5 @@
 provider "google" {
-  project = "corebridge-367900"
+  project = "corebridge-367900" # TODO: Use as variable
   region  = "asia-northeast1"
   zone    = "asia-northeast1-a"
 }
