@@ -16,12 +16,6 @@ namespace CoreBridge.Models
 
         public CoreBridgeException(string message) : base(message) { }
 
-        public int StatusCode
-        {
-            get
-            {
-                return Convert.ToInt32(Code.ToString("0000") + Action.ToString("0000"));
-            }
-        }
+
     }
 }

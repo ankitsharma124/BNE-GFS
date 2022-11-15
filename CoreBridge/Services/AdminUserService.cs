@@ -1,7 +1,7 @@
 ﻿using CoreBridge.Models;
 using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
-using CoreBridge.Models.Exceptions.BNExceptions;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Specifications;
@@ -24,13 +24,20 @@ namespace CoreBridge.Services
         public async Task<List<AdminUserDto>> ListAsync()
         {
             List<AdminUserDto> result = new();
-            var list = await _unitOfWork.AdminUserRepository.ListAsync();
-
-            foreach (AdminUser entity in list)
+            try
             {
-                result.Add(new(entity.Name, entity.EMail, entity.Password, entity.Password));
-            }
+                var list = await _unitOfWork.AdminUserRepository.ListAsync();
 
+                foreach (AdminUser entity in list)
+                {
+                    result.Add(new(entity.Name, entity.EMail, entity.Password, entity.Password));
+                }
+            }
+            catch (BNException ex)
+            {
+                _logger.LogError(ex);
+
+            }
 
             return result;
         }

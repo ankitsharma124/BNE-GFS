@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using NLog;
 
@@ -27,16 +28,10 @@ namespace CoreBridge.Services
             logger.Error(ex, message);
         }
 
-        public void LogError(string message, CoreBridgeException ex)
+        public void LogError(BNException ex)
         {
-            logger.Error(ex, $"ErrCode[{ex.Code}] | Action[{ex.Action}] | " + message);
+            logger.Error(ex, ex.Code.ToString() + $" | StatusCode[{ex.StatusCode}]");
         }
-
-        public void LogError(int errorCode, string message, Exception ex)
-        {
-            logger.Error(ex, $"Code[{errorCode}] |" + message);
-        }
-
 
         public void LogInfo(string message)
         {

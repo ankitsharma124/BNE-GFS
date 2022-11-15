@@ -7,6 +7,7 @@ using NLog;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Mvc;
 using MessagePack.AspNetCoreMvcFormatter;
+using CoreBridge.Models.Middleware;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -73,6 +74,9 @@ try
         {
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
+
+        //Middleware
+        app.UseMiddleware<ExceptionMiddleware>();
 
         // Api Routing Add
         app.MapControllerRoute(

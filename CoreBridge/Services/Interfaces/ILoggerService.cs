@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models;
+using CoreBridge.Models.Exceptions;
 
 namespace CoreBridge.Services.Interfaces
 {
@@ -8,8 +9,7 @@ namespace CoreBridge.Services.Interfaces
         void LogDebug(string message, Exception ex);
         void LogError(string message);
         void LogError(string message, Exception ex);
-        void LogError(string message, CoreBridgeException ex);
-        void LogError(int errorCode, string message, Exception ex);
+        void LogError(BNException ex);
         void LogInfo(string message);
         void LogWarn(string message);
         void LogWarn(string message, Exception ex);

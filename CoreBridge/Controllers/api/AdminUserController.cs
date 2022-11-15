@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using MessagePack;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ namespace CoreBridge.Controllers.api
         private readonly IAdminUserService _adminUserService;
 
         public AdminUserController(ILoggerService logger, IAdminUserService adminUserService,
-            IWebHostEnvironment env) : base(env)
+            IWebHostEnvironment env, IResponseService resp) : base(env, resp)
         {
             _logger = logger;
             _adminUserService = adminUserService;
@@ -26,17 +27,16 @@ namespace CoreBridge.Controllers.api
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                var list = await _adminUserService.ListAsync();
-                return ReturnMsgPack(list);
-            }
-            catch (CoreBridgeException ex)
-            {
-                _logger.LogError("GetAdminUser", ex);
-                return StatusCode(ex.StatusCode); //ToDo: check
-            }
+            var list = await _adminUserService.ListAsync();
+
+            return new JsonResult(list);
+
+
+
         }
+
+
+
 
     }
 }
