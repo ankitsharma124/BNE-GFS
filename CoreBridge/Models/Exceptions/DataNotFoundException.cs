@@ -9,5 +9,7 @@ namespace CoreBridge.Models.Exceptions
             Code = 1002;
             Action = 2;
         }
+
+
     }
 }
