@@ -1,0 +1,50 @@
+name: Container Build and Push
+
+on:
+  push:
+    # NOTE:
+    #  Uncomment when CI operational rules are established.
+    #
+    #branches:
+    #  - develop
+    tags:
+      - 'v*'
+
+env:
+  IMAGE: ${{ secrets.IMAGE_PREFIX }}/corebridge
+  TAG: latest
+  GOOGLE_IAM_WORKLOAD_IDENTITY_POOL_PROVIDER: ${{ secrets.GOOGLE_IAM_WORKLOAD_IDENTITY_POOL_PROVIDER }}
+  SERVICE_ACCOUNT_EMAIL: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
+jobs:
+  build-push-corebridge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: "${{ env.GOOGLE_IAM_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
+          service_account: "${{ env.SERVICE_ACCOUNT_EMAIL }}"
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      - name: Use gcloud CLI
+        run: gcloud info
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker ${{ secrets.REGISTRY_HOST }}
+      - name: Prepare for contaier build
+        uses: docker/setup-buildx-action@v2
+      - name: Contaier build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: '.'
+          file: './CoreBridge/Dockerfile'
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ env.TAG }}
+            ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
