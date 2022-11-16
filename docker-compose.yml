@@ -1,0 +1,15 @@
+version: "3"
+services:
+  core_bridge:
+    build:
+      context: .
+      dockerfile: CoreBridge/Dockerfile
+    container_name: core_bridge
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DockerLocal
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/corebridge-367900-75f6bcea9581.json
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
