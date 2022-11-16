@@ -17,7 +17,7 @@ namespace CoreBridge.Controllers.api
         private readonly IAdminUserService _adminUserService;
 
         public AdminUserController(ILoggerService logger, IAdminUserService adminUserService,
-            IWebHostEnvironment env, IResponseService resp) : base(env, resp)
+            IWebHostEnvironment env, IResponseService resp, IConfigService config) : base(env, resp, config, logger)
         {
             _logger = logger;
             _adminUserService = adminUserService;

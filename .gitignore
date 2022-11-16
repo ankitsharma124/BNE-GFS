@@ -76,3 +76,4 @@ override.tf.json
 terraform.rc
 
 *.tfplan
+/CoreBridge/docker-compose.yml

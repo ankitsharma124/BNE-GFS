@@ -17,9 +17,11 @@ namespace CoreBridge.Services
         private Action<object> customizeResponseContent;
 
         protected IHostEnvironment _env;
-        public ResponseService(IHostEnvironment env)
+        protected IConfigService _config;
+        public ResponseService(IHostEnvironment env, IConfigService config)
         {
             _env = env;
+            _config = config;
         }
 
 
@@ -87,12 +89,9 @@ namespace CoreBridge.Services
         {
             if (_useJson == null)
             {
-                IConfiguration config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.Development.json")
-                    .Build();
                 try
                 {
-                    _useJson = (bool)config.GetRequiredSection("DebugConfig")!.GetValue(typeof(bool), "UseJson");
+                    _useJson = _config.GetConfigVal<bool>("DebugConfig", "UseJson");
                 }
                 catch (Exception ex)
                 {

@@ -69,6 +69,7 @@ try
         //app.UseAuthorization();
 
         // HangFire Dashbord
+
         app.UseHangfireServer();
         app.UseHangfireDashboard("/hangfire", new DashboardOptions
         {
