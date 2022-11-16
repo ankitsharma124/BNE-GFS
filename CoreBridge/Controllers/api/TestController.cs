@@ -11,7 +11,8 @@ namespace CoreBridge.Controllers.api
     public class TestController : BaseControllerForMsgPack
     {
 
-        public TestController(IHostEnvironment env, IResponseService responseService) : base(env, responseService)
+        public TestController(ILoggerService logger, IAdminUserService adminUserService,
+            IWebHostEnvironment env, IResponseService resp, IConfigService config) : base(env, resp, config, logger)
         {
 
         }
