@@ -4,7 +4,6 @@ locals {
 
 module "gh_oidc" {
   source      = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
-  version     = "v3.1.0"
   project_id  = "corebridge-367900"
   pool_id     = "github-pool"
   provider_id = "github-pool-provider"
