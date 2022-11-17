@@ -1,3 +1,6 @@
+# TODO:
+#  - Add depend_on redis, spanner
+#  - Use resource variables
 resource "google_cloud_run_service" "corebridge-seconda" {
   location = "asia-northeast1"
   name     = "corebridge"
@@ -19,10 +22,6 @@ resource "google_cloud_run_service" "corebridge-seconda" {
 
       containers {
         image   = "asia-docker.pkg.dev/corebridge-367900/corebridge/corebridge:latest"
-        env {
-          name  = "ASPNETCORE_ENVIRONMENT"
-          value = "DockerLocal"
-        }
         env {
           name  = "ConnectionStrings__Redis"
           value = "10.91.188.179:6379"
