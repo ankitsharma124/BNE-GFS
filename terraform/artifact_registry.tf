@@ -8,7 +8,7 @@ resource "google_artifact_registry_repository" "corebridge" {
   location      = "asia"
   description   = "corebridge docker repository"
   format        = "DOCKER"
-  depends_on = [google_project_service.artifactregistry]
+  depends_on    = [google_project_service.artifactregistry]
 }
 
 
