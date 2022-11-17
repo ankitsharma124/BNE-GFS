@@ -11,7 +11,7 @@ namespace CoreBridge.Models.Context
 
         // Entity Entry
         public DbSet<AdminUser> AdminUsers { get; set; }
-
+        public DbSet<TitleInfo> TitleInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -15,9 +15,11 @@ namespace CoreBridge.Models.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-
+        //Entry List
         private readonly CoreBridgeRepository<AdminUser> _adminUserRepository = null;
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get { return GetInstance(_adminUserRepository); } }
+        private readonly CoreBridgeRepository<TitleInfo> _platformInfoRepository = null;
+        public ICoreBridgeRepository<TitleInfo> PlatformRepository { get { return GetInstance(_platformInfoRepository); } }
 
         private CoreBridgeRepository<T> GetInstance<T>(CoreBridgeRepository<T> repository) where T : CoreBridgeEntity, IAggregateRoot
         {
