@@ -18,8 +18,8 @@ namespace CoreBridge.Models.Repositories
         //Entry List
         private readonly CoreBridgeRepository<AdminUser> _adminUserRepository = null;
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get { return GetInstance(_adminUserRepository); } }
-        private readonly CoreBridgeRepository<TitleInfo> _platformInfoRepository = null;
-        public ICoreBridgeRepository<TitleInfo> PlatformRepository { get { return GetInstance(_platformInfoRepository); } }
+        private readonly CoreBridgeRepository<TitleInfo> _titleInfoRepository = null;
+        public ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get { return GetInstance(_titleInfoRepository); } }
 
         private CoreBridgeRepository<T> GetInstance<T>(CoreBridgeRepository<T> repository) where T : CoreBridgeEntity, IAggregateRoot
         {
