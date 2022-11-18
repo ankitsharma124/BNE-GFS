@@ -6,4 +6,6 @@ resource "google_storage_bucket" "corebridge-app" {
   versioning {
     enabled = false
   }
+
+  labels = local.default_labels
 }
