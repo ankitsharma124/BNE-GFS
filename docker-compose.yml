@@ -6,6 +6,7 @@ services:
       dockerfile: CoreBridge/Dockerfile
     container_name: core_bridge
     environment:
+      - TestVar=testVal
       - ConnectionStrings__Redis=redis:6379
       - GOOGLE_APPLICATION_CREDENTIALS=/app/corebridge-367900-75f6bcea9581.json
     ports:

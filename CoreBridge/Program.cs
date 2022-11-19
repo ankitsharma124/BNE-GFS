@@ -8,6 +8,10 @@ using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Mvc;
 using MessagePack.AspNetCoreMvcFormatter;
 using CoreBridge.Models.Middleware;
+using CoreBridge.Models;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -18,19 +22,33 @@ try
 {
     // Add services to the container.
     //builder.Services.AddControllersWithViews();
+
     builder.Services.AddMvc().AddMvcOptions(option =>
     {
-        option.OutputFormatters.Clear();
+        //option.OutputFormatters.Clear();
         option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
-        option.InputFormatters.Clear();
-        option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
-    });
+        //option.InputFormatters.Clear();
+        var inputFormatter = new MessagePackInputFormatter(ContractlessStandardResolver.Options);
+        inputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/x-messagepack"));
+        option.InputFormatters.Add(inputFormatter);
+
+
+    });//.AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(
+       //    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false)));
     builder.Services.AddRazorPages();
 
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);
     // Hangfuire Service Add
     builder.Services.AddHangfireServices(builder.Configuration);
+
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = AppSetting.GetConnectStringRedis(builder.Configuration);
+        options.InstanceName = "redis-1";
+    });
+
+
     // CustomServices
     builder.Services.AddCustomServices();
 

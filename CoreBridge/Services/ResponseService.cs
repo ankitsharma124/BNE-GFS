@@ -17,8 +17,8 @@ namespace CoreBridge.Services
         private Action<object> customizeResponseContent;
 
         protected IHostEnvironment _env;
-        protected IConfigService _config;
-        public ResponseService(IHostEnvironment env, IConfigService config)
+        protected IConfiguration _config;
+        public ResponseService(IHostEnvironment env, IConfiguration config)
         {
             _env = env;
             _config = config;
@@ -30,11 +30,15 @@ namespace CoreBridge.Services
 
         public async Task ReturnBNErrorAsync(HttpResponse response, int statusCode)
         {
-            await ReturnBNResponseAsync(response, new object[] { statusCode }, null, null, ResultNG, statusCode);
+            response.StatusCode = statusCode;
+            await ReturnBNResponseAsync(response, new object[] { statusCode }, null, null, null,
+                ResultNG, statusCode);
         }
 
         public async Task ReturnBNResponseAsync(HttpResponse response, object details,
-            Action<object[]> fxCustomizeHeader = null, Action<object> fxCustomizeContent = null, int result = -1, int status = -1)
+            Action<object[]> fxCustomizeHeader = null, Action<object> fxCustomizeContent = null,
+            Func<int, int> fxGetApiStatus = null,
+            int result = -1, int status = -1)
         {
             if (result < 0) result = ResultOK;
             if (status < 0) status = (int)BNException.BNErrorCode.OK;
@@ -46,6 +50,12 @@ namespace CoreBridge.Services
 
             //継承クラスにおいて必要があればヘッダーをカスタマイズ
             if (fxCustomizeHeader != null) fxCustomizeHeader(customHeader);
+
+            if (fxGetApiStatus != null) status = fxGetApiStatus(status);
+            //todo:  ステータスをAPI毎に分かるように送信(共通エラー以外)
+            //$status = $this->_get_api_status($status);
+            //
+
 
             if (details.GetType().IsArray)
             {
@@ -91,7 +101,7 @@ namespace CoreBridge.Services
             {
                 try
                 {
-                    _useJson = _config.GetConfigVal<bool>("DebugConfig", "UseJson");
+                    _useJson = _config.GetValue<bool>("UseJson");
                 }
                 catch (Exception ex)
                 {

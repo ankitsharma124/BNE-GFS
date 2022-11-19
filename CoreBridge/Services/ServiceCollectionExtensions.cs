@@ -50,7 +50,6 @@ namespace CoreBridge.Services
             services.AddScoped<ILoggerService, LoggerService>();
             services.TryAddScoped<IAdminUserService, AdminUserService>();
             services.AddScoped<IResponseService, ResponseService>();
-            services.AddScoped<IConfigService, ConfigService>();
 
             return services;
         }

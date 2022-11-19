@@ -2,6 +2,16 @@
 {
     public static class BasicTypeExtensions
     {
+        public static bool IsOrDescendantOf(this object thisObj, Type compareTo)
+        {
+            return thisObj.GetType().IsOrDescendantOf(compareTo);
+        }
+
+        public static bool IsOrDescendantOf(this Type thisType, Type compareTo)
+        {
+            return thisType.IsSubclassOf(compareTo) || thisType == compareTo;
+        }
+
         public static bool IsNumber(this object value)
         {
             return value is sbyte

@@ -77,3 +77,7 @@ terraform.rc
 
 *.tfplan
 /CoreBridge/docker-compose.yml
+/docker-compose.yml
+/CoreBridge/Ctempinternallog.txt
+/CoreBridge/CoreBridge.csproj.user
+/.gitignore

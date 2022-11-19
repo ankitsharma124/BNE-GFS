@@ -1,20 +1,20 @@
 ﻿namespace CoreBridge.Models.DTO.Requests
 {
-    /*
-    public class ReqBaseParam : ReqBase
+
+    public abstract class ReqBaseParam : ReqBase
     {
-        public static Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
+        public Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {
             { "code", 9999 },
-            {  "not_collect_param_api" , null },
-            {  "maintenance_avoid" , null }
+            {  "notCollectParamApi" , null },
+            {  "MaintenanceAvoid" , null }
         };
 
-        public ReqBaseParam(object data) : base(data)
+        public ReqBaseParam() : base()
         {
 
         }
-        public int ApiCode { get { return (int)ApiSetting["code"]; } }
+        public override int ApiCode { get { return (int)ApiSetting["code"]; } }
     }
-    */
+
 }

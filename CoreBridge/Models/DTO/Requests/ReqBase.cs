@@ -2,26 +2,25 @@
 {
     public abstract class ReqBase
     {
-        protected object _data;
+
 
         public static object[] GetRules(bool added = false)
         {
             return new object[] { };
         }
 
-        public ReqBase(object data = null)
+        public ReqBase()
         {
-            _data = data;
+
         }
 
         public void Validate()
         {
-            this.Convert();
             //todo? log validation complete
         }
 
-        public abstract void Convert();
+        public virtual int ApiCode { get { return 9999; } }
 
-
+        //public HttpRequest? HttpReqObj { get; set; } = null;
     }
 }

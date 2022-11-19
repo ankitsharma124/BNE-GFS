@@ -7,6 +7,7 @@ using System.Net.Mime;
 using Newtonsoft.Json;
 using MessagePack;
 using Microsoft.AspNetCore.Http;
+using Google.Api;
 
 namespace CoreBridge.Models.Middleware
 {
@@ -15,8 +16,6 @@ namespace CoreBridge.Models.Middleware
     /// </summary>
     public class ExceptionMiddleware
     {
-
-
         private readonly RequestDelegate _next;
         private ILoggerService? _logger;
         private IResponseService? _responseService;
@@ -39,19 +38,33 @@ namespace CoreBridge.Models.Middleware
                 _logger.LogError(bnx);
                 await HandleExceptionAsync(httpContext, bnx.StatusCode);
             }
+            catch (Manual404 m404)
+            {
+                _logger.LogError(m404.Message);
+                //CustomResponseを返す？　返さない？　(Q5)
+                //BNのHeaderが返ってくるかどうかテストするクライアントとかいる？
+                //await HandleExceptionAsync(httpContext, 404);
+
+                httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                var responseContent = new
+                {
+                    StatusCode = httpContext.Response.StatusCode
+                };
+                await httpContext.Response.WriteAsJsonAsync(responseContent);
+
+
+
+            }
             catch (Exception ex)
             {
                 _logger.LogError("Raw error", ex);
-                await HandleExceptionAsync(httpContext, httpContext.Response.StatusCode);
+                await HandleExceptionAsync(httpContext, 99990001);
             }
         }
 
-
         private async Task HandleExceptionAsync(HttpContext context, int statusCode)
         {
-
-            _responseService.ReturnBNErrorAsync(context.Response, statusCode);
-
+            await _responseService.ReturnBNErrorAsync(context.Response, statusCode);
         }
 
     }
