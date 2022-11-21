@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.DTO;
+﻿using AutoMapper;
+using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
@@ -11,6 +12,7 @@ namespace CoreBridge.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly ILogger<TitleInfoService> _logger;
+        private readonly IMapper _mapper;
 
         public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger)
         {
@@ -20,46 +22,14 @@ namespace CoreBridge.Services
 
         public async Task<List<TitleInfoDto>> ListAsync()
         {
-            List<TitleInfoDto> result = new();
             var list = await _unitOfWork.TitleInfoRepository.ListAsync();
-            foreach (TitleInfo entity in list)
-            {
-                result.Add(new(
-                    entity.TitleName,
-                    entity.TitleCode,
-                    entity.TrialTitleCode,
-                    entity.Ptype,
-                    entity.SwitchAppId,
-                    entity.XboxTitleId,
-                    entity.PsClientId,
-                    entity.PsClientSecoret,
-                    entity.SteamAppId,
-                    entity.SteamPublisherKey,
-                    entity.DevUrl,
-                    entity.QaUrl,
-                    entity.ProdUrl));
-            }
-
-            return result;
+            return _mapper.Map<List<TitleInfoDto>>(list);
         }
 
         public async Task<TitleInfoDto> GenerateTitleInfo(TitleInfoDto dto)
         {
 
-            TitleInfo entity = new(
-                    dto.TitleName,
-                    dto.TitleCode,
-                    dto.TrialTitleCode,
-                    dto.Ptype,
-                    dto.SwitchAppId,
-                    dto.XboxTitleId,
-                    dto.PsClientId,
-                    dto.PsClientSecoret,
-                    dto.SteamAppId,
-                    dto.SteamPublisherKey,
-                    dto.DevUrl,
-                    dto.QaUrl,
-                    dto.ProdUrl);
+            TitleInfo entity = _mapper.Map<TitleInfo>(dto);
 
             await _unitOfWork.TitleInfoRepository.AddAsync(entity);
             await _unitOfWork.CommitAsync();

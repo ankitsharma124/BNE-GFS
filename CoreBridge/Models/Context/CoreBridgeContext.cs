@@ -16,7 +16,7 @@ namespace CoreBridge.Models.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<TitleInfo>().HasKey(t => t.TitleCode);
         }
     }
 }

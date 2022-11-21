@@ -1,0 +1,108 @@
+﻿@model CoreBridge.Models.Entity.TitleInfo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TitleInfo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TitleName" class="control-label"></label>
+                <input asp-for="TitleName" class="form-control" />
+                <span asp-validation-for="TitleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TitleCode" class="control-label"></label>
+                <input asp-for="TitleCode" class="form-control" />
+                <span asp-validation-for="TitleCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrialTitleCode" class="control-label"></label>
+                <input asp-for="TrialTitleCode" class="form-control" />
+                <span asp-validation-for="TrialTitleCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ptype" class="control-label"></label>
+                <input asp-for="Ptype" class="form-control" />
+                <span asp-validation-for="Ptype" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SwitchAppId" class="control-label"></label>
+                <input asp-for="SwitchAppId" class="form-control" />
+                <span asp-validation-for="SwitchAppId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="XboxTitleId" class="control-label"></label>
+                <input asp-for="XboxTitleId" class="form-control" />
+                <span asp-validation-for="XboxTitleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PsClientId" class="control-label"></label>
+                <input asp-for="PsClientId" class="form-control" />
+                <span asp-validation-for="PsClientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PsClientSecoret" class="control-label"></label>
+                <input asp-for="PsClientSecoret" class="form-control" />
+                <span asp-validation-for="PsClientSecoret" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SteamAppId" class="control-label"></label>
+                <input asp-for="SteamAppId" class="form-control" />
+                <span asp-validation-for="SteamAppId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SteamPublisherKey" class="control-label"></label>
+                <input asp-for="SteamPublisherKey" class="form-control" />
+                <span asp-validation-for="SteamPublisherKey" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DevUrl" class="control-label"></label>
+                <input asp-for="DevUrl" class="form-control" />
+                <span asp-validation-for="DevUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QaUrl" class="control-label"></label>
+                <input asp-for="QaUrl" class="form-control" />
+                <span asp-validation-for="QaUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProdUrl" class="control-label"></label>
+                <input asp-for="ProdUrl" class="form-control" />
+                <span asp-validation-for="ProdUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
