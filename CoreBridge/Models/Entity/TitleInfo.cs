@@ -1,5 +1,4 @@
 ﻿using CoreBridge.Models.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace CoreBridge.Models.Entity
 {
@@ -27,7 +26,6 @@ namespace CoreBridge.Models.Entity
             ProdUrl = prodUrl;
         }
 
-        [Key]
         public string TitleName { get; set; }
         public string TitleCode{ get; set; }
         public string TrialTitleCode { get; set; }
@@ -41,10 +39,6 @@ namespace CoreBridge.Models.Entity
         public string? DevUrl { get; set; }
         public string? QaUrl { get; set; }
         public string? ProdUrl { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime CreateAt { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime UpdateAt { get; set; }
     }
 
 
