@@ -18,9 +18,10 @@ resource "random_id" "bucket_suffix" {
 resource "google_storage_bucket" "tfstate" {
   name          = "tf-state-${random_id.bucket_suffix.hex}"
   force_destroy = false
-  location      = "ASIA-NORTHEAST1"
+  location      = "asia-northeast1"
   storage_class = "STANDARD"
   versioning {
     enabled = true
   }
+  labels = local.default_labels
 }

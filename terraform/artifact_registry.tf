@@ -8,7 +8,10 @@ resource "google_artifact_registry_repository" "corebridge" {
   location      = "asia"
   description   = "corebridge docker repository"
   format        = "DOCKER"
-  depends_on    = [google_project_service.artifactregistry]
+
+  labels = local.default_labels
+
+  depends_on = [google_project_service.artifactregistry]
 }
 
 
@@ -36,6 +39,6 @@ output "registry_corebridge_host" {
 
 output "registry_corebridge_image_name_prefix" {
   description = "image name prefix for corebridge registry"
-  value       = "${google_artifact_registry_repository.corebridge.location}-docker.pkg.dev/corebridge-367900/${google_artifact_registry_repository.corebridge.repository_id}"
+  value       = "${google_artifact_registry_repository.corebridge.location}-docker.pkg.dev/${local.project}/${google_artifact_registry_repository.corebridge.repository_id}"
 }
 

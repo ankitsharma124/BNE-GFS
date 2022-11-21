@@ -11,4 +11,5 @@ resource "google_redis_instance" "corebridge" {
   persistence_config {
     persistence_mode = "DISABLED"
   }
+  labels = local.default_labels
 }

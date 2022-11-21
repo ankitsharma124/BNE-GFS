@@ -4,6 +4,7 @@ resource "google_spanner_instance" "corebridge-development" {
   force_destroy = false
   config        = "regional-asia-southeast2"
   num_nodes     = 0
+  labels        = local.default_labels
 }
 
 resource "google_spanner_database" "corebridge" {
