@@ -58,7 +58,8 @@ namespace CoreBridge.Services
                     entity.SteamPublisherKey,
                     entity.DevUrl,
                     entity.QaUrl,
-                    entity.ProdUrl);
+                    entity.ProdUrl
+                    );
 
             return result;
         }

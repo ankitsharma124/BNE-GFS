@@ -4,60 +4,60 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>ゲームタイトル管理画面</h1>
 
-<p>
+<button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="button">
     <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+</button>
+<table class="table-auto shadow">
     <thead>
         <tr>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.TitleName)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.TrialTitleCode)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.Ptype)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.SwitchAppId)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.XboxTitleId)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.PsClientId)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.PsClientSecoret)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.SteamAppId)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.SteamPublisherKey)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.DevUrl)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.QaUrl)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.ProdUrl)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.Id)
             </th>
-            <th>
+@*            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
-            <th>
+            <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.UpdatedAt)
             </th>
-            <th></th>
+*@            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -102,13 +102,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
-            <td>
+@*            <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UpdatedAt)
             </td>
-            <td>
+*@            <td>
                 <a asp-action="Edit" asp-route-id="@item.TitleCode">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.TitleCode">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.TitleCode">Delete</a>
