@@ -12,6 +12,7 @@ using CoreBridge.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.HttpOverrides;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -25,17 +26,25 @@ try
 
     builder.Services.AddMvc().AddMvcOptions(option =>
     {
-        //option.OutputFormatters.Clear();
+        //option.OutputFormatters.Clear(); 
         option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
-        //option.InputFormatters.Clear();
+
+        if (!builder.Configuration.GetValue<bool>("UseJson"))
+            option.InputFormatters.Clear();
         var inputFormatter = new MessagePackInputFormatter(ContractlessStandardResolver.Options);
         inputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/x-messagepack"));
         option.InputFormatters.Add(inputFormatter);
 
 
-    });//.AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(
-       //    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false)));
+    });
     builder.Services.AddRazorPages();
+
+    //for RemoteIP
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
 
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);
@@ -67,6 +76,9 @@ try
     {
         IWebHostEnvironment webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
+        var test = Environment.GetEnvironmentVariables();
+        Console.Write(test);
+
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
@@ -84,6 +96,11 @@ try
         app.UseStaticFiles();
         app.UseRouting();
         app.UseSession();
+
+        //custom middleware
+        app.UseMiddleware<HashAdminMiddleware>();
+        app.UseMiddleware<ExceptionMiddleware>();
+
         //app.UseAuthorization();
 
         // HangFire Dashbord
@@ -94,8 +111,7 @@ try
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
-        //Middleware
-        app.UseMiddleware<ExceptionMiddleware>();
+
 
         // Api Routing Add
         app.MapControllerRoute(

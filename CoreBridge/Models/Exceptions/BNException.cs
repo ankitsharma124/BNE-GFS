@@ -11,7 +11,11 @@ namespace CoreBridge.Models.Exceptions
             OK = 0,
             NG = 1,
             Maintenance = 2,
+            SessionNG = 3,
+            SessionTimeout = 4,
+            VersionInvalid = 5,
             RequestErr = 6,
+            ConnectStaging = 7,
             TitleCodeInvalid = 8,
             PlatformTypeInvalid = 9,
             ExternalDevice = 10,
@@ -22,20 +26,25 @@ namespace CoreBridge.Models.Exceptions
             Num_ULimit = 104,
             StrLen_LLimit = 105,
             StrLen_ULimit = 106,
+            CharType = 107,
             NGWord = 108,
             OutOfRange = 109,
             //User
             UserNotExist = 201,
+            RegisteredUser = 202, //登録済ユーザ
+            BlackListUser = 203,
             TokenErr = 204,
             UIdDuplicate = 205,
             NotBNageService = 206,
             //Sys
             FieldAgree = 501,
+            Fieled_TitleCode = 502,
             Kpi_NoEntryData = 503,
             //BNID
             BNId_NotLinked = 1501,
             BNId_Linked = 1502,
             NotService = 1503,
+            NoExistingEntry = 1504, //COSMOSID未登録
             BNId_EraseFailed = 1505,
             //購入 - clientOnly
             Common_OtherPurchaseInProgress = 1601,
@@ -67,7 +76,9 @@ namespace CoreBridge.Models.Exceptions
             Switch_ReqFailure_Consume = 2002,
             Switch_ReqFailure_SugarMaintenance = 2003,
             Switch_ReqFailure_BaasMaintenance = 2004,
-            Switch_ReqFailure_RightsEmpty = 2005
+            Switch_ReqFailure_RightsEmpty = 2005,
+            Switch_ErrCode_SugarMaintenance = 1502,
+            Switch_ErrCode_BaasMaintenance = 9501
         }
 
 

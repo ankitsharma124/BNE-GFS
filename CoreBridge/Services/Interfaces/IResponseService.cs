@@ -6,7 +6,7 @@
         Task ReturnBNErrorAsync(HttpResponse response, int statusCode);
 
         Task ReturnBNResponseAsync(HttpResponse response, object details,
-           Action<object[]> fxCustomizeHeader = null, Action<object> fxCustomizeContent = null,
+           Action<List<object>> fxCustomizeHeader = null, Action<object> fxCustomizeContent = null,
            Func<int, int> fxGetApiStatus = null,
            int result = -1, int status = -1);
 

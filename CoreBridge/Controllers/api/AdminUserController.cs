@@ -30,9 +30,6 @@ namespace CoreBridge.Controllers.api
             var list = await _adminUserService.ListAsync();
 
             return new JsonResult(list);
-
-
-
         }
 
 

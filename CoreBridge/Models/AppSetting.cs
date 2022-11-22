@@ -80,8 +80,9 @@ namespace CoreBridge.Models
         /// <returns>string</returns>
         public static string GetConnectStringRedis(IConfiguration configuration)
         {
+            var test = Environment.GetEnvironmentVariables();
             string res = Environment.GetEnvironmentVariable(EnviromentStringRedis);
-            if (res == null)
+            if (res == null && test != null)
                 res = configuration.GetConnectionString(ConnectionStringRedis);
             return res;
         }

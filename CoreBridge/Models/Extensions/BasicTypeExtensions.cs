@@ -32,5 +32,16 @@
             if (Array.IndexOf(arr, toLookFor) >= 0) return true;
             else return false;
         }
+
+        public static string GenerateUniqId(this DateTime now)
+        {
+            var ts = now - new DateTime(1970, 1, 1, 0, 0, 0);
+            double t = ts.TotalMilliseconds / 1000;
+
+            int a = (int)Math.Floor(t);
+            int b = (int)((t - Math.Floor(t)) * 1000000);
+
+            return a.ToString("x8") + b.ToString("x5");
+        }
     }
 }

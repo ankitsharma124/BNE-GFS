@@ -36,14 +36,14 @@ namespace CoreBridge.Services
         }
 
         public async Task ReturnBNResponseAsync(HttpResponse response, object details,
-            Action<object[]> fxCustomizeHeader = null, Action<object> fxCustomizeContent = null,
+            Action<List<object>> fxCustomizeHeader = null, Func<object, object> fxCustomizeContent = null,
             Func<int, int> fxGetApiStatus = null,
             int result = -1, int status = -1)
         {
             if (result < 0) result = ResultOK;
             if (status < 0) status = (int)BNException.BNErrorCode.OK;
 
-            var customHeader = new object[] {
+            var customHeader = new List<object> {
                 new{ result = result},
                 new{ date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss")}
             };
@@ -66,7 +66,7 @@ namespace CoreBridge.Services
                 details = new object[] { status };
             }
 
-            var responseContent = new object[] { customHeader, details };
+            var responseContent = new object[] { customHeader.ToArray(), details };
             object responseContentConverted;
 
 
@@ -88,7 +88,7 @@ namespace CoreBridge.Services
             }
 
             responseContentConverted = MessagePackSerializer.Serialize(responseContent);
-            if (fxCustomizeContent != null) fxCustomizeContent(responseContentConverted);
+            if (fxCustomizeContent != null) responseContentConverted = fxCustomizeContent(responseContentConverted);
             response.Headers.ContentType = "application/x-messagepack";
             response.Headers.ContentLength = ((byte[])responseContentConverted).Length;
             await response.Body.WriteAsync((byte[])responseContentConverted);

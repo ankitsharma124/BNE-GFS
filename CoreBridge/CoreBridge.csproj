@@ -19,6 +19,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
+		<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,10 +38,13 @@
 		<PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
 		<PackageReference Include="Google.Cloud.EntityFrameworkCore.Spanner" Version="2.0.3" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="XAct.Core.PCL" Version="0.0.5014" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Controllers\api\client\" />
 		<Folder Include="Models\Headers\" />
+		<Folder Include="Services\Client\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -37,7 +37,7 @@ namespace CoreBridge.Controllers.api
         protected readonly ILoggerService _loggerService;
         protected readonly IDistributedCache _cache;
         protected IHostEnvironment _env;
-
+        protected const string UserInfoKeyFormat = "userInfo_key.{0}";
 
         public BaseControllerForMsgPack(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
             IConfiguration configService, ILoggerService loggerService)
@@ -58,7 +58,7 @@ namespace CoreBridge.Controllers.api
         public int Platform { get; set; } = 0;
         public string RequestClassName { get; set; }
         public SysConsts.SkuType SkuType { get; set; }
-        public string Session { get; set; }
+        public string? Session { get; set; } = null;
         public string TitleCode { get; set; }
 
         public string? UserId { get; set; } = null;
@@ -88,7 +88,6 @@ namespace CoreBridge.Controllers.api
         public void SetParams(ReqBase reqHeader, ReqBase reqParam)
         {
             _reqHeader = reqHeader;
-            //_reqHeader.HttpReqObj = Request;
             _reqParam = reqParam;
             Init();
         }
@@ -129,7 +128,6 @@ namespace CoreBridge.Controllers.api
             //パラメーターの処理自体は各APIアクションの入り口で行う
             ProcessHeader();
 
-
             /* todo:Assign this.TitleInfo
              * 
              Check title_cd exists vs db.Titles
@@ -157,7 +155,6 @@ namespace CoreBridge.Controllers.api
         }
 
         protected abstract void ProcessHeader();
-
         [NonAction]
         public bool JudgeMaintenance(string? userId, int platform, bool isCommon = false)
         {
@@ -198,6 +195,7 @@ namespace CoreBridge.Controllers.api
 
             return permissionFlag;
         }
+
         [NonAction]
         private bool JudgeUser(string? userId)
         {
@@ -304,12 +302,8 @@ namespace CoreBridge.Controllers.api
                 if ($this->user_info['title_cd'] !== $title_cd) {
                     throw new BNException(CurrActionId, BNException.BNErrorCode.UserNotExist, "user_consistence:ユーザー情報とタイトルコードが相違している");
                 }
-             
-             
              */
         }
-
-
 
         /// <summary>
         /// uriチェック - configで指定した禁止APIの要求を無効化(エラー)とする
@@ -386,8 +380,11 @@ namespace CoreBridge.Controllers.api
 
         protected string GetTitleCodeByUrl()
         {
-            //todo:
-            return "";
+            //todo:　uri_protocolの他の設定値の可能性は？　Q7
+            //$protocol = $this->config->item('uri_protocol');
+            //empty($protocol) && $protocol = 'REQUEST_URI';
+
+            return Request.Path.ToString().Split("/").Last();
         }
 
         protected abstract string GetSessionKey();
@@ -399,7 +396,7 @@ namespace CoreBridge.Controllers.api
         protected abstract void SessionUpdate();
 
 
-        protected void CustomizeResponseInnerHeader(object[] customHeader)
+        protected void CustomizeResponseInnerHeader(List<object> customHeader)
         {
             //必要に応じて継承クラスでoverride
             //php BaseControllerの_response_custom_headerに相当
@@ -421,7 +418,6 @@ namespace CoreBridge.Controllers.api
         /// <returns></returns>
         protected async Task ReturnBNResponse(object details, int result = -1, int status = -1)
         {
-
             await _responseService.ReturnBNResponseAsync(Response, details, CustomizeResponseInnerHeader,
                 CustomizeResponseContent, GetApiStatus, result, status);
         }
