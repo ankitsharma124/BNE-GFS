@@ -11,6 +11,9 @@ on:
       - 'v*'
 
 env:
+  # NOTE:
+  #  Image full-path is very long so put it in environment variables.
+  # This value is totally same as `output.registry_corebridge_image_name_prefix` in terraform.
   IMAGE: ${{ secrets.IMAGE_PREFIX }}/corebridge
   TAG: latest
   GOOGLE_IAM_WORKLOAD_IDENTITY_POOL_PROVIDER: ${{ secrets.GOOGLE_IAM_WORKLOAD_IDENTITY_POOL_PROVIDER }}
