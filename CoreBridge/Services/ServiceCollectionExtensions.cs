@@ -49,6 +49,7 @@ namespace CoreBridge.Services
         {
             services.AddAutoMapper(typeof(Program));
             services.TryAddScoped<IAdminUserService, AdminUserService>();
+            services.TryAddScoped<ITitleInfoService, TitleInfoService>();
 
             return services;
         }

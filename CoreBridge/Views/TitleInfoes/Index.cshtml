@@ -48,16 +48,6 @@
             <th class="px-4 py-2">
                 @Html.DisplayNameFor(model => model.ProdUrl)
             </th>
-            <th class="px-4 py-2">
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-@*            <th class="px-4 py-2">
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th class="px-4 py-2">
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-*@            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -99,16 +89,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ProdUrl)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-*@            <td>
+           <td>
                 <a asp-action="Edit" asp-route-id="@item.TitleCode">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.TitleCode">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.TitleCode">Delete</a>

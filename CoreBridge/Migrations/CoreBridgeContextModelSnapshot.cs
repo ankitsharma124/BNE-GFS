@@ -47,16 +47,13 @@ namespace CoreBridge.Migrations
 
             modelBuilder.Entity("CoreBridge.Models.Entity.TitleInfo", b =>
                 {
-                    b.Property<string>("TitleCode")
+                    b.Property<string>("Id")
                         .HasColumnType("STRING");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("DevUrl")
-                        .HasColumnType("STRING");
-
-                    b.Property<string>("Id")
                         .HasColumnType("STRING");
 
                     b.Property<string>("ProdUrl")
@@ -83,6 +80,10 @@ namespace CoreBridge.Migrations
                     b.Property<string>("SwitchAppId")
                         .HasColumnType("STRING");
 
+                    b.Property<string>("TitleCode")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
                     b.Property<string>("TitleName")
                         .IsRequired()
                         .HasColumnType("STRING");
@@ -97,7 +98,7 @@ namespace CoreBridge.Migrations
                     b.Property<string>("XboxTitleId")
                         .HasColumnType("STRING");
 
-                    b.HasKey("TitleCode");
+                    b.HasKey("Id");
 
                     b.ToTable("TitleInfo");
                 });

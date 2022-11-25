@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.Entity;
+﻿using CoreBridge.Models.DTO;
+using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.Interfaces
 {

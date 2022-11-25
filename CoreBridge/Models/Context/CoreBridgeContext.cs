@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.Entity;
+﻿using CoreBridge.Models.DTO;
+using CoreBridge.Models.Entity;
 using CoreBridge.Models.Ext;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ namespace CoreBridge.Models.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<TitleInfo>().HasKey(t => t.TitleCode);
+            modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
         }
     }
 }

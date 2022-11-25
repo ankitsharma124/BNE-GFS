@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using CoreBridge.Models.Interfaces;
+using MessagePack;
 
 namespace CoreBridge.Models.DTO
 {
@@ -52,12 +53,6 @@ namespace CoreBridge.Models.DTO
         public String? QaUrl { get; set; }
         [Key(12)]
         public String? ProdUrl { get; set; }
-        //[Key(13)]
-        //[System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
-        //public DateTime CreateAt { get; set; }
-        //[Key(14)]
-        //[System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
-        //public DateTime UpdateAt { get; set; }
 
         public bool IsValid()
         {

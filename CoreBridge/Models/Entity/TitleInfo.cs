@@ -24,9 +24,6 @@ namespace CoreBridge.Models.Entity
             DevUrl = devUrl;
             QaUrl = qaUrl;
             ProdUrl = prodUrl;
-            //CreatedAt = createTime;
-            //UpdatedAt = updateTime;
-            //Id = id;
         }
 
         public string TitleName { get; set; }
@@ -42,9 +39,6 @@ namespace CoreBridge.Models.Entity
         public string? DevUrl { get; set; }
         public string? QaUrl { get; set; }
         public string? ProdUrl { get; set; }
-        //public DateTime CreateAt { get; set; }
-        //public DateTime UpdateAt { get; set; }
-        //public string Id { get; set; }
     }
 
 

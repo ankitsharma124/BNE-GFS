@@ -10,43 +10,42 @@ using CoreBridge.Models.Entity;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
 using Google.Api;
+using CoreBridge.Models.DTO;
+using AutoMapper;
+using CoreBridge.Models.Repositories;
 
 namespace CoreBridge.Controllers
 {
     public class TitleInfoesController : Controller
     {
-        //private readonly CoreBridgeContext _context;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITitleInfoService _titleInfoService;
 
-        //public TitleInfoesController(CoreBridgeContext context)
-        //{
-        //    _context = context;
-        //}
-
-        public TitleInfoesController(IUnitOfWork unitOfWork)
+        public TitleInfoesController(IUnitOfWork unitOfWork, ITitleInfoService titleInfoService)
         {
             _unitOfWork = unitOfWork;
+            _titleInfoService = titleInfoService;
         }
 
         // GET: TitleInfoes
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.TitleInfo.ToListAsync());
             return View(await _unitOfWork.TitleInfoRepository.ListAsync());
+            //return View(await _titleInfoService.ListAsync());
         }
 
         // GET: TitleInfoes/Details/5
         public async Task<IActionResult> Details(string id)
         {
             //if (id == null || _unitOfWork.TitleInfo == null)
-            if (id == null || _unitOfWork.TitleInfoRepository == null)
+            if (id == null || _titleInfoService == null)
             {
                 return NotFound();
             }
 
             //var titleInfo = await _context.TitleInfo
             //.FirstOrDefaultAsync(m => m.TitleCode == id);
-            var titleInfo = await _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
+            var titleInfo = await _titleInfoService.ListAsync(); //仮
             if (titleInfo == null)
             {
                 return NotFound();
@@ -66,17 +65,14 @@ namespace CoreBridge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,QaUrl,ProdUrl,Id,CreatedAt,UpdatedAt")] TitleInfo titleInfo)
+        public async Task<IActionResult> Create([Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,QaUrl,ProdUrl")] TitleInfoDto titleInfo)
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(titleInfo);
-                //await _context.SaveChangesAsync();
-                await _unitOfWork.TitleInfoRepository.AddAsync(titleInfo);
-                await _unitOfWork.CommitAsync();
-
+                await _titleInfoService.AddAsync(titleInfo);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(titleInfo);
         }
 
@@ -89,12 +85,12 @@ namespace CoreBridge.Controllers
             //}
 
             //var titleInfo = await _context.TitleInfo.FindAsync(id);
-            if (id == null || _unitOfWork.TitleInfoRepository == null)
+            if (id == null || _titleInfoService == null)
             {
                 return NotFound();
             }
 
-            var titleInfo = await _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
+            var titleInfo = await _titleInfoService.ListAsync(); //仮
             if (titleInfo == null)
             {
                 return NotFound();
@@ -107,7 +103,7 @@ namespace CoreBridge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,QaUrl,ProdUrl")] TitleInfo titleInfo)
+        public async Task<IActionResult> Edit(string id, TitleInfoDto titleInfo)
         {
             if (id != titleInfo.TitleCode)
             {
@@ -120,8 +116,10 @@ namespace CoreBridge.Controllers
                 {
                     //_context.Update(titleInfo);
                     //await _context.SaveChangesAsync();
-                    await _unitOfWork.TitleInfoRepository.UpdateAsync(titleInfo);
-                    await _unitOfWork.CommitAsync();
+
+                    //await _unitOfWork.TitleInfoRepository.UpdateAsync(titleInfo);
+                    //await _unitOfWork.CommitAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -149,12 +147,13 @@ namespace CoreBridge.Controllers
 
             //var titleInfo = await _context.TitleInfo
             //    .FirstOrDefaultAsync(m => m.TitleCode == id);
-            if (id == null || _unitOfWork.TitleInfoRepository == null)
-            {
-                return NotFound();
-            }
 
-            var titleInfo = await _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
+            //if (id == null || _unitOfWork.TitleInfoRepository == null)
+            //{
+            //    return NotFound();
+            //}
+
+            var titleInfo = await _titleInfoService.ListAsync(); //仮
             if (titleInfo == null)
             {
                 return NotFound();
@@ -179,27 +178,29 @@ namespace CoreBridge.Controllers
             //}
 
             //await _context.SaveChangesAsync();
-            if (_unitOfWork.TitleInfoRepository == null)
-            {
-                return Problem("Entity set 'CoreBridgeContext.TitleInfo'  is null.");
-            }
-            var titleInfo = await _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
-            if (titleInfo != null)
-            {
-                await _unitOfWork.TitleInfoRepository.DeleteAsync(titleInfo);
-            }
+
+
+            //if (_unitOfWork.TitleInfoRepository == null)
+            //{
+            //    return Problem("Entity set 'CoreBridgeContext.TitleInfo'  is null.");
+            //}
+            //var titleInfo = await _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
+            //if (titleInfo != null)
+            //{
+            //    await _unitOfWork.TitleInfoRepository.DeleteAsync(titleInfo);
+            //}
 
             //await _context.SaveChangesAsync();
-            await _unitOfWork.CommitAsync();
+            //await _unitOfWork.CommitAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        private  bool TitleInfoExists(string id)
+        private bool TitleInfoExists(string id)
         {
             //return _context.TitleInfo.Any(e => e.TitleCode == id);
-            var titleinfo = _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
-            if(titleinfo == null)
+            var titleinfo = _titleInfoService.ListAsync(); //仮
+            if (titleinfo == null)
             {
                 return false;
             }
