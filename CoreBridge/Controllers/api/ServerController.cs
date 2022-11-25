@@ -1,6 +1,8 @@
-﻿using CoreBridge.Models.DTO.Requests;
+﻿using CoreBridge.Models;
+using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Extensions;
+using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -10,14 +12,16 @@ using System.Text.Unicode;
 
 namespace CoreBridge.Controllers.api
 {
-    public class ServerController : ClientServerControllerBase, IDisposable
+    public class ServerController : BaseControllerForMsgPack, IDisposable
     {
 
         private const string Userinfo_ServerKeyFormat = "server.{0}_{1}"; //サーバー情報のキャッシュキー 
+        private readonly ITitleInfoService _titleInfoService;
 
         public ServerController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
-          IConfiguration configService, ILoggerService loggerService) : base(env, responseService, cache, configService, loggerService)
+          IConfiguration configService, ILoggerService loggerService, ITitleInfoService titleInfoService) : base(env, responseService, cache, configService, loggerService)
         {
+            _titleInfoService = titleInfoService;
         }
 
 
@@ -38,6 +42,7 @@ namespace CoreBridge.Controllers.api
         }
 
         #region BaseController class methods
+
         protected override string GetUserInfoKey()
         {
             return String.Format(UserInfoKeyFormat, String.Format(Userinfo_ServerKeyFormat, this.UserId, (int)this.SkuType));
@@ -54,60 +59,30 @@ namespace CoreBridge.Controllers.api
             _loggerService.LogDebug("セッション更新 なし");
         }
 
-
-        protected new void CustomizeResponseInnerHeader(List<object> customHeader)
-        {
-            if (ServerParam.SessionAvoid() != true)
-            {
-                bool found = false;
-
-                foreach (IDictionary<string, object> item in customHeader)
-                {
-                    if (item.ContainsKey("session"))
-                    {
-                        item["session"] = this.Session != null ? this.Session : "";
-                        found = true;
-                    }
-
-                }
-                if (!found)
-                {
-                    customHeader.Add(new { session = (this.Session != null) ? this.Session : "" });
-                }
-
-            }
-        }
-
-
-        #endregion
-
+        /// <summary>
+        /// _load_header_param()に相当
+        /// </summary>
         protected override void ProcessParams()
         {
+            //_load_header_param
             var titleCode = GetTitleCodeByUrl();
+            this.TitleInfo = _titleInfoService.GetByCodeAsync(titleCode).Result;
 
-            //todo: Get TitleInfo from repository
-            //this.TitleInfo = 
-
-            if (titleCode != null)
+            if (this.TitleInfo == null)
             {
-                //todo: uncomment
-                //throw new BNException(CurrActionId, BNException.BNErrorCode.TitleCodeInvalid,
-                //$"不正なタイトルコードが指定されました。 url_title_cd[{titleCode}]");
+                throw new BNException(CurrActionId, BNException.BNErrorCode.TitleCodeInvalid,
+                $"不正なタイトルコードが指定されました。 url_title_cd[{titleCode}]");
             }
 
             CheckApi();
-            //todo:
-            /*
             if (this.TitleInfo.HashKey == null)
             {
                 throw new BNException(CurrActionId, BNException.BNErrorCode.TitleCodeInvalid,
                     $"ハッシュキーが未登録です[{titleCode}]");
-            }*/
+            }
             GetPostParam();
 
-
-            /*
-             
+            /*todo
              // HTTPヘッダーを出力(ユーザエージェントのみ出力)
 		        $this->load->library('user_agent');
 		        log_message('info',  "HttpHeader[ User-Agent: {$this->agent->agent_string()} ]" );
@@ -129,6 +104,17 @@ namespace CoreBridge.Controllers.api
              */
 
             base.ProcessParams();
+        }
+
+        protected override void ProcessHeader()
+        {
+
+            this.TitleCode = ServerHeader.TitleCd;
+            this.UserId = ServerHeader.UserId;
+            this.SkuType = (SysConsts.SkuType)Enum.Parse(typeof(SysConsts.SkuType), ServerHeader.SkuType + "");
+            this.Session = ServerHeader.Session;
+            this.Platform = (int)ServerHeader.Platform;
+
         }
 
         private void GetPostParam()
@@ -156,8 +142,42 @@ namespace CoreBridge.Controllers.api
                 }
             }
 
+            if (this.ServerHeader.TitleCd != GetTitleCodeByUrl())
+            {
+                throw new BNException(CurrActionId, BNException.BNErrorCode.RequestErr,
+                        $"post_param:title_cd error header[{this.ServerHeader.TitleCd}], url[{GetTitleCodeByUrl()}]");
+            }
+
 
         }
+
+        protected new void CustomizeResponseInnerHeader(List<object> customHeader)
+        {
+            //if (ServerParam.SessionAvoid() != true)
+            {
+                bool found = false;
+
+                foreach (IDictionary<string, object> item in customHeader)
+                {
+                    if (item.ContainsKey("session"))
+                    {
+                        item["session"] = this.Session != null ? this.Session : "";
+                        found = true;
+                    }
+
+                }
+                if (!found)
+                {
+                    customHeader.Add(new { session = (this.Session != null) ? this.Session : "" });
+                }
+
+            }
+        }
+        #endregion
+
+
+
+
 
         protected new object CustomizeResponseContent(object response)
         {
@@ -185,6 +205,15 @@ namespace CoreBridge.Controllers.api
             var hashKeyEncoded = new UTF8Encoding().GetBytes(hashKey);
             hashKeyEncoded.ToList().AddRange(body);
             return hashKeyEncoded.ToArray();
+        }
+        protected override string GetUserInfoKey()
+        {
+            return String.Format(UserInfoKeyFormat, String.Format("", this.UserId));
+        }
+
+        protected override string GetSessionKey()
+        {
+            return String.Format("", this.UserId);
         }
     }
 }

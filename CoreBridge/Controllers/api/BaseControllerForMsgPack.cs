@@ -1,7 +1,9 @@
 ﻿using Ardalis.Specification;
 using CoreBridge.Models;
+using CoreBridge.Models.DTO;
 using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Entity;
+using CoreBridge.Models.Entity.CoreBridge.Models.Entity;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Extensions;
 using CoreBridge.Services.Interfaces;
@@ -66,7 +68,7 @@ namespace CoreBridge.Controllers.api
         //todo: type?
         public object UserInfo { get; set; } = null;
 
-        public TitleInfo TitleInfo { get; set; }
+        public TitleInfoDto TitleInfo { get; set; }
 
         //各アクションでParameter bindingで受け取った後、セットすべし
         private ReqBase _reqParam;
@@ -402,7 +404,7 @@ namespace CoreBridge.Controllers.api
             //php BaseControllerの_response_custom_headerに相当
         }
 
-        protected void CustomizeResponseContent(object response)
+        protected object CustomizeResponseContent(object response)
         {
             //必要に応じて継承クラスでoverride
             //php BaseControllerの_response_custom_dataに相当

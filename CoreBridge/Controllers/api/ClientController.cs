@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.DTO.Requests;
+﻿using CoreBridge.Models;
+using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Extensions;
 using CoreBridge.Services.Interfaces;
@@ -14,7 +15,7 @@ namespace CoreBridge.Controllers.api
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ClientController : ClientServerControllerBase, IDisposable
+    public class ClientController : BaseControllerForMsgPack, IDisposable
     {
         protected const string SessionKeyFormat = "ses_key.{0}";
         private const string Userinfo_ClientKeyFormat = "client.{0}";
@@ -38,6 +39,22 @@ namespace CoreBridge.Controllers.api
         public ClientController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
            IConfiguration configService, ILoggerService loggerService) : base(env, responseService, cache, configService, loggerService)
         {
+        }
+
+        protected override void ProcessHeader()
+        {
+            if (!ReqHeader.IsOrDescendantOf(typeof(ReqBaseClientServerParamHeader)))
+            {
+                throw new Exception("smtg wrong with the header");
+            }
+
+            var header = (ReqBaseClientServerParamHeader)ReqHeader;
+            this.TitleCode = header.TitleCd;
+            this.UserId = header.UserId;
+            this.SkuType = (SysConsts.SkuType)Enum.Parse(typeof(SysConsts.SkuType), header.SkuType + "");
+            this.Session = header.Session;
+            this.Platform = (int)header.Platform;
+
         }
 
         #region BaseController class methods

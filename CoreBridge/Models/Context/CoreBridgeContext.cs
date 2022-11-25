@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models.Entity;
+using CoreBridge.Models.Entity.CoreBridge.Models.Entity;
 using CoreBridge.Models.Ext;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +12,13 @@ namespace CoreBridge.Models.Context
 
         // Entity Entry
         public DbSet<AdminUser> AdminUsers { get; set; }
+        public DbSet<TitleInfo> TitleInfo { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<TitleInfo>().HasKey(t => t.TitleCode);
         }
     }
 }

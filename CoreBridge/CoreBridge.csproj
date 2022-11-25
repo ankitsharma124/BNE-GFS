@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="CloudStructures" Version="3.0.2" />
 		<PackageReference Include="LitJWT" Version="2.0.2" />
 		<PackageReference Include="MessagePack" Version="2.4.35" />
@@ -44,7 +45,6 @@
 	<ItemGroup>
 		<Folder Include="Controllers\api\client\" />
 		<Folder Include="Models\Headers\" />
-		<Folder Include="Services\Client\" />
 	</ItemGroup>
 
 	<ItemGroup>
