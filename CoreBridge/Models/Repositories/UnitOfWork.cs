@@ -9,10 +9,12 @@ namespace CoreBridge.Models.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CoreBridgeContext _dbContext;
+        private readonly ILogger _logger;
 
-        public UnitOfWork(CoreBridgeContext dbContext)
+        public UnitOfWork(CoreBridgeContext dbContext, ILogger<UnitOfWork> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         //Entry List
@@ -32,11 +34,13 @@ namespace CoreBridge.Models.Repositories
             try
             {
                 await _dbContext.SaveChangesAsync();
+
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.LogError(ex, "UnitOfWork:DB Commit Err");
+                //Console.WriteLine(ex.Message);
                 throw;
             }
         }

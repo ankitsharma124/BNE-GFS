@@ -1,5 +1,7 @@
-﻿using CoreBridge.Models.DTO;
+﻿using CoreBridge.Models;
+using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Specifications;
@@ -10,9 +12,9 @@ namespace CoreBridge.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly ILogger<AdminUserService> _logger;
+        private readonly ILoggerService _logger;
 
-        public AdminUserService(IUnitOfWork unitOfWork, ILogger<AdminUserService> logger)
+        public AdminUserService(IUnitOfWork unitOfWork, ILoggerService logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -22,10 +24,19 @@ namespace CoreBridge.Services
         public async Task<List<AdminUserDto>> ListAsync()
         {
             List<AdminUserDto> result = new();
-            var list = await _unitOfWork.AdminUserRepository.ListAsync();
-            foreach(AdminUser entity in list)
+            try
             {
-                result.Add(new(entity.Name, entity.EMail,entity.Password,entity.Password));
+                var list = await _unitOfWork.AdminUserRepository.ListAsync();
+
+                foreach (AdminUser entity in list)
+                {
+                    result.Add(new(entity.Name, entity.EMail, entity.Password, entity.Password));
+                }
+            }
+            catch (BNException ex)
+            {
+                _logger.LogError(ex);
+
             }
 
             return result;

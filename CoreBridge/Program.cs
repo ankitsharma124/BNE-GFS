@@ -7,10 +7,11 @@ using NLog;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Mvc;
 using MessagePack.AspNetCoreMvcFormatter;
+using CoreBridge.Models.Middleware;
 
 ThreadPool.SetMinThreads(200, 200);
 
-var logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
 
 try
@@ -73,6 +74,9 @@ try
         {
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
+
+        //Middleware
+        app.UseMiddleware<ExceptionMiddleware>();
 
         // Api Routing Add
         app.MapControllerRoute(

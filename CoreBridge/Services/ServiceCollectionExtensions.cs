@@ -47,9 +47,9 @@ namespace CoreBridge.Services
 
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Program));
+            services.AddScoped<ILoggerService, LoggerService>();
             services.TryAddScoped<IAdminUserService, AdminUserService>();
-            services.TryAddScoped<ITitleInfoService, TitleInfoService>();
+            services.AddScoped<IResponseService, ResponseService>();
 
             return services;
         }

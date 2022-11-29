@@ -15,5 +15,7 @@ namespace CoreBridge.Models
         }
 
         public CoreBridgeException(string message) : base(message) { }
+
+
     }
 }

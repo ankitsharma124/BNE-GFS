@@ -48,7 +48,9 @@
 		<Folder Include="Views\TitleInfo\" />
 	</ItemGroup>
 
+
 	<ItemGroup>
+		<None Include="nlog.config" />
 		<None Include="Views\Dashboard\Index.cshtml" />
 		<None Include="Views\Login\Create.cshtml" />
 		<None Include="Views\UserRegister\Confirm.cshtml" />
