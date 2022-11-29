@@ -20,7 +20,7 @@ namespace CoreBridge.Services
         private readonly ILogger<TitleInfoService> _logger;
         private readonly IMapper _mapper;
 
-        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger)
+        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -28,6 +28,7 @@ namespace CoreBridge.Services
             //Auto Mapper Setting.
             var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<TitleInfoDto, TitleInfo>());
             _mapper = new Mapper(mapConfig);
+            //_mapper = mapper;
         }
 
         public async Task<TitleInfoDto> GetByCodeAsync(string titleCode)

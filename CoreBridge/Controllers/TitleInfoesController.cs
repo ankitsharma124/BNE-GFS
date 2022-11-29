@@ -37,14 +37,11 @@ namespace CoreBridge.Controllers
         // GET: TitleInfoes/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            //if (id == null || _unitOfWork.TitleInfo == null)
             if (id == null || _titleInfoService == null)
             {
                 return NotFound();
             }
 
-            //var titleInfo = await _context.TitleInfo
-            //.FirstOrDefaultAsync(m => m.TitleCode == id);
             var titleInfo = await _titleInfoService.GetByIdAsync(id);
             if (titleInfo == null)
             {
@@ -149,19 +146,6 @@ namespace CoreBridge.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            //if (_context.TitleInfo == null)
-            //{
-            //    return Problem("Entity set 'CoreBridgeContext.TitleInfo'  is null.");
-            //}
-            //var titleInfo = await _context.TitleInfo.FindAsync(id);
-            //if (titleInfo != null)
-            //{
-            //    _context.TitleInfo.Remove(titleInfo);
-            //}
-
-            //await _context.SaveChangesAsync();
-
-
             if (_titleInfoService == null)
             {
                 return Problem("Entity set 'CoreBridgeContext.TitleInfo'  is null.");
@@ -177,7 +161,6 @@ namespace CoreBridge.Controllers
 
         private bool TitleInfoExists(string id)
         {
-            //return _context.TitleInfo.Any(e => e.TitleCode == id);
             var titleinfo = _unitOfWork.TitleInfoRepository.GetByIdAsync(id);
             if (titleinfo == null)
             {
