@@ -1,8 +1,11 @@
 ﻿using CoreBridge.Models.Interfaces;
 using MessagePack;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Policy;
 
 namespace CoreBridge.Models.DTO
 {
+    [Index(nameof(TitleCode))]
     [MessagePackObject]
     public class TitleInfoDto
     {

@@ -100,6 +100,8 @@ namespace CoreBridge.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TitleCode");
+
                     b.ToTable("TitleInfo");
                 });
 #pragma warning restore 612, 618

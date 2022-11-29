@@ -4,99 +4,82 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>TitleInfo</h4>
+<h1>タイトル情報編集画面</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="TitleName" class="control-label"></label>
                 <input asp-for="TitleName" class="form-control" />
                 <span asp-validation-for="TitleName" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="TitleCode" />
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3 hidden">
                 <label asp-for="TrialTitleCode" class="control-label"></label>
-                <input asp-for="TrialTitleCode" class="form-control" />
+                <input asp-for="TrialTitleCode" class="form-control"/>
                 <span asp-validation-for="TrialTitleCode" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="Ptype" class="control-label"></label>
                 <input asp-for="Ptype" class="form-control" />
                 <span asp-validation-for="Ptype" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="SwitchAppId" class="control-label"></label>
                 <input asp-for="SwitchAppId" class="form-control" />
                 <span asp-validation-for="SwitchAppId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="XboxTitleId" class="control-label"></label>
                 <input asp-for="XboxTitleId" class="form-control" />
                 <span asp-validation-for="XboxTitleId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="PsClientId" class="control-label"></label>
                 <input asp-for="PsClientId" class="form-control" />
                 <span asp-validation-for="PsClientId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="PsClientSecoret" class="control-label"></label>
                 <input asp-for="PsClientSecoret" class="form-control" />
                 <span asp-validation-for="PsClientSecoret" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="SteamAppId" class="control-label"></label>
                 <input asp-for="SteamAppId" class="form-control" />
                 <span asp-validation-for="SteamAppId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="SteamPublisherKey" class="control-label"></label>
                 <input asp-for="SteamPublisherKey" class="form-control" />
                 <span asp-validation-for="SteamPublisherKey" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="DevUrl" class="control-label"></label>
                 <input asp-for="DevUrl" class="form-control" />
                 <span asp-validation-for="DevUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="QaUrl" class="control-label"></label>
                 <input asp-for="QaUrl" class="form-control" />
                 <span asp-validation-for="QaUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
                 <label asp-for="ProdUrl" class="control-label"></label>
                 <input asp-for="ProdUrl" class="form-control" />
                 <span asp-validation-for="ProdUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-@*            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAt" class="control-label"></label>
-                <input asp-for="UpdatedAt" class="form-control" />
-                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="flex flex-wrap -mx-3 ml-2 mb-3">
+                <input type="submit" value="保存" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">戻る</a>
 </div>
 
 @section Scripts {

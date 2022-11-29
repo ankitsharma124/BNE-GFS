@@ -9,43 +9,43 @@
 <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="button">
     <a asp-action="Create">Create New</a>
 </button>
-<table class="table-auto shadow">
-    <thead>
+<table>
+    <thead class="table-auto shadow">
         <tr>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.TitleName)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.TrialTitleCode)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.Ptype)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.SwitchAppId)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.XboxTitleId)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.PsClientId)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.PsClientSecoret)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.SteamAppId)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.SteamPublisherKey)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.DevUrl)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.QaUrl)
             </th>
-            <th class="px-4 py-2">
+            <th class="px-2 py-1">
                 @Html.DisplayNameFor(model => model.ProdUrl)
             </th>
         </tr>
@@ -90,9 +90,9 @@
                 @Html.DisplayFor(modelItem => item.ProdUrl)
             </td>
            <td>
-                <a asp-action="Edit" asp-route-id="@item.TitleCode">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TitleCode">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TitleCode">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.TitleCode">編集</a> |
+                <a asp-action="Details" asp-route-id="@item.TitleCode">詳細</a> |
+                <a asp-action="Delete" asp-route-id="@item.TitleCode">削除</a>
             </td>
         </tr>
 }
