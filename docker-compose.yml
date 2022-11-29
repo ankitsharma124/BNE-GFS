@@ -7,7 +7,7 @@ services:
     container_name: core_bridge
     environment:
       - ConnectionStrings__Redis=redis:6379
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/corebridge-367900-75f6bcea9581.json
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/bne-gfs-06ffad36d462.json
     ports:
       - 8888:80
     restart: always
