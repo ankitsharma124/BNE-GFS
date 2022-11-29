@@ -1,6 +1,6 @@
 locals {
   # General
-  project       = "corebridge-367900"
+  project       = "bne-gfs"
   project_short = "corebridge"
   env           = "dev"
   sig           = "${local.project_short}-${local.env}"

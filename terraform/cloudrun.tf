@@ -1,11 +1,11 @@
 locals {
   repository_id = "${google_artifact_registry_repository.corebridge.location}-docker.pkg.dev/${local.project}/${google_artifact_registry_repository.corebridge.repository_id}"
-  image_tag     = "latest"
+  image_tag     = "test"
   image_uri     = "${local.repository_id}/corebridge:${local.image_tag}"
 
   # NOTE:
   #   Use this cred in application. This sholud be replace into secret.
-  google_application_credentials = "/app/corebridge-367900-75f6bcea9581.json"
+  google_application_credentials = "/app/bne-gfs-06ffad36d462.json"
 }
 
 
@@ -25,11 +25,16 @@ resource "google_cloud_run_service" "corebridge-seconda" {
 
     spec {
       container_concurrency = 80
-      service_account_name  = "978233375489-compute@developer.gserviceaccount.com"
+      # Compute Engine default service account
+      service_account_name  = "116615950553-compute@developer.gserviceaccount.com"
       timeout_seconds       = 300
 
       containers {
         image = local.image_uri
+        env {
+          name  = "ConnectionStrings__Spanner"
+          value = "Data Source=projects/bne-gfs/instances/corebridge-development/databases/corebridge"
+        }
         env {
           name  = "ConnectionStrings__Redis"
           value = "${google_redis_instance.corebridge.host}:${google_redis_instance.corebridge.port}"
@@ -63,4 +68,3 @@ resource "google_cloud_run_service" "corebridge-seconda" {
     google_spanner_database.corebridge,
   ]
 }
-
