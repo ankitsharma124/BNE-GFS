@@ -62,7 +62,7 @@ namespace CoreBridge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,QaUrl,ProdUrl")] TitleInfoDto titleInfo)
+        public async Task<IActionResult> Create([Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,TestUrl,QaUrl,ProdUrl")] TitleInfoDto titleInfo)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace CoreBridge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,QaUrl,ProdUrl")] TitleInfoDto titleInfo)
+        public async Task<IActionResult> Edit(string id, [Bind("TitleName,TitleCode,TrialTitleCode,Ptype,SwitchAppId,XboxTitleId,PsClientId,PsClientSecoret,SteamAppId,SteamPublisherKey,DevUrl,TestUrl,QaUrl,ProdUrl")] TitleInfoDto titleInfo)
         {
             if (ModelState.IsValid)
             {

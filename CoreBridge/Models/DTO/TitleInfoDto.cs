@@ -13,7 +13,8 @@ namespace CoreBridge.Models.DTO
 
         public TitleInfoDto(string titleName, string titleCode, string trialTitleCode, int pType,
             string switchAppId, string xboxTitleId, string psClientId, string psClientSecret,
-            string steamAppId, string steamPublisherKey, string devUrl, string qaUrl, string prodUrl)
+            string steamAppId, string steamPublisherKey,
+            string devUrl, string testUrl, string qaUrl, string prodUrl)
         {
             TitleName = titleName;
             TitleCode = titleCode;
@@ -26,6 +27,7 @@ namespace CoreBridge.Models.DTO
             SteamAppId = steamAppId;
             SteamPublisherKey = steamPublisherKey;
             DevUrl = devUrl;
+            TestUrl = testUrl;
             QaUrl = qaUrl;
             ProdUrl = prodUrl;
         }
@@ -53,8 +55,10 @@ namespace CoreBridge.Models.DTO
         [Key(10)]
         public String? DevUrl { get; set; }
         [Key(11)]
-        public String? QaUrl { get; set; }
+        public String? TestUrl { get; set; }
         [Key(12)]
+        public String? QaUrl { get; set; }
+        [Key(13)]
         public String? ProdUrl { get; set; }
 
         public bool IsValid()

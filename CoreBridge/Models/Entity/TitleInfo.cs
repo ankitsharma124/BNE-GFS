@@ -37,6 +37,7 @@ namespace CoreBridge.Models.Entity
         public string? SteamAppId { get; set; }
         public string? SteamPublisherKey { get; set; }
         public string? DevUrl { get; set; }
+        public string? TestUrl { get; set; }
         public string? QaUrl { get; set; }
         public string? ProdUrl { get; set; }
     }

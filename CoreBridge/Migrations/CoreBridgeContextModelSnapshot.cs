@@ -80,6 +80,9 @@ namespace CoreBridge.Migrations
                     b.Property<string>("SwitchAppId")
                         .HasColumnType("STRING");
 
+                    b.Property<string>("TestUrl")
+                        .HasColumnType("STRING");
+
                     b.Property<string>("TitleCode")
                         .IsRequired()
                         .HasColumnType("STRING");
