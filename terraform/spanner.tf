@@ -3,7 +3,7 @@ resource "google_spanner_instance" "corebridge-development" {
   name          = "corebridge-development"
   force_destroy = false
   config        = "regional-asia-southeast2"
-  num_nodes     = 0
+  num_nodes     = 1
   labels        = local.default_labels
 }
 

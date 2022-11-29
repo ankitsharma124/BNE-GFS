@@ -1,12 +1,12 @@
 provider "google" {
-  project = "corebridge-367900" # TODO: Use as variable
+  project = "bne-gfs" # TODO: Use as variable
   region  = "asia-northeast1"
   zone    = "asia-northeast1-a"
 }
 
 terraform {
   backend "gcs" {
-    bucket = "tf-state-934af1408b5cdc78" # google_storage_bucket.tfstate.name
+    bucket = "tf-state-be1ca496d472a6d3" # google_storage_bucket.tfstate.name
     prefix = "terraform/state"
   }
 }
