@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.Entity;
+﻿using CoreBridge.Models.DTO;
+using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.Interfaces
 {
@@ -6,6 +7,7 @@ namespace CoreBridge.Models.Interfaces
     {
         // Repository List
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get; }
+        public ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get; }
 
         public Task<bool> CommitAsync();
         public string GetTableName<T>() where T : IAggregateRoot;

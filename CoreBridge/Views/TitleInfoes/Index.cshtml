@@ -1,0 +1,101 @@
+﻿@model IEnumerable<CoreBridge.Models.Entity.TitleInfo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>ゲームタイトル管理画面</h1>
+<button class="btn btn-light" type="button">
+    <a asp-action="Create">Create New</a>
+</button>
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.TitleName)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.TrialTitleCode)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Ptype)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.SwitchAppId)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.XboxTitleId)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.PsClientId)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.PsClientSecoret)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.SteamAppId)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.SteamPublisherKey)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.DevUrl)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.TestUrl)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.QaUrl)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.ProdUrl)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TitleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrialTitleCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ptype)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SwitchAppId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XboxTitleId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PsClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PsClientSecoret)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SteamAppId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SteamPublisherKey)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DevUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QaUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProdUrl)
+            </td>
+           <td>
+                <a asp-action="Edit" asp-route-id="@item.TitleCode">編集</a> |
+                <a asp-action="Details" asp-route-id="@item.TitleCode">詳細</a> |
+                <a asp-action="Delete" asp-route-id="@item.TitleCode">削除</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
