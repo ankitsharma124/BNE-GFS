@@ -37,7 +37,7 @@ namespace CoreBridge.Controllers.api
         }
 
         public ClientController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
-           IConfiguration configService, ILoggerService loggerService) : base(env, responseService, cache, configService, loggerService)
+           IConfiguration configService, ILogger loggerService) : base(env, responseService, cache, configService, loggerService)
         {
         }
 

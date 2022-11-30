@@ -1,34 +1,11 @@
-﻿using Ardalis.Specification;
-using CoreBridge.Models;
+﻿using CoreBridge.Models;
 using CoreBridge.Models.DTO;
 using CoreBridge.Models.DTO.Requests;
-using CoreBridge.Models.Entity;
-using CoreBridge.Models.Entity.CoreBridge.Models.Entity;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Extensions;
 using CoreBridge.Services.Interfaces;
-using Google.Api;
-using Google.Api.Gax;
-using Google.Apis.Http;
-using Google.Apis.Util;
-using Google.Type;
-using Hangfire.Storage.Monitoring;
-using MessagePack;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using static Google.Rpc.Context.AttributeContext.Types;
-using DateTime = System.DateTime;
 
 namespace CoreBridge.Controllers.api
 {
@@ -36,18 +13,18 @@ namespace CoreBridge.Controllers.api
     {
         protected readonly IResponseService _responseService;
         protected readonly IConfiguration _configService;
-        protected readonly ILoggerService _loggerService;
+        protected readonly ILogger _logger;
         protected readonly IDistributedCache _cache;
         protected IHostEnvironment _env;
         protected const string UserInfoKeyFormat = "userInfo_key.{0}";
 
         public BaseControllerForMsgPack(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
-            IConfiguration configService, ILoggerService loggerService)
+            IConfiguration configService, ILogger loggerService)
         {
             _env = env;
             _responseService = responseService;
             _configService = configService;
-            _loggerService = loggerService;
+            _logger = loggerService;
             _cache = cache;
 
         }
@@ -408,6 +385,7 @@ namespace CoreBridge.Controllers.api
         {
             //必要に応じて継承クラスでoverride
             //php BaseControllerの_response_custom_dataに相当
+            return new object();
         }
 
 

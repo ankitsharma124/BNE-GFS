@@ -12,9 +12,9 @@ namespace CoreBridge.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly ILoggerService _logger;
+        private readonly ILogger<AdminUserService> _logger;
 
-        public AdminUserService(IUnitOfWork unitOfWork, ILoggerService logger)
+        public AdminUserService(IUnitOfWork unitOfWork, ILogger<AdminUserService> logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -24,20 +24,12 @@ namespace CoreBridge.Services
         public async Task<List<AdminUserDto>> ListAsync()
         {
             List<AdminUserDto> result = new();
-            try
+            var list = await _unitOfWork.AdminUserRepository.ListAsync();
+            foreach (AdminUser entity in list)
             {
-                var list = await _unitOfWork.AdminUserRepository.ListAsync();
-
-                foreach (AdminUser entity in list)
-                {
-                    result.Add(new(entity.Name, entity.EMail, entity.Password, entity.Password));
-                }
+                result.Add(new(entity.Name, entity.EMail, entity.Password, entity.Password));
             }
-            catch (BNException ex)
-            {
-                _logger.LogError(ex);
 
-            }
 
             return result;
         }

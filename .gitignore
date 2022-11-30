@@ -81,3 +81,4 @@ terraform.rc
 /CoreBridge/Ctempinternallog.txt
 /CoreBridge/CoreBridge.csproj.user
 /.gitignore
+/CoreBridge/bne-gfs-06ffad36d462.json

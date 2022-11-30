@@ -1,5 +1,6 @@
 ﻿using CoreBridge.Models;
 using CoreBridge.Models.Exceptions;
+using CoreBridge.Services;
 using CoreBridge.Services.Interfaces;
 using MessagePack;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +15,10 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class AdminUserController : ControllerBase
     {
-        private readonly ILoggerService _logger;
+        private readonly ILogger<AdminUserService> _logger;
         private readonly IAdminUserService _adminUserService;
 
-        public AdminUserController(ILoggerService logger, IAdminUserService adminUserService)
+        public AdminUserController(ILogger<AdminUserService> logger, IAdminUserService adminUserService)
         {
             _logger = logger;
             _adminUserService = adminUserService;
@@ -31,10 +32,6 @@ namespace CoreBridge.Controllers.api
 
             return new JsonResult(list);
         }
-
-
-
-
 
     }
 }

@@ -19,7 +19,7 @@ namespace CoreBridge.Controllers.api
         private readonly ITitleInfoService _titleInfoService;
 
         public ServerController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
-          IConfiguration configService, ILoggerService loggerService, ITitleInfoService titleInfoService) : base(env, responseService, cache, configService, loggerService)
+          IConfiguration configService, ILogger loggerService, ITitleInfoService titleInfoService) : base(env, responseService, cache, configService, loggerService)
         {
             _titleInfoService = titleInfoService;
         }
@@ -50,13 +50,13 @@ namespace CoreBridge.Controllers.api
 
         protected override void SessionCheck()
         {
-            _loggerService.LogDebug("セッションチェック なし");
+            _logger.LogDebug("セッションチェック なし");
 
         }
 
         protected override void SessionUpdate()
         {
-            _loggerService.LogDebug("セッション更新 なし");
+            _logger.LogDebug("セッション更新 なし");
         }
 
         /// <summary>
@@ -205,10 +205,6 @@ namespace CoreBridge.Controllers.api
             var hashKeyEncoded = new UTF8Encoding().GetBytes(hashKey);
             hashKeyEncoded.ToList().AddRange(body);
             return hashKeyEncoded.ToArray();
-        }
-        protected override string GetUserInfoKey()
-        {
-            return String.Format(UserInfoKeyFormat, String.Format("", this.UserId));
         }
 
         protected override string GetSessionKey()

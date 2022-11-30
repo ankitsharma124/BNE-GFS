@@ -14,7 +14,7 @@ namespace CoreBridge.Controllers.api
     {
         private ReqClientHeader _clientHeader = new ReqClientHeader { Platform = 1, Session = "Session", UserId = "UserId", TitleCd = "Code", SkuType = 0 };
 
-        public TestController(ILoggerService logger, IAdminUserService adminUserService, IDistributedCache cache,
+        public TestController(ILogger logger, IAdminUserService adminUserService, IDistributedCache cache,
             IWebHostEnvironment env, IResponseService resp, IConfiguration config) : base(env, resp, cache, config, logger)
         {
 

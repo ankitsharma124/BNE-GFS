@@ -18,8 +18,7 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "publishAllPorts": true,
-      "useSSL": true,
-      "DockerfileRunArguments": "--network=\"dockercompose13010673730827423722_coreBridgeNet\""
+      "useSSL": true
     }
   },
   "iisSettings": {

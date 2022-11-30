@@ -17,14 +17,14 @@ namespace CoreBridge.Models.Middleware
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private ILoggerService? _logger;
+        private ILogger<ExceptionMiddleware>? _logger;
         private IResponseService? _responseService;
         //todo: ResponseServiceにBaseControllerForMsgPackとの共通機能を集約
         public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
-        public async Task InvokeAsync(HttpContext httpContext, ILoggerService logger, IResponseService responseService)
+        public async Task InvokeAsync(HttpContext httpContext, ILogger<ExceptionMiddleware> logger, IResponseService responseService)
         {
             _logger = logger;
             _responseService = responseService;
@@ -35,7 +35,7 @@ namespace CoreBridge.Models.Middleware
             }
             catch (BNException bnx)
             {
-                _logger.LogError(bnx);
+                _logger.LogError(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
                 await HandleExceptionAsync(httpContext, bnx.StatusCode);
             }
             catch (Manual404 m404)
