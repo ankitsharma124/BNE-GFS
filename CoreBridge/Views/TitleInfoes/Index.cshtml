@@ -3,52 +3,50 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>ゲームタイトル管理画面</h1>
-
-<button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="button">
+<button class="btn btn-light" type="button">
     <a asp-action="Create">Create New</a>
 </button>
-<table>
-    <thead class="table-auto shadow">
+<table class="table table-bordered table-striped table-hover">
+    <thead>
         <tr>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.TitleName)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.TrialTitleCode)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Ptype)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.SwitchAppId)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.XboxTitleId)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.PsClientId)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.PsClientSecoret)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.SteamAppId)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.SteamPublisherKey)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.DevUrl)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.TestUrl)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.QaUrl)
             </th>
-            <th class="px-2 py-1">
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.ProdUrl)
             </th>
         </tr>
