@@ -3,7 +3,6 @@ using CoreBridge.Models.Context;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Models.Entity;
-using CoreBridge.Models.Entity.CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.Repositories
 {
@@ -18,7 +17,7 @@ namespace CoreBridge.Models.Repositories
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
+        //Entry List
         private readonly CoreBridgeRepository<AdminUser> _adminUserRepository = null;
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get { return GetInstance(_adminUserRepository); } }
 

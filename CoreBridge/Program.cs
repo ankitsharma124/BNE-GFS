@@ -28,9 +28,6 @@ try
     {
         //option.OutputFormatters.Clear(); 
         option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
-
-        if (!builder.Configuration.GetValue<bool>("UseJson"))
-            option.InputFormatters.Clear();
         var inputFormatter = new MessagePackInputFormatter(ContractlessStandardResolver.Options);
         inputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/x-messagepack"));
         option.InputFormatters.Add(inputFormatter);
@@ -100,6 +97,7 @@ try
         //custom middleware
         app.UseMiddleware<HashAdminMiddleware>();
         app.UseMiddleware<ExceptionMiddleware>();
+        app.UseMiddleware<DebugMiddleware>();
 
         //app.UseAuthorization();
 

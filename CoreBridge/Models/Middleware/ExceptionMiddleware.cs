@@ -33,14 +33,42 @@ namespace CoreBridge.Models.Middleware
             {
                 await _next(httpContext);
             }
+#if DEBUG
+            catch (DebugException ex)
+            {
+                _logger.LogError(ex, "[Debug Err]");
+                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                var responseContent = new
+                {
+                    StatusCode = httpContext.Response.StatusCode,
+                    ErrorMessage = ex.Message
+                };
+                await httpContext.Response.WriteAsJsonAsync(responseContent);
+            }
+#endif
             catch (BNException bnx)
             {
+                if ((int)bnx.Level >= (int)BNException.ErrorLevel.Error)
+                {
+                    _logger.LogError(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
+                }
+#if DEBUG
+                else if ((int)bnx.Level >= (int)BNException.ErrorLevel.Info)
+                {
+                    _logger.LogInformation(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
+                }
+                else
+                {
+                    _logger.LogDebug(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
+                }
+#endif
+
                 _logger.LogError(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
                 await HandleExceptionAsync(httpContext, bnx.StatusCode);
             }
             catch (Manual404 m404)
             {
-                _logger.LogError(m404.Message);
+                //_logger.LogError(m404.Message);
                 //CustomResponseを返す？　返さない？　(Q5)
                 //BNのHeaderが返ってくるかどうかテストするクライアントとかいる？
                 //await HandleExceptionAsync(httpContext, 404);
@@ -64,7 +92,7 @@ namespace CoreBridge.Models.Middleware
 
         private async Task HandleExceptionAsync(HttpContext context, int statusCode)
         {
-            await _responseService.ReturnBNErrorAsync(context.Response, statusCode);
+            await _responseService.ReturnBNErrorAsync(9999, context.Response, statusCode);
         }
 
     }

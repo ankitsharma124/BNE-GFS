@@ -1,6 +1,7 @@
 ﻿using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using MessagePack;
+using System.Reflection.Emit;
 using System.Text.Json;
 using static Google.Rpc.Context.AttributeContext.Types;
 
@@ -24,20 +25,18 @@ namespace CoreBridge.Services
             _config = config;
         }
 
-
         public int ResultOK { get { return RESULT_OK; } }
         public int ResultNG { get { return RESULT_NG; } }
 
-        public async Task ReturnBNErrorAsync(HttpResponse response, int statusCode)
+        public async Task ReturnBNErrorAsync(int apiCode, HttpResponse response, int statusCode)
         {
             response.StatusCode = statusCode;
-            await ReturnBNResponseAsync(response, new object[] { statusCode }, null, null, null,
+            await ReturnBNResponseAsync(apiCode, response, new object[] { statusCode }, null, null,
                 ResultNG, statusCode);
         }
 
-        public async Task ReturnBNResponseAsync(HttpResponse response, object details,
+        public async Task ReturnBNResponseAsync(int apiCode, HttpResponse response, object details,
             Action<List<object>> fxCustomizeHeader = null, Func<object, object> fxCustomizeContent = null,
-            Func<int, int> fxGetApiStatus = null,
             int result = -1, int status = -1)
         {
             if (result < 0) result = ResultOK;
@@ -51,11 +50,7 @@ namespace CoreBridge.Services
             //継承クラスにおいて必要があればヘッダーをカスタマイズ
             if (fxCustomizeHeader != null) fxCustomizeHeader(customHeader);
 
-            if (fxGetApiStatus != null) status = fxGetApiStatus(status);
-            //todo:  ステータスをAPI毎に分かるように送信(共通エラー以外)
-            //$status = $this->_get_api_status($status);
-            //
-
+            status = GetApiStatus(apiCode, status);
 
             if (details.GetType().IsArray)
             {
@@ -93,7 +88,15 @@ namespace CoreBridge.Services
             response.Headers.ContentLength = ((byte[])responseContentConverted).Length;
             await response.Body.WriteAsync((byte[])responseContentConverted);
         }
+        protected int GetApiStatus(int apiCode, int status)
+        {
+            if (status < (int)BNException.BNErrorCode.ParamExists)
+            {
+                return status;
+            }
 
+            return Convert.ToInt32(apiCode.ToString("0000") + status.ToString("0000"));
+        }
 
         public bool GetUseJson()
         {

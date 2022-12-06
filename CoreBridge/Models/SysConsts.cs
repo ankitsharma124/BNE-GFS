@@ -2,6 +2,12 @@
 {
     public class SysConsts
     {
+        public const string AddedReqHeaderKey_Hash = "CBHash";
+        public const string AddedReqHeaderKey_ReqBodyLen = "CBReqLen";
+        public const string AddedReqHeaderKey_OriginalBody = "CBOrigBody";
+        public const string AddedReqHeaderKey_Debug_ReqBody = "CBDebug_ReqBody";
+
+
         #region ------- システム設定 -------------
 
         public const string SYSTEM_MAINTENANCE_KEY = "maintenance";

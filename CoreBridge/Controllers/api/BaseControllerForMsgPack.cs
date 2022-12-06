@@ -48,26 +48,22 @@ namespace CoreBridge.Controllers.api
         public TitleInfoDto TitleInfo { get; set; }
 
         //各アクションでParameter bindingで受け取った後、セットすべし
-        private ReqBase _reqParam;
         public ReqBase ReqParam
         {
-            get { return _reqParam; }
-            set { _reqParam = value; }
+            get; set;
         }
 
-        private ReqBase _reqHeader;
         public ReqBase ReqHeader
         {
-            get { return _reqHeader; }
-            set { _reqHeader = value; }
+            get; set;
         }
 
         #endregion
         [NonAction]
         public void SetParams(ReqBase reqHeader, ReqBase reqParam)
         {
-            _reqHeader = reqHeader;
-            _reqParam = reqParam;
+            ReqHeader = reqHeader;
+            ReqParam = reqParam;
             Init();
         }
 
@@ -90,7 +86,7 @@ namespace CoreBridge.Controllers.api
             // 実行APIがリストに存在する場合には処理をスキップ
 
             if (ReqParam.IsOrDescendantOf(typeof(ReqBaseParam))
-                && (bool)((ReqBaseParam)ReqParam).ApiSetting["code"] == true)
+                && (bool?)((ReqBaseParam)ReqParam).MaintenanceAvoid == true)
             {
                 if (JudgeMaintenance(this.UserId, this.Platform, true))
                 {
@@ -398,8 +394,8 @@ namespace CoreBridge.Controllers.api
         /// <returns></returns>
         protected async Task ReturnBNResponse(object details, int result = -1, int status = -1)
         {
-            await _responseService.ReturnBNResponseAsync(Response, details, CustomizeResponseInnerHeader,
-                CustomizeResponseContent, GetApiStatus, result, status);
+            await _responseService.ReturnBNResponseAsync(CurrActionId, Response, details, CustomizeResponseInnerHeader,
+                CustomizeResponseContent, result, status);
         }
         [NonAction]
         public void Dispose()

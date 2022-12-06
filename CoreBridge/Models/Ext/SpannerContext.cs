@@ -19,7 +19,7 @@ namespace CoreBridge.Models.Ext
         public static DbContextOptionsBuilder<T> OptionsBuilder<T>(IConfiguration configuration) where T : DbContext
         {
             var optionsBuilder = new DbContextOptionsBuilder<T>();
-                optionsBuilder.UseSpanner(AppSetting.GetConnectStringSpanner(configuration));
+            optionsBuilder.UseSpanner(AppSetting.GetConnectStringSpanner(configuration));
             return optionsBuilder;
         }
     }

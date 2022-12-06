@@ -1,7 +1,11 @@
-﻿namespace CoreBridge.Models.Extensions
+﻿using System;
+
+
+namespace CoreBridge.Models.Extensions
 {
     public static class BasicTypeExtensions
     {
+
         public static bool IsOrDescendantOf(this object thisObj, Type compareTo)
         {
             return thisObj.GetType().IsOrDescendantOf(compareTo);

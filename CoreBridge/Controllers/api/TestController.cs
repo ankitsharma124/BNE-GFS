@@ -1,4 +1,6 @@
-﻿using CoreBridge.Models.DTO.Requests;
+﻿#if DEBUG
+
+using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +21,15 @@ namespace CoreBridge.Controllers.api
         {
 
         }
+
+        [HttpPost]
+        public IActionResult JsonTest([FromBody] TestParam testParam)
+        {
+            var name = testParam.name;
+            return new JsonResult(new { name = name });
+        }
+
+
 
         [HttpGet]
         public IActionResult Test()
@@ -154,3 +165,4 @@ namespace CoreBridge.Controllers.api
 
     }
 }
+#endif

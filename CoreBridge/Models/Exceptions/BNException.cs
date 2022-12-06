@@ -4,7 +4,6 @@ namespace CoreBridge.Models.Exceptions
 {
     public class BNException : CoreBridgeException
     {
-
         public enum BNErrorCode
         {
             //共通
@@ -86,14 +85,41 @@ namespace CoreBridge.Models.Exceptions
         {
             Code = (int)code;
             Action = action;
+            Level = ErrorLevel.Error;
+        }
+
+        public BNException(int action, BNErrorCode code, ErrorLevel level)
+        {
+            Code = (int)code;
+            Action = action;
+            Level = level;
         }
 
         public BNException(int action, BNErrorCode code, string message) : base(message)
         {
             Code = (int)code;
             Action = action;
+            Level = ErrorLevel.Error;
         }
 
+        public BNException(int action, BNErrorCode code, ErrorLevel level, string message) : base(message)
+        {
+            Code = (int)code;
+            Action = action;
+            Level = level;
+        }
+
+        public enum ErrorLevel
+        {
+            Trace = 1,
+            Debug = 2,
+            Info,
+            Warn,
+            Error,
+            Fatal
+        }
+
+        public ErrorLevel Level { get; set; }
 
         public int StatusCode
         {

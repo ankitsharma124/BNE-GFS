@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CoreBridge.Models.DTO;
-using CoreBridge.Models.Entity.CoreBridge.Models.Entity;
+using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.MapperProfiles
 {

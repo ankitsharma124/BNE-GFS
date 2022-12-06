@@ -7,6 +7,7 @@ using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Unicode;
 
@@ -202,9 +203,10 @@ namespace CoreBridge.Controllers.api
 
         private byte[] GetBodyHash(string hashKey, byte[] body)
         {
-            var hashKeyEncoded = new UTF8Encoding().GetBytes(hashKey);
-            hashKeyEncoded.ToList().AddRange(body);
-            return hashKeyEncoded.ToArray();
+            var key = new UTF8Encoding().GetBytes(hashKey);
+            var bytes = new List<byte>(body);
+            bytes.AddRange(key);
+            return MD5.Create().ComputeHash(bytes.ToArray());
         }
 
         protected override string GetSessionKey()
