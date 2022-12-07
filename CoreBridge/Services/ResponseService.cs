@@ -1,4 +1,5 @@
-﻿using CoreBridge.Models.Exceptions;
+﻿using CoreBridge.Models;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using MessagePack;
 using System.Reflection.Emit;
@@ -98,13 +99,45 @@ namespace CoreBridge.Services
             return Convert.ToInt32(apiCode.ToString("0000") + status.ToString("0000"));
         }
 
+        public async Task<string> ReadResponseBody(HttpResponse response, bool isServerApiCall)
+        {
+            byte[] originalContent;
+            using (StreamReader stream = new StreamReader(response.Body))
+            {
+                var ms = new MemoryStream();
+                await stream.BaseStream.CopyToAsync(ms);
+                originalContent = ms.ToArray();
+            }
+
+            //remove hash
+            if (isServerApiCall)
+            {
+                originalContent = originalContent.Skip(16).ToArray();
+            }
+            response.Body = new MemoryStream(originalContent);
+
+            string bodyStr;
+            if (GetUseJson())
+            {
+                bodyStr = originalContent.ToString();
+            }
+            else
+            {
+                var unpacked = MessagePackSerializer.Deserialize<object[]>(originalContent);
+                bodyStr = JsonSerializer.Serialize(unpacked);
+            }
+
+            return bodyStr;
+        }
+
+
         public bool GetUseJson()
         {
             if (_useJson == null)
             {
                 try
                 {
-                    _useJson = _config.GetValue<bool>("UseJson");
+                    _useJson = _config.GetValue<bool>("DebugConfig:UseJson");
                 }
                 catch (Exception ex)
                 {

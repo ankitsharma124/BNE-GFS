@@ -16,11 +16,21 @@ namespace CoreBridge.Controllers.api
     {
         private ReqClientHeader _clientHeader = new ReqClientHeader { Platform = 1, Session = "Session", UserId = "UserId", TitleCd = "Code", SkuType = 0 };
 
-        public TestController(ILogger logger, IAdminUserService adminUserService, IDistributedCache cache,
+        public TestController(ILogger<TestController> logger, IAdminUserService adminUserService, IDistributedCache cache,
             IWebHostEnvironment env, IResponseService resp, IConfiguration config) : base(env, resp, cache, config, logger)
         {
 
         }
+
+        [HttpPost]
+        public IActionResult CollectParamTest([FromBody] TestParam testParam)
+        {
+            var name = testParam.name;
+            return new JsonResult(new { name = name });
+        }
+
+
+
 
         [HttpPost]
         public IActionResult JsonTest([FromBody] TestParam testParam)

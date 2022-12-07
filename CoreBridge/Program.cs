@@ -9,15 +9,16 @@ using Microsoft.AspNetCore.Mvc;
 using MessagePack.AspNetCoreMvcFormatter;
 using CoreBridge.Models.Middleware;
 using CoreBridge.Models;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 ThreadPool.SetMinThreads(200, 200);
 
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 try
 {
@@ -28,6 +29,7 @@ try
     {
         //option.OutputFormatters.Clear(); 
         option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+        SystemTextJsonInputFormatter jsonFormatter = (SystemTextJsonInputFormatter)option.InputFormatters.First();
         var inputFormatter = new MessagePackInputFormatter(ContractlessStandardResolver.Options);
         inputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/x-messagepack"));
         option.InputFormatters.Add(inputFormatter);
@@ -51,14 +53,12 @@ try
     builder.Services.AddStackExchangeRedisCache(options =>
     {
         options.Configuration = AppSetting.GetConnectStringRedis(builder.Configuration);
-        options.InstanceName = "redis-1";
+        options.InstanceName = "redis";
     });
 
 
     // CustomServices
     builder.Services.AddCustomServices();
-
-
 
     // Session(Cookie)
     builder.Services.AddSession(options =>
@@ -72,9 +72,6 @@ try
     using (var scope = app.Services.CreateScope())
     {
         IWebHostEnvironment webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-
-        var test = Environment.GetEnvironmentVariables();
-        Console.Write(test);
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

@@ -15,10 +15,10 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class AdminUserController : ControllerBase
     {
-        private readonly ILogger<AdminUserService> _logger;
+        private readonly ILogger<AdminUserController> _logger;
         private readonly IAdminUserService _adminUserService;
 
-        public AdminUserController(ILogger<AdminUserService> logger, IAdminUserService adminUserService)
+        public AdminUserController(ILogger<AdminUserController> logger, IAdminUserService adminUserService)
         {
             _logger = logger;
             _adminUserService = adminUserService;

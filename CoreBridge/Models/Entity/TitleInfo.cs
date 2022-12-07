@@ -47,7 +47,7 @@ namespace CoreBridge.Models.Entity
 
         public string? HashKey { get; set; } = null;
 
-        public object[]? ApiList { get; set; } //Dictionary<string, string>[]?
+        //public object[]? ApiList { get; set; } //Dictionary<string, string>[]?
 
 
         //public DateTime CreateAt { get; set; }

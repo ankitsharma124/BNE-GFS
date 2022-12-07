@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using System.Net.Http;
+using System.Text;
+using MessagePack;
 
 namespace CoreBridge.Services
 {
@@ -84,14 +86,13 @@ namespace CoreBridge.Services
         {
             req.EnableBuffering();
 
-            using (var streamReader = new System.IO.StreamReader(req.Body, System.Text.Encoding.UTF8))
-            {
-                var body = await streamReader.ReadToEndAsync();
-                req.Headers.Remove(bodyKey);
-                req.Headers.Add(bodyKey, body);
-                req.Body.Position = 0;
-            }
-
+            var buffer = new byte[Convert.ToInt32(req.ContentLength)];
+            await req.Body.ReadAsync(buffer, 0, buffer.Length);
+            //get body string here...
+            var body = Encoding.UTF8.GetString(buffer);
+            req.Headers.Remove(bodyKey);
+            req.Headers.Add(bodyKey, body);
+            req.Body.Position = 0;
 
         }
 
@@ -169,6 +170,15 @@ namespace CoreBridge.Services
             return GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_OriginalBody);
         }
 
+        public string GetOriginalInJsonStringFromHeader(HttpRequest req)
+        {
+            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_OriginalBody))
+            {
+                throw new Exception("OriginalBody not set in the header");
+            }
+            return req.Headers[SysConsts.AddedReqHeaderKey_OriginalBody];
+        }
+
 #if DEBUG
         public byte[] GetDebugBodyCopyInBytesFromHeader(HttpRequest req)
         {
@@ -178,6 +188,28 @@ namespace CoreBridge.Services
             }
 
             return GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
+        }
+
+        public string GetDebugMsgpackBodyCopyInJsonStringFromHeader(HttpRequest req)
+        {
+            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Debug_ReqBody))
+            {
+                throw new Exception("Debug copy of ReqBody not set in the header");
+            }
+
+            var bytes = GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
+            var unpacked = MessagePackSerializer.Deserialize<string>(bytes);
+            return unpacked;
+        }
+
+        public string GetDebugBodyCopyInJsonStringFromHeader(HttpRequest req)
+        {
+            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Debug_ReqBody))
+            {
+                throw new Exception("Debug copy of ReqBody not set in the header");
+            }
+
+            return req.Headers[SysConsts.AddedReqHeaderKey_Debug_ReqBody];
         }
 #endif
         #region helpers
@@ -211,7 +243,7 @@ namespace CoreBridge.Services
             {
                 try
                 {
-                    _useJson = _config.GetValue<bool>("UseJson");
+                    _useJson = _config.GetValue<bool>("DebugConfig:UseJson");
                 }
                 catch (Exception ex)
                 {

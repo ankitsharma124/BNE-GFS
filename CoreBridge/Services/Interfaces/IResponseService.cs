@@ -11,5 +11,7 @@
 
         int ResultOK { get; }
         int ResultNG { get; }
+
+        Task<string> ReadResponseBody(HttpResponse response, bool isServerApiCall);
     }
 }

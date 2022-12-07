@@ -8,6 +8,7 @@ using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using NuGet.Protocol;
 
 namespace CoreBridge.Controllers.api
 {
@@ -20,6 +21,9 @@ namespace CoreBridge.Controllers.api
         protected readonly IDistributedCache _cache;
         protected readonly ITitleInfoService _titleInfoService;
         protected IHostEnvironment _env;
+#if DEBUG
+        protected readonly IRequestService _reqService;
+#endif
 
 
 
@@ -27,6 +31,9 @@ namespace CoreBridge.Controllers.api
 
         public BaseController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
             IConfiguration configService, ILogger loggerService, ITitleInfoService titleInfoService,
+#if DEBUG
+            IRequestService reqService,
+#endif
             IUserService userService)
         {
             _env = env;
@@ -36,6 +43,9 @@ namespace CoreBridge.Controllers.api
             _cache = cache;
             _titleInfoService = titleInfoService;
             _userService = userService;
+#if DEBUG
+            _reqService = reqService;
+#endif
         }
 
         public string? TitleCode { get; set; } = null;
@@ -382,24 +392,17 @@ namespace CoreBridge.Controllers.api
             skuType = this.SkuTypeId ?? skuType;
             var titleCode = skuType == (int)SysConsts.SkuType.Product ? this.TitleCode :
                 this.TitleInfo.TrialTitleCode;
+            var reqBody = _configService.GetValue<bool?>("UseJson") == true ?
+                _reqService.GetDebugBodyCopyInJsonStringFromHeader(Request) : _reqService.GetDebugMsgpackBodyCopyInJsonStringFromHeader(Request);
 
-
-
+            var resBody = _responseService.ReadResponseBody(Response, Request.Path.ToString().ToLower().StartsWith("/api/server")).Result;
 
 
 
 
 
         }
-
-
-
-
-
 #endif
-
-
-
     }
 }
 
