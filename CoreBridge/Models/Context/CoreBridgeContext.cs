@@ -15,6 +15,11 @@ namespace CoreBridge.Models.Context
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
 
+
+#if DEBUG
+        public DbSet<DebugInfo> DebugInfoList { get; set; }
+#endif
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

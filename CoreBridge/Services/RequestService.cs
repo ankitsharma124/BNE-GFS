@@ -6,254 +6,63 @@ using CoreBridge.Services.Interfaces;
 using System.Net.Http;
 using System.Text;
 using MessagePack;
+using CoreBridge.Models.Entity;
+using System.Security.Policy;
+using System.Reflection.Emit;
 
 namespace CoreBridge.Services
 {
     public class RequestService : IRequestService
     {
         private readonly IConfiguration _config;
-        public RequestService(IConfiguration config)
+        private readonly ISessionStatusService _sss;
+        private readonly ILogger _logger;
+        public RequestService(IConfiguration config, ISessionStatusService sss, ILogger logger)
         {
             _config = config;
+            _sss = sss;
+            _logger = logger;
         }
 
-        public async Task RemoveHash(HttpRequest req)
+        public void CheckUri(HttpRequest req)
         {
-            if (GetUseJson() == true)
+            var list = _config.GetValue<string[]>("ProhibitedApiList");
+            if (list != null && list.Length > 0)
             {
-                await CopyJsonBodyToHeader(req, SysConsts.AddedReqHeaderKey_OriginalBody, true);
-            }
-            else
-            {
-                await CopyMsgPackBodyToHeader(req, SysConsts.AddedReqHeaderKey_OriginalBody, true);
-            }
-        }
-
-        #region read from body => header (bytes to string)
-
-        /// <summary>
-        /// HttpRequest.BodyをHeader[SysConsts.AddedReqHeaderKey_OriginalBody]にコピー
-        /// (ServerControllerで行うhashチェックのために必要
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        public async Task CopyOriginalBodyToHeader(HttpRequest req)
-        {
-            if (GetUseJson() == true)
-            {
-                await CopyJsonBodyToHeader(req, SysConsts.AddedReqHeaderKey_OriginalBody);
-            }
-            else
-            {
-                await CopyMsgPackBodyToHeader(req, SysConsts.AddedReqHeaderKey_OriginalBody);
-            }
-
-        }
-
-#if DEBUG
-        /// <summary>
-        /// Debug環境のみ。オリジナルのRequest.BodyをHeaderにコピー。
-        /// BaseController.CollecthttpParam()で使用
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        public async Task Debug_CopyBodyToHeader(HttpRequest req)
-        {
-            if (GetUseJson() == true)
-            {
-                await CopyJsonBodyToHeader(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
-            }
-            else
-            {
-                await CopyMsgPackBodyToHeader(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
-            }
-
-
-        }
-#endif
-
-        #region helpers
-        /// <summary>
-        /// Jsonで書かれたHttpRequest.Bodyを指定のHeaderフィールドにコピー
-        /// Bodyを読む時はこのサービスのGet系method使用のこと
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="bodyKey"></param>
-        /// <param name="removeHash"></param>
-        /// <returns></returns>
-        private async Task CopyJsonBodyToHeader(HttpRequest req, string bodyKey,
-            bool removeHash = false)
-        {
-            req.EnableBuffering();
-
-            var buffer = new byte[Convert.ToInt32(req.ContentLength)];
-            await req.Body.ReadAsync(buffer, 0, buffer.Length);
-            //get body string here...
-            var body = Encoding.UTF8.GetString(buffer);
-            req.Headers.Remove(bodyKey);
-            req.Headers.Add(bodyKey, body);
-            req.Body.Position = 0;
-
-        }
-
-
-        /// <summary>
-        /// MsgPackで書かれたHttpRequest.Bodyを指定のHeaderフィールドにコピー
-        /// Bodyを読む時はこのサービスのGet系method使用のこと
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="bodyKey"></param>
-        /// <param name="removeHash"></param>
-        /// <returns></returns>
-        private async Task CopyMsgPackBodyToHeader(HttpRequest req, string bodyKey,
-            bool removeHash = false)
-        {
-            byte[] originalContent;
-            using (StreamReader stream = new StreamReader(req.Body))
-            {
-                var ms = new MemoryStream();
-                await stream.BaseStream.CopyToAsync(ms);
-                originalContent = ms.ToArray();
-            }
-
-            if (removeHash)
-            {
-                var hash = originalContent.Take(16).ToArray();
-                req.Headers.Remove(SysConsts.AddedReqHeaderKey_Hash);
-                req.Headers.Add(SysConsts.AddedReqHeaderKey_Hash, GetStringFromByteArray(hash));
-                originalContent = originalContent.Skip(16).ToArray();
-            }
-
-            var strMsgPackBytes = GetStringFromByteArray(originalContent);
-            req.Body = new MemoryStream(originalContent);
-
-            req.Headers.Remove(bodyKey);
-            req.Headers.Add(bodyKey, strMsgPackBytes);
-
-            //msgPackの長さが奇数バイトである場合、末尾に値0のバイトが足される。
-            //それを後に取り除く時のフラグとしてオリジナルbodyの長さを記録
-            req.Headers.Remove(SysConsts.AddedReqHeaderKey_ReqBodyLen);
-            req.Headers.Add(SysConsts.AddedReqHeaderKey_ReqBodyLen, originalContent.Length + "");
-
-        }
-
-
-        private string GetStringFromByteArray(byte[] bytes)
-        {
-            var len = (bytes.Length % sizeof(char) == 0) ? bytes.Length / sizeof(char)
-                : bytes.Length / sizeof(char) + 1;
-            char[] chars = new char[len];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
-        }
-        #endregion
-        #endregion
-
-        #region Get from header string=>bytes
-        public byte[] GetBodyHashInBytesFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Hash))
-            {
-                throw new Exception("Hash not set in the header");
-            }
-
-            return GetByteArrayFromString(req.Headers[SysConsts.AddedReqHeaderKey_Hash]);
-
-        }
-
-        public byte[] GetOriginalBodyInBytesFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_OriginalBody))
-            {
-                throw new Exception("OriginalBody not set in the header");
-            }
-            return GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_OriginalBody);
-        }
-
-        public string GetOriginalInJsonStringFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_OriginalBody))
-            {
-                throw new Exception("OriginalBody not set in the header");
-            }
-            return req.Headers[SysConsts.AddedReqHeaderKey_OriginalBody];
-        }
-
-#if DEBUG
-        public byte[] GetDebugBodyCopyInBytesFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Debug_ReqBody))
-            {
-                throw new Exception("Debug copy of ReqBody not set in the header");
-            }
-
-            return GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
-        }
-
-        public string GetDebugMsgpackBodyCopyInJsonStringFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Debug_ReqBody))
-            {
-                throw new Exception("Debug copy of ReqBody not set in the header");
-            }
-
-            var bytes = GetBodyByteArrayFromHeaderCopy(req, SysConsts.AddedReqHeaderKey_Debug_ReqBody);
-            var unpacked = MessagePackSerializer.Deserialize<string>(bytes);
-            return unpacked;
-        }
-
-        public string GetDebugBodyCopyInJsonStringFromHeader(HttpRequest req)
-        {
-            if (!req.Headers.ContainsKey(SysConsts.AddedReqHeaderKey_Debug_ReqBody))
-            {
-                throw new Exception("Debug copy of ReqBody not set in the header");
-            }
-
-            return req.Headers[SysConsts.AddedReqHeaderKey_Debug_ReqBody];
-        }
-#endif
-        #region helpers
-        private byte[] GetBodyByteArrayFromHeaderCopy(HttpRequest req, string key)
-        {
-            var bytes = GetByteArrayFromString(req.Headers[key]);
-            var len = req.Headers[SysConsts.AddedReqHeaderKey_ReqBodyLen];
-            if (len == "") throw new Exception("Body length not set in request header @ ReqService");
-
-            if (Convert.ToInt32(len) != bytes.Length)
-            {
-                return bytes.Take(bytes.Length - (bytes.Length - Convert.ToInt32(len))).ToArray();
-            }
-            else return bytes;
-        }
-
-        private byte[] GetByteArrayFromString(string str)
-        {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-        #endregion
-        #endregion
-
-
-        private bool? _useJson = null;
-        public bool? GetUseJson()
-        {
-            if (_useJson == null)
-            {
-                try
+                var path = req.Path;
+                if (path.ToString().In(list))
                 {
-                    _useJson = _config.GetValue<bool>("DebugConfig:UseJson");
+                    throw new BNException(_sss.ApiCode, BNException.BNErrorCode.RequestErr,
+                        $"不許可APIが要求されました。ApiName[{path}]");
                 }
-                catch (Exception ex)
-                {
-                    _useJson = false;
-                }
-
             }
-            return _useJson;
         }
 
+        public void CheckApi(HttpRequest req)
+        {
+            var list = new List<string>();
+            var dic = ((Dictionary<string, string>[])_sss.TitleInfo.ApiList).First();
+            var keys = dic.Keys.ToArray();
+            foreach (var key in keys)
+            {
+                if (req.Path.ToString().Contains(key))
+                {
+                    _logger.LogError($"使用不可のAPIが要求されました[title_cd:{_sss.TitleCode} ], " +
+                        $"ApiName:[{req.Path.ToString()}], HitUrl:{key}");
+                    throw new Manual404("");
+                }
+            }
+        }
+
+        public void CheckTrialTitleCode()
+        {
+            if (_sss.SkuType == (int)SysConsts.SkuType.Trial &&
+                _sss.TitleInfo.TrialTitleCode == "")
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.TitleCodeInvalid,
+                    $"体験版タイトルコード未登録[{_sss.TitleCode}]");
+            }
+        }
 
     }
 }

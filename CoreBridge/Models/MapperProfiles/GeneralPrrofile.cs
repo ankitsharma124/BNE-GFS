@@ -4,11 +4,12 @@ using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Models.MapperProfiles
 {
-    public class TitleProfile : Profile
+    public class GeneralPrrofile : Profile
     {
-        public TitleProfile()
+        public GeneralPrrofile()
         {
             CreateMap<TitleInfo, TitleInfoDto>().ReverseMap();
+            CreateMap<GFSUser, GFSUserDto>().ReverseMap();
         }
     }
 }

@@ -7,6 +7,8 @@
         public const string AddedReqHeaderKey_OriginalBody = "CBOrigBody";
         public const string AddedReqHeaderKey_Debug_ReqBody = "CBDebug_ReqBody";
 
+        public const string UserInfoKeyBase_Client = "client.{0}";
+        public const string UserInfoKeyBase_Server = "server.{0}_{1}";
 
         #region ------- システム設定 -------------
 
