@@ -15,17 +15,15 @@ namespace CoreBridge.Services
 
         private const int RESULT_NG = 1;
         private const int RESULT_OK = 0;
-
         private Action<object[]> customizeResponseInnerHeader;
         private Action<object> customizeResponseContent;
-
         protected IHostEnvironment _env;
         protected IConfiguration _config;
         private readonly ISessionStatusService _sss;
         private readonly IHashService _hash;
-        private readonly ILogger _logger;
+        private readonly ILogger<ResponseService> _logger;
         public ResponseService(IHostEnvironment env, IConfiguration config,
-            ISessionStatusService sss, IHashService hash, ILogger logger)
+            ISessionStatusService sss, IHashService hash, ILogger<ResponseService> logger)
         {
             _env = env;
             _config = config;
@@ -52,13 +50,13 @@ namespace CoreBridge.Services
 
             if (_sss.IsBnIdApi)
             {
-                //ReturnHtmlResponse();
+                ReturnHtmlResponse(response, details, result, status);
                 return;
             }
 
-            var innerHeader = new List<object> {
-                new{ result = result},
-                new{ date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss")}
+            var innerHeader = new List<KeyValuePair<string, object>> {
+                new KeyValuePair<string, object>("Result", result ),
+                 new KeyValuePair<string, object>("Date", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"))
             };
 
             if (_sss.IsClientApi)
@@ -109,23 +107,14 @@ namespace CoreBridge.Services
             await response.Body.WriteAsync((byte[])responseContentConverted);
         }
 
-        protected void CustomizeResponseInnerHeader(List<object> customHeader)
+        protected void CustomizeResponseInnerHeader(List<KeyValuePair<string, object>> customHeader)
         {
             var clientParam = (ReqBaseClient)_sss.ReqParam;
             if (clientParam.SessionAvoid() != true)
             {
-                bool found = false;
-                foreach (IDictionary<string, object> item in customHeader)
+                if (!customHeader.Any(s => s.Key == "Session"))
                 {
-                    if (item.ContainsKey("session"))
-                    {
-                        item["session"] = _sss.SessionKey == null ? "" : _sss.SessionKey;
-                        found = true;
-                    }
-                }
-                if (!found)
-                {
-                    customHeader.Add(new { session = (_sss.SessionKey != null) ? _sss.SessionKey : "" });
+                    customHeader.Add(new KeyValuePair<string, object>("Session", (_sss.Session != null) ? _sss.Session : ""));
                 }
             }
         }
@@ -145,7 +134,7 @@ namespace CoreBridge.Services
         {
             var statusCode = GetApiStatus(status);
 #if DEBUG
-            _logger.LogInformation("Senging response: result: {0}, status:{1}, uri:{2}",
+            _logger.LogInformation("Sending response: result: {0}, status:{1}, uri:{2}",
                 result, statusCode, _sss.ReqPath);
 #endif
             response.Headers.ContentType = "text/html";

@@ -8,6 +8,7 @@ using CoreBridge.Models;
 using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Exceptions;
 using System.Reflection.Emit;
+using XAct.Users;
 
 namespace CoreBridge.Services
 {
@@ -17,9 +18,9 @@ namespace CoreBridge.Services
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
         private readonly ISessionStatusService _sss;
-        private readonly ILogger _logger;
+        private readonly ILogger<UserService> _logger;
         public UserService(IUnitOfWork unit, IMapper mapper, IDistributedCache cache,
-            ILogger logger, ISessionStatusService sss)
+            ILogger<UserService> logger, ISessionStatusService sss)
         {
             _unit = unit;
             _mapper = mapper;
@@ -44,6 +45,11 @@ namespace CoreBridge.Services
             {
                 throw new Exception("ここには来ない");
             }
+        }
+
+        public async Task LoadStatus_UserInfo()
+        {
+            _sss.UserInfo = await GetByIdAsync(_sss.UserId);
         }
 
         public async Task<GFSUserDto> GetByIdAsync(string id)
@@ -105,26 +111,26 @@ namespace CoreBridge.Services
 
             if (_sss.UserId == null)
             {
-                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist,
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, BNException.ErrorLevel.Error,
                     "user_consistence:パラメータにユーザーIDが存在しません");
             }
 
             var titleCode = _sss.SkuType == (int)SysConsts.SkuType.Product ? _sss.TitleCode :
                 _sss.TitleInfo.TrialTitleCode;
 
-            await _sss.LoadUserInfo();
+            await LoadStatus_UserInfo();
 
             if (_sss.UserInfo == null)
             {
-                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, "user_consistence:error");
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, BNException.ErrorLevel.Error, "user_consistence:error");
             }
 
             if (_sss.UserInfo.Platform != _sss.Platform)
-                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.RequestErr, "user_consistence:ユーザー情報とプラットフォームが相違している");
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.RequestErr, BNException.ErrorLevel.Error, "user_consistence:ユーザー情報とプラットフォームが相違している");
 
             // ここに来ることはないはず(SKU種別が変わった場合はセッションID側でエラーにしてる)
             if (_sss.UserInfo.TitleCode != _sss.TitleCode)
-                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, "user_consistence:ユーザー情報とタイトルコードが相違している");
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, BNException.ErrorLevel.Error, "user_consistence:ユーザー情報とタイトルコードが相違している");
         }
     }
 }

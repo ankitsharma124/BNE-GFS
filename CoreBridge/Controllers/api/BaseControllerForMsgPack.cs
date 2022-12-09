@@ -391,8 +391,7 @@ namespace CoreBridge.Controllers.api
         /// <returns></returns>
         protected async Task ReturnBNResponse(object details, int result = -1, int status = -1)
         {
-            await _responseService.ReturnBNResponseAsync(CurrActionId, Response, details, CustomizeResponseInnerHeader,
-                CustomizeResponseContent, result, status);
+            await _responseService.ReturnBNResponseAsync(Response, details, result, status);
         }
         [NonAction]
         public void Dispose()

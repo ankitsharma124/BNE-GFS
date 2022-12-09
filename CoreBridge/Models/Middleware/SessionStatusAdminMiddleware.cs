@@ -7,17 +7,18 @@ namespace CoreBridge.Models.Middleware
     {
 
         private readonly RequestDelegate _next;
-        private readonly ISessionStatusService _sss;
-        private readonly IConfiguration _config;
-        public SessionStatusAdminMiddleware(RequestDelegate next, ISessionStatusService sss,
-            IConfiguration config)
+        private ISessionStatusService _sss;
+        private IConfiguration _config;
+        private IRequestService _req;
+        public SessionStatusAdminMiddleware(RequestDelegate next)
         {
             _next = next;
+        }
+        public async Task InvokeAsync(HttpContext httpContext, ISessionStatusService sss, IRequestService req, IConfiguration config)
+        {
             _sss = sss;
             _config = config;
-        }
-        public async Task InvokeAsync(HttpContext httpContext, IRequestService reqService)
-        {
+            _req = req;
             InitSSS(httpContext);
             await _next(httpContext);
 #if DEBUG
@@ -32,11 +33,11 @@ namespace CoreBridge.Models.Middleware
             _sss.IsClientApi = path.Contains("api/client/");
             _sss.IsServerApi = path.ToLower().Contains("api/server/");
 #if DEBUG
-            await _sss.CopyRequestBody(httpContext.Request);
+            await _req.LoadStatus_RequestBody(httpContext.Request);
 #else
             if (_sss.IsServerApi)
             {
-                await _sss.CopyRequestBody(httpContext.Request);   
+                await _req.LoadStatus_RequestBody(httpContext.Request);   
             }
 #endif
         }

@@ -110,7 +110,7 @@ namespace CoreBridge.Controllers.api
         protected override void ProcessHeader()
         {
 
-            this.TitleCode = ServerHeader.TitleCd;
+            this.TitleCode = ServerHeader.TitleCode;
             this.UserId = ServerHeader.UserId;
             this.SkuType = (SysConsts.SkuType)Enum.Parse(typeof(SysConsts.SkuType), ServerHeader.SkuType + "");
             this.Session = ServerHeader.Session;
@@ -143,10 +143,10 @@ namespace CoreBridge.Controllers.api
                 }
             }
 
-            if (this.ServerHeader.TitleCd != GetTitleCodeByUrl())
+            if (this.ServerHeader.TitleCode != GetTitleCodeByUrl())
             {
                 throw new BNException(CurrActionId, BNException.BNErrorCode.RequestErr,
-                        $"post_param:title_cd error header[{this.ServerHeader.TitleCd}], url[{GetTitleCodeByUrl()}]");
+                        $"post_param:title_cd error header[{this.ServerHeader.TitleCode}], url[{GetTitleCodeByUrl()}]");
             }
 
 

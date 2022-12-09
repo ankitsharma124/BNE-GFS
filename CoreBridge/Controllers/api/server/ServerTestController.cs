@@ -24,7 +24,7 @@ namespace CoreBridge.Controllers.api.server
         [HttpPost]
         public IActionResult MiddlewareTest([FromBody] TestParam testParam)
         {
-            var header = _reqService.GetDebugBodyCopyInBytesFromHeader(Request);
+            //var header = _reqService.GetDebugBodyCopyInBytesFromHeader(Request);
             //Debug.WriteLine(header);
 
             return new JsonResult("OK");

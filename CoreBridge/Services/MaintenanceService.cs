@@ -60,7 +60,7 @@ namespace CoreBridge.Services
         {
             var maintenanceKey = _sss.ReqPath;
             object code = null;
-            var scs = _cache.TryGetValue(SysConsts.SYSTEM_MAINTENANCE_KEY + ":" + maintenanceKey + ":" + platform,
+            var scs = _cache.TryGetValue(SysConsts.SYSTEM_MAINTENANCE_KEY + ":" + maintenanceKey + ":" + _sss.Platform,
                 out code);
 
             if (scs && code != null)

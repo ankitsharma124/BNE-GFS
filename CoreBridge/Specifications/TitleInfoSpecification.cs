@@ -16,5 +16,10 @@ namespace CoreBridge.Specifications
         {
             Query.Where(x => x.Id == id);
         }
+
+        public void GetByCode(string titleCode)
+        {
+            Query.Where(x => x.TitleCode == titleCode);
+        }
     }
 }

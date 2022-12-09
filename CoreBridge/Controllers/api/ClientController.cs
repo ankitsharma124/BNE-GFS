@@ -49,7 +49,7 @@ namespace CoreBridge.Controllers.api
             }
 
             var header = (ReqBaseClientServerParamHeader)ReqHeader;
-            this.TitleCode = header.TitleCd;
+            this.TitleCode = header.TitleCode;
             this.UserId = header.UserId;
             this.SkuType = (SysConsts.SkuType)Enum.Parse(typeof(SysConsts.SkuType), header.SkuType + "");
             this.Session = header.Session;
@@ -156,9 +156,9 @@ namespace CoreBridge.Controllers.api
         protected override void ProcessParams()
         {
             // タイトルコードとURLのタイトルコードが違う場合はエラー
-            if (CliendHeader.TitleCd != GetTitleCodeByUrl())
+            if (CliendHeader.TitleCode != GetTitleCodeByUrl())
                 throw new BNException(CurrActionId, BNException.BNErrorCode.RequestErr,
-                    $"post_param:title_cd error header[{CliendHeader.TitleCd}] url[{GetTitleCodeByUrl()}]");
+                    $"post_param:title_cd error header[{CliendHeader.TitleCode}] url[{GetTitleCodeByUrl()}]");
 
             base.ProcessParams();
         }

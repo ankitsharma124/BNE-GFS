@@ -4,18 +4,18 @@ using Newtonsoft.Json;
 
 namespace CoreBridge.Models.DTO.Requests
 {
-    public class ReqBaseClientServerParamHeader : ReqBaseParam
+    public class ReqBaseClientServerParamHeader : ReqBaseParamHeader
     {
 
-        [FromHeader]
-        public string? TitleCd { get; set; } = null;
-        [FromHeader]
+        [FromBody]
+        public string? TitleCode { get; set; } = null;
+        [FromBody]
         public string? UserId { get; set; } = null;
-        [FromHeader]
+        [FromBody]
         public int? SkuType { get; set; } = null;
-        [FromHeader]
+        [FromBody]
         public string? Session { get; set; } = null;
-        [FromHeader]
+        [FromBody]
         public int? Platform { get; set; } = null;
 
 
@@ -23,12 +23,12 @@ namespace CoreBridge.Models.DTO.Requests
 
         public void Validate()
         {
-            if (TitleCd == null || UserId == null || SkuType == null || Session == null || Platform == null)
+            if (TitleCode == null || UserId == null || SkuType == null || Session == null || Platform == null)
             {
                 throw new BNException(0, BNException.BNErrorCode.ParamExists,
                     "ヘッダー項目が足りません。" + Environment.NewLine + JsonConvert.SerializeObject(HttpReqObj));
             }
-            if (TitleCd == "" || UserId == "" || SkuType == 0 || Session == "" || Platform == 0)
+            if (TitleCode == "" || UserId == "" || SkuType == 0 || Session == "" || Platform == 0)
             {
                 throw new BNException(0, BNException.BNErrorCode.ParamType,
                     "ヘッダー項目型エラー。" + Environment.NewLine + JsonConvert.SerializeObject(HttpReqObj));

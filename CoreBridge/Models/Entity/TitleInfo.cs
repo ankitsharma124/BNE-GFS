@@ -6,7 +6,7 @@ namespace CoreBridge.Models.Entity
     //タイトルコード管理テーブル（仮）
     public class TitleInfo : CoreBridgeEntity, IAggregateRoot
     {
-        private TitleInfo() { }
+        internal TitleInfo() { }
 
         public TitleInfo(string titleName, string titleCode, string trialTitleCode, int pType,
             string switchAppId, string xboxTitleId, string psClientId, string psClientSecret,

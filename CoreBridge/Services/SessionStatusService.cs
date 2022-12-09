@@ -14,21 +14,10 @@ namespace CoreBridge.Services
 {
     public class SessionStatusService : ISessionStatusService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHashService _hash;
-        private readonly IUserService _userSvc;
-        private readonly ITitleInfoService _titleInfoService;
-        private readonly IDistributedCache _cache;
-
-        public SessionStatusService(IUnitOfWork unitOfWork, IHashService hash,
-            ITitleInfoService titleInfo, IUserService user,
-            IDistributedCache cache)
+        private readonly IUnitOfWork _unit;
+        public SessionStatusService(IUnitOfWork unit)
         {
-            _unitOfWork = unitOfWork;
-            _hash = hash;
-            _titleInfoService = titleInfo;
-            _userSvc = user;
-            _cache = cache;
+            _unit = unit;
         }
         //SessionStatusAdminMiddlewareでイニシャライズ
         public bool IsClientApi { get; set; }
@@ -40,9 +29,10 @@ namespace CoreBridge.Services
 
         //ControllerActionでイニシャライズ
         public string? TitleCode { get; set; }
-        public string? SessionKey { get; set; }
+        public string? Session { get; set; }
         public string ReqPath { get; set; }
         public int? Platform { get; set; }
+        public string PlatformStr { get; set; }
         public int? SkuType { get; set; }
         public string? UserId { get; set; }
         public int ApiCode { get; set; }
@@ -136,60 +126,7 @@ namespace CoreBridge.Services
 
         public IQueryCollection Query { get; set; } = null;//BnId controller only
 
-        public void CopyParamHeader()
-        {
-            if (!ReqHeader.IsOrDescendantOf(typeof(ReqBaseClientServerParamHeader)))
-            {
-                throw new Exception("smtg wrong with the header");
-            }
 
-            var header = (ReqBaseClientServerParamHeader)ReqHeader;
-            TitleCode = header.TitleCd;
-            UserId = header.UserId;
-            SkuType = header.SkuType;
-            SessionKey = header.Session;
-            Platform = header.Platform;
-        }
-
-        /// <summary>
-        /// copy request body from req and save to Json/MsgPackRequestbody
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        public async Task CopyRequestBody(HttpRequest req)
-        {
-            if (req.Method.ToUpper() == "GET")
-            {
-                Query = req.Query;
-            }
-            else
-            {
-                byte[] originalContent;
-                using (StreamReader stream = new StreamReader(req.Body))
-                {
-                    var ms = new MemoryStream();
-                    await stream.BaseStream.CopyToAsync(ms);
-                    originalContent = ms.ToArray();
-                }
-                this.ReqPath = req.Path.ToString();
-                if (UseHash)
-                {
-                    RequestHash = originalContent.Take(16).ToArray();
-                    originalContent = originalContent.Skip(16).ToArray();
-                }
-
-                if (UseJson)
-                {
-                    JsonRequest = originalContent.ToString();
-                }
-                else
-                {
-                    MsgPackRequest = originalContent;
-                }
-                req.Body = new MemoryStream(originalContent);
-            }
-
-        }
         /// <summary>
         /// copy request body from res and save to Json/MsgPackResponsebody
         /// </summary>
@@ -231,19 +168,8 @@ namespace CoreBridge.Services
             SkuType = info.SkuType;
             Platform = info.Platform;
         }
-        public async Task LoadTitleInfo(string titleCode)
-        {
-            TitleInfo = await _titleInfoService.GetByCodeAsync(titleCode);
-            if (TitleInfo == null)
-            {
-                throw new BNException(ApiCode, BNException.BNErrorCode.TitleCodeInvalid,
-                    BNException.ErrorLevel.Error, $"不正なタイトルコードが指定されました。title_cd[{TitleCode}]");
-            }
-        }
-        public async Task LoadUserInfo()
-        {
-            UserInfo = await _userSvc.GetByIdAsync(UserId);
-        }
+
+
 
 #if DEBUG
         public async Task SaveSessionDebugInfo()
@@ -267,8 +193,8 @@ namespace CoreBridge.Services
                 RequestPath = this.ReqPath
             };
             info.SetPrimaryKey();
-            await _unitOfWork.DebugInfoRepository.AddAsync(info);
-            await _unitOfWork.CommitAsync();
+            await _unit.DebugInfoRepository.AddAsync(info);
+            await _unit.CommitAsync();
         }
 #endif
 

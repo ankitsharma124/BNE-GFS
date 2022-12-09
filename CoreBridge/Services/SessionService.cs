@@ -6,12 +6,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace CoreBridge.Services
 {
-    public class SessionService : ISessionService
+    public class SessionDataService : ISessionDataService
     {
         private readonly ISessionStatusService _sss;
         private readonly IWebHostEnvironment _env;
         private readonly IDistributedCache _cache;
-        public SessionService(ISessionStatusService sss, IWebHostEnvironment env, IDistributedCache cache)
+        public SessionDataService(ISessionStatusService sss, IWebHostEnvironment env, IDistributedCache cache)
         {
             _sss = sss;
             _env = env;
@@ -29,11 +29,11 @@ namespace CoreBridge.Services
             {
                 throw new BNException(_sss.ApiCode, BNException.BNErrorCode.SessionTimeout);
             }
-            else if (session.SessionId == _sss.SessionKey && session.SkuType == (int)_sss.SkuType)
+            else if (session.SessionId == _sss.Session && session.SkuType == (int)_sss.SkuType)
             {
                 //session ok
             }
-            else if (session.SessionId != _sss.SessionKey)
+            else if (session.SessionId != _sss.Session)
             {
                 throw new BNException(_sss.ApiCode, BNException.BNErrorCode.SessionNG, "session err");
             }
@@ -58,7 +58,7 @@ namespace CoreBridge.Services
             if (!clientParam.NotSessionUpdate() == true)
             {
                 // NOT_SESSION_UPDATE_API_LISTで指定されたAPIではセッションを更新せずレスポンスsessionで空文字を返却する
-                _sss.SessionKey = "";
+                _sss.Session = "";
             }
             else if (clientParam.MirroSession() == true)
             {
@@ -66,11 +66,11 @@ namespace CoreBridge.Services
             }
             else
             {
-                _sss.SessionKey = DateTime.UtcNow.GenerateUniqId();
+                _sss.Session = DateTime.UtcNow.GenerateUniqId();
                 _cache.SetAsync<SessionData>(GetSessionKey(),
                     new SessionData
                     {
-                        SessionId = _sss.SessionKey,
+                        SessionId = _sss.Session,
                         TitleCode = _sss.TitleCode,
                         SkuType = _sss.SkuType,
                         Platform = _sss.Platform

@@ -45,6 +45,70 @@ namespace CoreBridge.Migrations
                     b.ToTable("AdminUsers");
                 });
 
+            modelBuilder.Entity("CoreBridge.Models.Entity.DebugInfo", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("RequestBody")
+                        .HasColumnType("STRING");
+
+                    b.Property<string>("RequestPath")
+                        .HasColumnType("STRING");
+
+                    b.Property<string>("ResponseBody")
+                        .HasColumnType("STRING");
+
+                    b.Property<string>("TitleCode")
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("STRING");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DebugInfoList");
+                });
+
+            modelBuilder.Entity("CoreBridge.Models.Entity.GFSUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<int>("Platform")
+                        .HasColumnType("INT64");
+
+                    b.Property<string>("TitleCode")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "TestUserId",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Platform = 1,
+                            TitleCode = "TestTitleCode",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("CoreBridge.Models.Entity.TitleInfo", b =>
                 {
                     b.Property<string>("Id")
@@ -109,6 +173,18 @@ namespace CoreBridge.Migrations
                     b.HasIndex("TitleCode");
 
                     b.ToTable("TitleInfo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "TestTitleId",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ptype = 0,
+                            TitleCode = "TestTitleCode",
+                            TitleName = "testTitleName",
+                            TrialTitleCode = "TestTrialTitleCode",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 #pragma warning restore 612, 618
         }

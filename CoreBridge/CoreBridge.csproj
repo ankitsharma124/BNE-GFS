@@ -32,6 +32,7 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.11" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
 		<PackageReference Include="NLog.Config" Version="4.7.15" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.70" />
 		<PackageReference Include="Ardalis.Specification" Version="6.1.0" />
 		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
@@ -47,6 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Controllers\api\NewFolder\" />
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\Headers\" />
 		<Folder Include="Views\TitleInfo\" />

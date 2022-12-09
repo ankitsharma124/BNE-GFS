@@ -86,13 +86,14 @@ namespace CoreBridge.Models.Middleware
             catch (Exception ex)
             {
                 _logger.LogError("Raw error", ex);
-                await HandleExceptionAsync(httpContext, 99990001);
+                throw ex;
+                //await HandleExceptionAsync(httpContext, 99990001);
             }
         }
 
         private async Task HandleExceptionAsync(HttpContext context, int statusCode)
         {
-            await _responseService.ReturnBNErrorAsync(9999, context.Response, statusCode);
+            await _responseService.ReturnBNErrorAsync(context.Response, statusCode);
         }
 
     }

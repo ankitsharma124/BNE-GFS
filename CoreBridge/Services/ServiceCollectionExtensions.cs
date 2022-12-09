@@ -55,6 +55,7 @@ namespace CoreBridge.Services
             services.TryAddScoped<ITitleInfoService, TitleInfoService>();
             services.TryAddScoped<IRequestService, RequestService>();
             services.TryAddScoped<ISessionStatusService, SessionStatusService>();
+            services.TryAddScoped<ISessionDataService, SessionDataService>();
             services.TryAddScoped<IHashService, HashService>();
             services.TryAddScoped<IUserService, UserService>();
             services.TryAddScoped<IMaintenanceService, MaintenanceService>();

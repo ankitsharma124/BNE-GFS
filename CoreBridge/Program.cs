@@ -12,6 +12,8 @@ using CoreBridge.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using NLog.Web;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -44,6 +46,14 @@ try
         options.ForwardedHeaders =
             ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     });
+
+    // NLog: Setup NLog for Dependency injection
+    builder.Host.ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddConsole();
+    }).UseNLog();
+
 
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);

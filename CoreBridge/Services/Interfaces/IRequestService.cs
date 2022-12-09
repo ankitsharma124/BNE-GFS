@@ -14,5 +14,7 @@ namespace CoreBridge.Services.Interfaces
         /// <param name="reqParam"></param>
         /// <returns></returns>
         Task ProcessRequest(HttpRequest req, ReqBase reqHeader, ReqBase reqParam);
+        void LoadStatus_ParamHeader();
+        Task LoadStatus_RequestBody(HttpRequest req);
     }
 }

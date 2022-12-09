@@ -14,7 +14,7 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class Test_NoBaseController : ControllerBase
     {
-        /*
+
         private readonly IRequestService _reqService;
 
         public Test_NoBaseController(IRequestService reqService)
@@ -28,6 +28,8 @@ namespace CoreBridge.Controllers.api
             var name = testParam.name;
             return new JsonResult(new { name = name });
         }
+
+        /*
 
         [HttpPost]
         public IActionResult MiddlewareTest([FromBody] TestParam testParam)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
+using CoreBridge.Models.Exceptions;
 using CoreBridge.Models.Extensions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Models.Repositories;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.IO.Enumeration;
+using System.Reflection.Emit;
 using System.Transactions;
 
 namespace CoreBridge.Services
@@ -21,9 +23,10 @@ namespace CoreBridge.Services
         private readonly IDistributedCache _cache;
         private readonly ILogger<TitleInfoService> _logger;
         private readonly IMapper _mapper;
+        private readonly ISessionStatusService _sss;
 
         public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger,
-            IMapper mapper, IDistributedCache cache)
+            IMapper mapper, IDistributedCache cache, ISessionStatusService sss)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -31,8 +34,18 @@ namespace CoreBridge.Services
             //Auto Mapper Setting.
             _mapper = mapper;
             _cache = cache;
+            _sss = sss;
         }
 
+        public async Task LoadStatus_TitleInfo(string titleCode)
+        {
+            _sss.TitleInfo = await GetByCodeAsync(titleCode);
+            if (_sss.TitleInfo == null)
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.TitleCodeInvalid,
+                    BNException.ErrorLevel.Error, $"不正なタイトルコードが指定されました。title_cd[{_sss.TitleCode}]");
+            }
+        }
         public async Task<TitleInfoDto> GetByCodeAsync(string titlecode)
         {
             TitleInfoDto title;
@@ -50,7 +63,9 @@ namespace CoreBridge.Services
 
         private async Task<TitleInfoDto> GetByCodeInnerAsync(string titleCode)
         {
-            var entity = await _unitOfWork.TitleInfoRepository.GetByIdAsync(titleCode);
+            TitleInfoSpecification spec = new();
+            spec.GetByCode(titleCode);
+            var entity = await _unitOfWork.TitleInfoRepository.GetBySpecAsync(spec);
             return _mapper.Map<TitleInfoDto>(entity);
         }
 

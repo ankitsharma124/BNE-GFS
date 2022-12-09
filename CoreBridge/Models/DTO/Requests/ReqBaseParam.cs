@@ -1,7 +1,7 @@
 ﻿namespace CoreBridge.Models.DTO.Requests
 {
 
-    public abstract class ReqBaseParam : ReqBase
+    public class ReqBaseParam : ReqBase
     {
         public Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {

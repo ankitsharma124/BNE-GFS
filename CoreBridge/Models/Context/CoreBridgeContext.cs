@@ -14,6 +14,7 @@ namespace CoreBridge.Models.Context
         // Entity Entry
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
+        public DbSet<GFSUser> Users { get; set; }
 
 
 #if DEBUG
@@ -24,6 +25,10 @@ namespace CoreBridge.Models.Context
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
+
+#if DEBUG
+            ContextSeedForTest.Seed(modelBuilder).Wait();
+#endif
         }
     }
 }

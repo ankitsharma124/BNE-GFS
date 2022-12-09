@@ -10,6 +10,7 @@ using CoreBridge.Models.Extensions;
 
 namespace CoreBridge.Models.Middleware
 {
+    /*
     public class HashAdminMiddleware
     {
         private readonly RequestDelegate _next;
@@ -27,4 +28,5 @@ namespace CoreBridge.Models.Middleware
         }
 
     }
+    */
 }

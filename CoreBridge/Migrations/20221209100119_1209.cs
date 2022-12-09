@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CoreBridge.Migrations
 {
-    public partial class rebuild1130 : Migration
+    public partial class _1209 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,6 +23,24 @@ namespace CoreBridge.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdminUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DebugInfoList",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "STRING", nullable: false),
+                    TitleCode = table.Column<string>(type: "STRING", nullable: true),
+                    UserId = table.Column<string>(type: "STRING", nullable: true),
+                    RequestPath = table.Column<string>(type: "STRING", nullable: true),
+                    RequestBody = table.Column<string>(type: "STRING", nullable: true),
+                    ResponseBody = table.Column<string>(type: "STRING", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DebugInfoList", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,6 +71,31 @@ namespace CoreBridge.Migrations
                     table.PrimaryKey("PK_TitleInfo", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "STRING", nullable: false),
+                    Platform = table.Column<int>(type: "INT64", nullable: false),
+                    TitleCode = table.Column<string>(type: "STRING", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.InsertData(
+                table: "TitleInfo",
+                columns: new[] { "Id", "CreatedAt", "DevUrl", "HashKey", "ProdUrl", "PsClientId", "PsClientSecoret", "Ptype", "QaUrl", "SteamAppId", "SteamPublisherKey", "SwitchAppId", "TestUrl", "TitleCode", "TitleName", "TrialTitleCode", "UpdatedAt", "XboxTitleId" },
+                values: new object[] { "TestTitleId", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, 0, null, null, null, null, null, "TestTitleCode", "testTitleName", "TestTrialTitleCode", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreatedAt", "Platform", "TitleCode", "UpdatedAt" },
+                values: new object[] { "TestUserId", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "TestTitleCode", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
             migrationBuilder.CreateIndex(
                 name: "IX_TitleInfo_TitleCode",
                 table: "TitleInfo",
@@ -65,7 +108,13 @@ namespace CoreBridge.Migrations
                 name: "AdminUsers");
 
             migrationBuilder.DropTable(
+                name: "DebugInfoList");
+
+            migrationBuilder.DropTable(
                 name: "TitleInfo");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

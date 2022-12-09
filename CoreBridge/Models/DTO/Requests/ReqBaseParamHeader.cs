@@ -12,7 +12,7 @@
 
         public bool HasTemporaryCredential()
         {
-            return (bool)this.ApiSetting["temporaryCredential"];
+            return this.ApiSetting["temporaryCredential"] == null ? false : (bool)this.ApiSetting["temporaryCredential"];
         }
 
 

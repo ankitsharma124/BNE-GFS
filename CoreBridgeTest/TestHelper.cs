@@ -27,5 +27,8 @@ namespace CoreBridgeTest
 
         public static StringContent GetJsonStringContent<T>(T model)
             => new(JsonSerializer.Serialize(model), Encoding.UTF8, _jsonMediaType);
+
+
+
     }
 }

@@ -1,14 +1,15 @@
 ﻿using CoreBridge.Models.DTO;
 using CoreBridge.Models.DTO.Requests;
+using CoreBridge.Models.Entity;
 
 namespace CoreBridge.Services.Interfaces
 {
     public interface ISessionStatusService
     {
         int ApiCode { get; set; }
+        bool IsBnIdApi { get; set; }
         bool IsClientApi { get; set; }
         bool IsServerApi { get; set; }
-        bool IsBnIdApi { get; set; }
         string? JsonRequest { get; set; }
         string? JsonResponse { get; set; }
         byte[]? MsgPackRequest { get; set; }
@@ -16,15 +17,16 @@ namespace CoreBridge.Services.Interfaces
         byte[]? MsgPackResponse { get; set; }
         string MsgPackResponseInJson { get; }
         int? Platform { get; set; }
+        IQueryCollection Query { get; set; }
         ReqBase ReqHeader { get; set; }
         ReqBase ReqParam { get; set; }
-        object RequestBody { get; set; }
+        string ReqPath { get; set; }
+        object? RequestBody { get; set; }
         string? RequestBodyStr { get; }
         byte[]? RequestHash { get; set; }
-        string ReqPath { get; set; }
-        object ResponseBody { get; set; }
+        object? ResponseBody { get; set; }
         string? ResponseBodyStr { get; }
-        string? SessionKey { get; set; }
+        string? Session { get; set; }
         int? SkuType { get; set; }
         string? TitleCode { get; set; }
         TitleInfoDto TitleInfo { get; set; }
@@ -33,11 +35,8 @@ namespace CoreBridge.Services.Interfaces
         string? UserId { get; set; }
         GFSUserDto UserInfo { get; set; }
 
-        Task CopyRequestBody(HttpRequest req);
+        void CopyBnIdUserInfo(BnIdTempInfo info);
         Task CopyResponseBody(HttpResponse res);
-        Task LoadTitleInfo(string titleCode);
-        Task LoadUserInfo();
         Task SaveSessionDebugInfo();
-        void CopyParamHeader();
     }
 }

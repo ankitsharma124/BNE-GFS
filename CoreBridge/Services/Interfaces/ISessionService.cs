@@ -1,6 +1,6 @@
 ﻿namespace CoreBridge.Services.Interfaces
 {
-    public interface ISessionService
+    public interface ISessionDataService
     {
         void SessionCheck();
         void SessionUpdate();
