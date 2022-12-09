@@ -92,9 +92,11 @@ try
         app.UseSession();
 
         //custom middleware
-        app.UseMiddleware<HashAdminMiddleware>();
         app.UseMiddleware<ExceptionMiddleware>();
-        app.UseMiddleware<DebugMiddleware>();
+        app.UseMiddleware<SessionStatusAdminMiddleware>();
+
+        //app.UseMiddleware<HashAdminMiddleware>();
+        //app.UseMiddleware<DebugMiddleware>();
 
         //app.UseAuthorization();
 

@@ -14,6 +14,7 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class TestController : BaseControllerForMsgPack
     {
+        /*
         private ReqClientHeader _clientHeader = new ReqClientHeader { Platform = 1, Session = "Session", UserId = "UserId", TitleCd = "Code", SkuType = 0 };
 
         public TestController(ILogger<TestController> logger, IAdminUserService adminUserService, IDistributedCache cache,
@@ -170,7 +171,7 @@ namespace CoreBridge.Controllers.api
         {
             ReturnBNResponse(new object[] { 0 }).Wait();
         }
-
+        */
 
 
     }

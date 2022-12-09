@@ -33,11 +33,10 @@ namespace CoreBridge.Models.Middleware
             _sss.IsServerApi = path.ToLower().Contains("api/server/");
 #if DEBUG
             await _sss.CopyRequestBody(httpContext.Request);
-
 #else
             if (_sss.IsServerApi)
             {
-                await _sss.ReadRequestBody(httpContext.Request);   
+                await _sss.CopyRequestBody(httpContext.Request);   
             }
 #endif
         }

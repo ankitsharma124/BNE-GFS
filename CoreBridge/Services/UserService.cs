@@ -5,6 +5,9 @@ using AutoMapper;
 using Microsoft.Extensions.Caching.Distributed;
 using CoreBridge.Models.Extensions;
 using CoreBridge.Models;
+using CoreBridge.Models.DTO.Requests;
+using CoreBridge.Models.Exceptions;
+using System.Reflection.Emit;
 
 namespace CoreBridge.Services
 {
@@ -25,12 +28,6 @@ namespace CoreBridge.Services
             _logger = logger;
         }
 
-        public async Task<GFSUserDto> GetByIdAsync(string id)
-        {
-            var entity = await _unit.UserRepository.GetByIdAsync(id);
-            return _mapper.Map<GFSUserDto>(entity);
-        }
-
 
 
         private string GetUserInfoKey()
@@ -45,11 +42,11 @@ namespace CoreBridge.Services
             }
             else
             {
-                throw new Exception('ここには来ない');
+                throw new Exception("ここには来ない");
             }
         }
 
-        public async Task<GFSUserDto> LoadCurrentUser()
+        public async Task<GFSUserDto> GetByIdAsync(string id)
         {
 #if DEBUG
             // memo: must initialize sss with header params before calling this
@@ -65,7 +62,7 @@ namespace CoreBridge.Services
 #if DEBUG
                 _logger.LogDebug("UserInfoをSpannerから取得");
 #endif
-                user = await GetByIdAsync(_sss.UserId);
+                user = await GetByIdAsyncInner(id);
                 if (user != null)
                 {
                     await _cache.SetAsync(GetUserInfoKey(), user);
@@ -80,5 +77,54 @@ namespace CoreBridge.Services
             return user;
         }
 
+        private async Task<GFSUserDto> GetByIdAsyncInner(string id)
+        {
+            var entity = await _unit.UserRepository.GetByIdAsync(id);
+            return _mapper.Map<GFSUserDto>(entity);
+        }
+
+        /// <summary>
+        /// memo: user gets loaded here
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="BNException"></exception>
+        public async Task CheckUserConsistency()
+        {
+            //todo: check - TEMPORARY_CREDENTIAL_API_LISTの一覧とは？
+#if DEBUG
+            _logger.LogDebug("debug", "ユーザーの整合性チェック");
+#endif
+            if (_sss.ReqParam.IsOrDescendantOf(typeof(ReqBaseParamHeader)) &&
+                ((ReqBaseParamHeader)_sss.ReqParam).HasTemporaryCredential())
+            {
+#if DEBUG
+                _logger.LogDebug("debug", "ユーザーの整合性チェックをスキップ");
+#endif
+                return;
+            }
+
+            if (_sss.UserId == null)
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist,
+                    "user_consistence:パラメータにユーザーIDが存在しません");
+            }
+
+            var titleCode = _sss.SkuType == (int)SysConsts.SkuType.Product ? _sss.TitleCode :
+                _sss.TitleInfo.TrialTitleCode;
+
+            await _sss.LoadUserInfo();
+
+            if (_sss.UserInfo == null)
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, "user_consistence:error");
+            }
+
+            if (_sss.UserInfo.Platform != _sss.Platform)
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.RequestErr, "user_consistence:ユーザー情報とプラットフォームが相違している");
+
+            // ここに来ることはないはず(SKU種別が変わった場合はセッションID側でエラーにしてる)
+            if (_sss.UserInfo.TitleCode != _sss.TitleCode)
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.UserNotExist, "user_consistence:ユーザー情報とタイトルコードが相違している");
+        }
     }
 }

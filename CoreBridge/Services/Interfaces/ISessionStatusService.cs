@@ -8,6 +8,7 @@ namespace CoreBridge.Services.Interfaces
         int ApiCode { get; set; }
         bool IsClientApi { get; set; }
         bool IsServerApi { get; set; }
+        bool IsBnIdApi { get; set; }
         string? JsonRequest { get; set; }
         string? JsonResponse { get; set; }
         byte[]? MsgPackRequest { get; set; }
@@ -20,7 +21,7 @@ namespace CoreBridge.Services.Interfaces
         object RequestBody { get; set; }
         string? RequestBodyStr { get; }
         byte[]? RequestHash { get; set; }
-        string ReqUri { get; set; }
+        string ReqPath { get; set; }
         object ResponseBody { get; set; }
         string? ResponseBodyStr { get; }
         string? SessionKey { get; set; }
@@ -37,5 +38,6 @@ namespace CoreBridge.Services.Interfaces
         Task LoadTitleInfo(string titleCode);
         Task LoadUserInfo();
         Task SaveSessionDebugInfo();
+        void CopyParamHeader();
     }
 }

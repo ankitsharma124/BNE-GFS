@@ -39,12 +39,9 @@ namespace CoreBridge.Controllers.api
         public SysConsts.SkuType SkuType { get; set; }
         public string? Session { get; set; } = null;
         public string TitleCode { get; set; }
-
         public string? UserId { get; set; } = null;
-
         //todo: type?
         public object UserInfo { get; set; } = null;
-
         public TitleInfoDto TitleInfo { get; set; }
 
         //各アクションでParameter bindingで受け取った後、セットすべし

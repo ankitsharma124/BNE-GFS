@@ -78,15 +78,13 @@ namespace CoreBridge.Controllers.api
 
         protected async Task Init()
         {
-#if DEBUG
-            StartTime = DateTime.Now; //
-#endif   
+
             CheckUri(); //
             ProcessParams(); //
-            CheckPlatform();
-            SessionCheck();
-            SessionUpdate();
-            await CheckUserConsistency();
+            CheckPlatform();//
+            SessionCheck();//
+            SessionUpdate();//
+            await CheckUserConsistency();//
 
             // メンテナンス中にAPIを操作できるユーザーであるかを判断する処理
             // 実行APIがリストに存在する場合には処理をスキップ
@@ -140,9 +138,10 @@ namespace CoreBridge.Controllers.api
 
         /// <summary>
         /// 不正なPFが指定されていないかのチェック
+        /// this is wrong anyway
         /// </summary>
         /// <exception cref="BNException"></exception>
-        protected void CheckPlatform()
+        protected void CheckPlatform()　// RequestService
         {
             var list = _configService.GetValue<Dictionary<string, int>>("PlatformlessApiList");
             if (!Platform.ToString().In(list.Keys.ToArray()))
@@ -288,13 +287,6 @@ namespace CoreBridge.Controllers.api
             return false;
         }
 
-        private bool CheckTitleMaintenance(int platform, int modeKey)
-        {
-            int getMode;
-            var success = _cache.TryGetValue<int>(SysConsts.SYSTEM_MAINTENANCE_KEY + ":" + platform, out getMode);
-            if (success && getMode == modeKey) return true;
-            return false;
-        }
 
         protected async Task ReturnBNResponse(object details, int result = -1, int status = -1)
         {
@@ -356,16 +348,13 @@ namespace CoreBridge.Controllers.api
         }
 
 
-        protected void CollectHttpParamForDebug()
+        protected void CollectHttpParamForDebug() //done
         {
             var skuType = (int)SysConsts.SkuType.Product;
             skuType = this.SkuTypeId ?? skuType;
             var titleCode = skuType == (int)SysConsts.SkuType.Product ? this.TitleCode :
                 this.TitleInfo.TrialTitleCode;
-            var reqBody = _configService.GetValue<bool?>("UseJson") == true ?
-                _reqService.GetDebugBodyCopyInJsonStringFromHeader(Request) : _reqService.GetDebugMsgpackBodyCopyInJsonStringFromHeader(Request);
 
-            var resBody = _responseService.ReadResponseBody(Response, Request.Path.ToString().ToLower().StartsWith("/api/server")).Result;
 
 
 

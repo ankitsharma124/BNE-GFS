@@ -14,6 +14,7 @@ namespace CoreBridge.Controllers.api
     [ApiController]
     public class Test_NoBaseController : ControllerBase
     {
+        /*
         private readonly IRequestService _reqService;
 
         public Test_NoBaseController(IRequestService reqService)
@@ -62,6 +63,7 @@ namespace CoreBridge.Controllers.api
         {
             return new JsonResult(new { name = "Hello" });
         }
+        */
 
     }
 }

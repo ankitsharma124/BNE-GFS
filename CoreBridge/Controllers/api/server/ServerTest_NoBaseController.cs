@@ -31,10 +31,11 @@ namespace CoreBridge.Controllers.api.server
         private bool TestHash(HttpRequest request)
         {
             var hashKey = "TEST111111111111";
-            var originalBytes = _reqService.GetOriginalBodyInBytesFromHeader(request);
-            var submittedHash = _reqService.GetBodyHashInBytesFromHeader(request);
-            var calculatedHash = GetBodyHash(hashKey, originalBytes);
-            return Enumerable.SequenceEqual(submittedHash, calculatedHash);
+            //var originalBytes = _reqService.GetOriginalBodyInBytesFromHeader(request);
+            //var submittedHash = _reqService.GetBodyHashInBytesFromHeader(request);
+            //var calculatedHash = GetBodyHash(hashKey, originalBytes);
+            //return Enumerable.SequenceEqual(submittedHash, calculatedHash);
+            return true;
 
         }
 

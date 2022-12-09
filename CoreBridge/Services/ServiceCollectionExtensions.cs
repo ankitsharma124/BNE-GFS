@@ -56,6 +56,8 @@ namespace CoreBridge.Services
             services.TryAddScoped<IRequestService, RequestService>();
             services.TryAddScoped<ISessionStatusService, SessionStatusService>();
             services.TryAddScoped<IHashService, HashService>();
+            services.TryAddScoped<IUserService, UserService>();
+            services.TryAddScoped<IMaintenanceService, MaintenanceService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;

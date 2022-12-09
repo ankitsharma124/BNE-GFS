@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
+using CoreBridge.Models.Extensions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Models.Repositories;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Specifications;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.IO.Enumeration;
 using System.Transactions;
@@ -16,20 +18,37 @@ namespace CoreBridge.Services
     public class TitleInfoService : ITitleInfoService
     {
         private readonly IUnitOfWork _unitOfWork;
-
+        private readonly IDistributedCache _cache;
         private readonly ILogger<TitleInfoService> _logger;
         private readonly IMapper _mapper;
 
-        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger, IMapper mapper)
+        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger,
+            IMapper mapper, IDistributedCache cache)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             //Auto Mapper Setting.
             _mapper = mapper;
+            _cache = cache;
         }
 
-        public async Task<TitleInfoDto> GetByCodeAsync(string titleCode)
+        public async Task<TitleInfoDto> GetByCodeAsync(string titlecode)
+        {
+            TitleInfoDto title;
+            var success = _cache.TryGetValue<TitleInfoDto>(titlecode, out title);
+            if (title == null)
+            {
+                title = await GetByCodeInnerAsync(titlecode);
+                if (title != null)
+                {
+                    await _cache.SetAsync(titlecode, title);
+                }
+            }
+            return title;
+        }
+
+        private async Task<TitleInfoDto> GetByCodeInnerAsync(string titleCode)
         {
             var entity = await _unitOfWork.TitleInfoRepository.GetByIdAsync(titleCode);
             return _mapper.Map<TitleInfoDto>(entity);

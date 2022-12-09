@@ -9,6 +9,8 @@ using MessagePack;
 using CoreBridge.Models.Entity;
 using System.Security.Policy;
 using System.Reflection.Emit;
+using CoreBridge.Models.DTO.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoreBridge.Services
 {
@@ -17,14 +19,72 @@ namespace CoreBridge.Services
         private readonly IConfiguration _config;
         private readonly ISessionStatusService _sss;
         private readonly ILogger _logger;
-        public RequestService(IConfiguration config, ISessionStatusService sss, ILogger logger)
+        private readonly IUrlHelper _url;
+        private readonly ISessionService _session;
+        private readonly IUserService _user;
+        private readonly IMaintenanceService _maintenace;
+        private readonly IHashService _hash;
+        public RequestService(IConfiguration config, ISessionStatusService sss,
+            ISessionService session, IUserService user, IMaintenanceService maintenace, IHashService hash,
+            IUrlHelper url, ILogger logger)
         {
             _config = config;
             _sss = sss;
             _logger = logger;
+            _url = url;
+            _session = session;
+            _user = user;
+            _maintenace = maintenace;
+            _hash = hash;
         }
 
-        public void CheckUri(HttpRequest req)
+        public async Task ProcessRequest(HttpRequest req, ReqBase reqHeader, ReqBase reqParam)
+        {
+            _sss.ReqHeader = reqHeader;
+            _sss.ReqParam = reqParam;
+            if (_sss.ReqParam == null)
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.RequestErr,
+                    "post_param:empty");
+            }
+
+            if (!_sss.IsBnIdApi)
+            {
+                _sss.CopyParamHeader();
+                CheckUri(req);
+#if DEBUG
+                var agent = req.Headers.UserAgent;
+                _logger.LogInformation($"HttpHeader[ User-Agent: {agent} ]");
+#endif
+                await _sss.LoadTitleInfo(_sss.TitleCode);
+                if (!_url.IsLocalUrl(req.Headers.Referer))
+                {
+                    CheckApi(req);
+                }
+                if (_sss.IsServerApi)
+                {
+                    _hash.CheckTitleHasHashKey();
+                    _hash.CheckHash();
+                }
+
+                CheckTrialTitleCode();
+            }
+            CheckPlatform(req);
+            if (_sss.IsClientApi)
+            {
+                _session.SessionCheck(); //clientOnly
+                _session.SessionUpdate(); //clientOnly
+            }
+            if (!_sss.IsBnIdApi)
+            {
+                await _user.CheckUserConsistency();
+            }
+            await _maintenace.CheckMaintenanceStatus(true);
+
+            _sss.ReqParam.Validate();
+        }
+
+        private void CheckUri(HttpRequest req)
         {
             var list = _config.GetValue<string[]>("ProhibitedApiList");
             if (list != null && list.Length > 0)
@@ -38,7 +98,7 @@ namespace CoreBridge.Services
             }
         }
 
-        public void CheckApi(HttpRequest req)
+        private void CheckApi(HttpRequest req)
         {
             var list = new List<string>();
             var dic = ((Dictionary<string, string>[])_sss.TitleInfo.ApiList).First();
@@ -54,13 +114,28 @@ namespace CoreBridge.Services
             }
         }
 
-        public void CheckTrialTitleCode()
+        private void CheckTrialTitleCode()
         {
             if (_sss.SkuType == (int)SysConsts.SkuType.Trial &&
                 _sss.TitleInfo.TrialTitleCode == "")
             {
                 throw new BNException(_sss.ApiCode, BNException.BNErrorCode.TitleCodeInvalid,
                     $"体験版タイトルコード未登録[{_sss.TitleCode}]");
+            }
+        }
+
+        private void CheckPlatform(HttpRequest req)
+        {
+            var list = _config.GetValue<Dictionary<string, int>>("PlatformlessApiList");
+
+            if (req.Path.ToString().In(list.Keys.ToArray()))
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.PlatformTypeInvalid,
+                    $"不正なプラットフォームが指定されました。platform[{_sss.Platform}]");
+            }
+            else
+            {
+                _sss.Platform = list[req.Path.ToString()];
             }
         }
 

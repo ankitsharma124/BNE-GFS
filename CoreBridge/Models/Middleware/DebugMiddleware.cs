@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace CoreBridge.Models.Middleware
 {
+    /*
     public class DebugMiddleware
     {
         private readonly RequestDelegate _next;
@@ -26,5 +27,5 @@ namespace CoreBridge.Models.Middleware
             }
             await _next(httpContext);
         }
-    }
+    }*/
 }
