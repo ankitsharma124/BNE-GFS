@@ -84,3 +84,4 @@ terraform/.terraform/modules/
 /CoreBridge/CoreBridge.csproj.user
 /.gitignore
 /CoreBridge/bne-gfs-06ffad36d462.json
+/CoreBridgeTest/CoreBridgeTest1.sln
