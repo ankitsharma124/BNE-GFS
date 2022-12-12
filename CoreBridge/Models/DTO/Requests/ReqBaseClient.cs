@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.HttpOverrides;
+using MessagePack;
 
 namespace CoreBridge.Models.DTO.Requests
 {
+    [MessagePackObject]
     public class ReqBaseClient : ReqBaseParamHeader
     {
+        [Key(20)]
         public new Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {
             { "code", 9999 },

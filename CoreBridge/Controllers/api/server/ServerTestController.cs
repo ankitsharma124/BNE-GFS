@@ -9,14 +9,18 @@ namespace CoreBridge.Controllers.api.server
 {
 
     [Route("api/server/[controller]/[action]")]
-    public class ServerTestController : ServerController
+    [ApiController]
+    public class ServerTestController : ControllerBase
     {
         private readonly IRequestService _reqService;
-        public ServerTestController(IHostEnvironment env, IResponseService responseService, IDistributedCache cache,
-          IConfiguration configService, ILogger loggerService, ITitleInfoService titleInfoService,
-          IRequestService reqService)
-            : base(env, responseService, cache, configService, loggerService, titleInfoService)
+        private readonly ISessionStatusService _sss;
+        private readonly IResponseService _res;
+        public ServerTestController(
+          IRequestService reqService, ISessionStatusService session, IResponseService res)
         {
+            _reqService = reqService;
+            _sss = session;
+            _res = res;
 
         }
 
@@ -28,6 +32,26 @@ namespace CoreBridge.Controllers.api.server
             //Debug.WriteLine(header);
 
             return new JsonResult("OK");
+        }
+
+        [HttpPost]
+        public async Task TestServerApiJson([FromBody] ReqBag<ReqBaseClientServerParamHeader, ServerTestParam> bag)
+        {
+            _sss.ApiCode = 9999;
+            await _reqService.ProcessRequest(Request, bag.Header, bag.Param);
+            //perform service
+            await _res.ReturnBNResponseAsync(Response, 1);
+
+        }
+
+        [HttpPost]
+        public async Task TestServerMsgpack([FromBody] ReqBag<ReqBaseClientServerParamHeader, ServerTestParam> bag)
+        {
+            _sss.ApiCode = 9999;
+            await _reqService.ProcessRequest(Request, bag.Header, bag.Param);
+            //perform service
+            await _res.ReturnBNResponseAsync(Response, 1);
+
         }
     }
 }

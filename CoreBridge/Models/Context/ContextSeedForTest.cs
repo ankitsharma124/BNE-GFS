@@ -21,7 +21,8 @@ namespace CoreBridge.Models.Context
                 Id = "TestTitleId",
                 TitleCode = "TestTitleCode",
                 TitleName = "testTitleName",
-                TrialTitleCode = "TestTrialTitleCode"
+                TrialTitleCode = "TestTrialTitleCode",
+                HashKey = "TEST111111111111"
             };
 
             _modelBuilder.Entity<TitleInfo>().HasData(info);

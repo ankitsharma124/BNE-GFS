@@ -127,36 +127,7 @@ namespace CoreBridge.Services
         public IQueryCollection Query { get; set; } = null;//BnId controller only
 
 
-        /// <summary>
-        /// copy request body from res and save to Json/MsgPackResponsebody
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        public async Task CopyResponseBody(HttpResponse res)
-        {
-            byte[] originalContent;
-            using (StreamReader stream = new StreamReader(res.Body))
-            {
-                var ms = new MemoryStream();
-                await stream.BaseStream.CopyToAsync(ms);
-                originalContent = ms.ToArray();
-            }
 
-            if (UseHash)
-            {
-                originalContent = originalContent.Skip(16).ToArray();
-            }
-
-            if (UseJson)
-            {
-                JsonResponse = originalContent.ToString();
-            }
-            else
-            {
-                MsgPackResponse = originalContent;
-            }
-            res.Body = new MemoryStream(originalContent);
-        }
         /// <summary>
         /// phpのBnIdController.entry_userdataに相当
         /// </summary>

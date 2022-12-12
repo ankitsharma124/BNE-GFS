@@ -7,5 +7,6 @@
 
         Task ReturnBNErrorAsync(HttpResponse response, int statusCode);
         Task ReturnBNResponseAsync(HttpResponse response, object details, int result = -1, int status = -1);
+        Task CopyResponseBody(HttpResponse res);
     }
 }

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.HttpOverrides;
+﻿using MessagePack;
+using Microsoft.AspNetCore.HttpOverrides;
 namespace CoreBridge.Models.DTO.Requests
 {
+    [MessagePackObject]
     public class ReqBaseServer : ReqBaseParamHeader
     {
+        [Key(50)]
         public new Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {
             { "code", 9999 },

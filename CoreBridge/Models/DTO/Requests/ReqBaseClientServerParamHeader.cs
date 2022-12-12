@@ -1,24 +1,30 @@
 ﻿using CoreBridge.Models.Exceptions;
+using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace CoreBridge.Models.DTO.Requests
 {
+    [MessagePackObject]
     public class ReqBaseClientServerParamHeader : ReqBaseParamHeader
     {
-
+        [Key(10)]
         [FromBody]
         public string? TitleCode { get; set; } = null;
+        [Key(11)]
         [FromBody]
         public string? UserId { get; set; } = null;
+        [Key(12)]
         [FromBody]
         public int? SkuType { get; set; } = null;
+        [Key(13)]
         [FromBody]
         public string? Session { get; set; } = null;
+        [Key(14)]
         [FromBody]
         public int? Platform { get; set; } = null;
 
-
+        [IgnoreMember]
         public HttpRequest? HttpReqObj { get; set; } = null;
 
         public void Validate()

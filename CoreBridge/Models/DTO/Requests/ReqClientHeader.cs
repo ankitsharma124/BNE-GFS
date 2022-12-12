@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models.Exceptions;
+using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
@@ -7,8 +8,10 @@ using System.Text.Json;
 
 namespace CoreBridge.Models.DTO.Requests
 {
+    [MessagePackObject]
     public class ReqClientHeader : ReqBaseClientServerParamHeader
     {
+
         public ReqClientHeader() : base()
         {
             //???should validate after construction (let controller method run)???

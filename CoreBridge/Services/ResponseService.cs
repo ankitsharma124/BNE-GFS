@@ -3,6 +3,7 @@ using CoreBridge.Models.DTO.Requests;
 using CoreBridge.Models.Exceptions;
 using CoreBridge.Services.Interfaces;
 using MessagePack;
+using Microsoft.DotNet.MSIdentity.Shared;
 using System.Reflection.Emit;
 using System.Text.Json;
 using static Google.Rpc.Context.AttributeContext.Types;
@@ -143,6 +144,37 @@ namespace CoreBridge.Services
             await response.WriteAsync(body);
         }
 
+
+        /// <summary>
+        /// copy request body from res and save to Json/MsgPackResponsebody
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        public async Task CopyResponseBody(HttpResponse res)
+        {
+            byte[] originalContent;
+            using (StreamReader stream = new StreamReader(res.Body))
+            {
+                var ms = new MemoryStream();
+                await stream.BaseStream.CopyToAsync(ms);
+                originalContent = ms.ToArray();
+            }
+
+            if (_sss.UseHash)
+            {
+                originalContent = originalContent.Skip(16).ToArray();
+            }
+
+            if (_sss.UseJson)
+            {
+                _sss.JsonResponse = originalContent.ToString();
+            }
+            else
+            {
+                _sss.MsgPackResponse = originalContent;
+            }
+            res.Body = new MemoryStream(originalContent);
+        }
 
     }
 }

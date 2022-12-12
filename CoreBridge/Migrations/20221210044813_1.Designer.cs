@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreBridge.Migrations
 {
     [DbContext(typeof(CoreBridgeContext))]
-    [Migration("20221209100119_1209")]
-    partial class _1209
+    [Migration("20221210044813_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

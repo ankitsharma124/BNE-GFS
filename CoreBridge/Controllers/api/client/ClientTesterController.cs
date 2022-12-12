@@ -25,6 +25,17 @@ namespace CoreBridge.Controllers.api.client
         {
             _sss.ApiCode = 9999;
             await _req.ProcessRequest(Request, bag.Header, bag.Param);
+            //perform service
+            await _res.ReturnBNResponseAsync(Response, 1);
+
+        }
+
+        [HttpPost]
+        public async Task TestClientMsgpack([FromBody] ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> bag)
+        {
+            _sss.ApiCode = 9999;
+            await _req.ProcessRequest(Request, bag.Header, bag.Param);
+            //perform service
             await _res.ReturnBNResponseAsync(Response, 1);
 
         }

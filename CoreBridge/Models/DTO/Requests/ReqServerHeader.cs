@@ -1,5 +1,8 @@
-﻿namespace CoreBridge.Models.DTO.Requests
+﻿using MessagePack;
+
+namespace CoreBridge.Models.DTO.Requests
 {
+    [MessagePackObject]
     public class ReqServerHeader : ReqBaseClientServerParamHeader
     {
         /// <summary>

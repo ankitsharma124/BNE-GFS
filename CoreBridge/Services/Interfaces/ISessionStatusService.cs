@@ -36,7 +36,7 @@ namespace CoreBridge.Services.Interfaces
         GFSUserDto UserInfo { get; set; }
 
         void CopyBnIdUserInfo(BnIdTempInfo info);
-        Task CopyResponseBody(HttpResponse res);
+
         Task SaveSessionDebugInfo();
     }
 }

@@ -22,7 +22,10 @@ namespace CoreBridge.Models.Middleware
             InitSSS(httpContext);
             await _next(httpContext);
 #if DEBUG
-            await _sss.SaveSessionDebugInfo();
+            if (httpContext.Request.Path.ToString().ToLower().Contains("api"))
+            {
+                await _sss.SaveSessionDebugInfo();
+            }
 #endif
         }
 
