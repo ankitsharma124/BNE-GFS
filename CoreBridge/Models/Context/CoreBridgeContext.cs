@@ -13,11 +13,13 @@ namespace CoreBridge.Models.Context
         // Entity Entry
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
+            modelBuilder.Entity<AppUser>().HasIndex(a => a.UserId);
         }
     }
 }

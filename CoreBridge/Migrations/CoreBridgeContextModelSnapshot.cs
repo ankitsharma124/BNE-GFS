@@ -45,6 +45,35 @@ namespace CoreBridge.Migrations
                     b.ToTable("AdminUsers");
                 });
 
+            modelBuilder.Entity("CoreBridge.Models.Entity.AppUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.Property<string>("TitleCode")
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppUsers");
+                });
+
             modelBuilder.Entity("CoreBridge.Models.Entity.TitleInfo", b =>
                 {
                     b.Property<string>("Id")

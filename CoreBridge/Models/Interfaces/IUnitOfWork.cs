@@ -8,6 +8,7 @@ namespace CoreBridge.Models.Interfaces
         // Repository List
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get; }
         public ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get; }
+        public ICoreBridgeRepository<AppUser> AppUserRepository { get; }
 
         public Task<bool> CommitAsync();
         public string GetTableName<T>() where T : IAggregateRoot;
