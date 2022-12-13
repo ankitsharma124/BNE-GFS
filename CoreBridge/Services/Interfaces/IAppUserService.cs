@@ -11,6 +11,7 @@ namespace CoreBridge.Services.Interfaces
         public Task<AppUserDto?> UpdateAsync(AppUserDto dto);
         public Task<AppUserDto> DetachAsync(AppUserDto dto);
         public Task<AppUser> DeleteAsync(AppUser dto);
+        public Task<bool> FindTitleCode(string code);
         public Task<bool> GetByUserIdAsync(string id);
     }
 }

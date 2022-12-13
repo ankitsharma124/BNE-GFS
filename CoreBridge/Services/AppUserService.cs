@@ -107,5 +107,16 @@ namespace CoreBridge.Services
             await _unitOfWork.CommitAsync();
             return dto;
         }
+
+        public async Task<bool> FindTitleCode(string code)
+        {
+            var targetInfo = await _unitOfWork.AppUserRepository.ListAsync();
+            var targetTitleCode = targetInfo.Find(e => e.TitleCode == code);
+            if (targetTitleCode == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

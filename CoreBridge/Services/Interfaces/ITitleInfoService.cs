@@ -11,7 +11,6 @@ namespace CoreBridge.Services.Interfaces
         public Task<TitleInfoDto> UpdateAsync(TitleInfoDto dto);
         public Task<TitleInfoDto> DetachAsync(TitleInfoDto dto);
         public Task<TitleInfo> DeleteAsync(TitleInfo dto);
-        public Task<bool> FindTitleCode(string code);
         Task<TitleInfoDto> GetByCodeAsync(string titleCode);
 
         Task LoadStatus_TitleInfo(string titleCode);

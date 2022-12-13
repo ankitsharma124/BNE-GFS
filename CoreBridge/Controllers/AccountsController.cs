@@ -21,12 +21,15 @@ namespace CoreBridge.Controllers
     {
         private readonly CoreBridgeContext _context;
         private readonly IAppUserService _appUserService;
-        //private readonly ITitleInfoService _titleInfoService;
+        private readonly IMapper _mapper;
 
         public AccountsController(CoreBridgeContext coreBridgeContext, IAppUserService appUserService)
         {
             _context = coreBridgeContext;
             _appUserService = appUserService;
+
+            var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
+            _mapper = new Mapper(mapConfig);
         }
 
         // GET: Accounts
@@ -76,16 +79,16 @@ namespace CoreBridge.Controllers
             if (ModelState.IsValid)
             {
                 //タイトルコードの重複は防ぐ.
-                //if(appUser.TitleCode != null)
-                //{
-                //    var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
-                //    if (check == false)
-                //    {
-                //        //エラーメッセージ
-                //        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
-                //        return View();
-                //    }
-                //}
+                if (appUser.TitleCode != null)
+                {
+                    var check = await _appUserService.FindTitleCode(appUser.TitleCode);
+                    if (check == false)
+                    {
+                        //エラーメッセージ
+                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
+                        return View(_mapper.Map<AppUser>(appUser));
+                    }
+                }
 
                 //登録する
                 await _appUserService.AddAsync(appUser);
