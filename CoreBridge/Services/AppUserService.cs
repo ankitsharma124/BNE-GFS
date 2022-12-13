@@ -10,13 +10,11 @@ namespace CoreBridge.Services
     public class AppUserService : IAppUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILoggerService _logger;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUnitOfWork unitOfWork, ILoggerService logger)
+        public AppUserService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             //Auto Mapper Setting.
             var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
@@ -72,6 +70,23 @@ namespace CoreBridge.Services
                 return null;
             }
             return await _unitOfWork.AppUserRepository.GetByIdAsync(targetInfo.Id);
+        }
+
+        /// <summary>
+        /// UserIDの検出
+        /// </summary>
+        /// <param name="id">UserID</param>
+        /// <returns>True:新規 False:既存</returns>
+        public async Task<bool> GetByUserIdAsync(string id)
+        {
+            var appUserInfo = await _unitOfWork.AppUserRepository.ListAsync();
+            var targetInfo = appUserInfo.Find(e => e.UserId == id);
+            if(targetInfo == null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<AppUserDto?> UpdateAsync(AppUserDto dto)

@@ -12,6 +12,8 @@ using CoreBridge.Services.Interfaces;
 using CoreBridge.Models.DTO;
 using CoreBridge.Services;
 using Google.Api;
+using CoreBridge.Models.lib;
+using AutoMapper;
 
 namespace CoreBridge.Controllers
 {
@@ -19,6 +21,7 @@ namespace CoreBridge.Controllers
     {
         private readonly CoreBridgeContext _context;
         private readonly IAppUserService _appUserService;
+        //private readonly ITitleInfoService _titleInfoService;
 
         public AccountsController(CoreBridgeContext coreBridgeContext, IAppUserService appUserService)
         {
@@ -50,9 +53,17 @@ namespace CoreBridge.Controllers
         }
 
         // GET: Accounts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            AppUser appUser = new();
+            UserOperation userManager = new(_appUserService);
+
+            appUser.UserId = await userManager.CreateUserId();
+            if(appUser.UserId == String.Empty)
+            {
+                return View();
+            }
+            return View(appUser);
         }
 
         // POST: Accounts/Create
@@ -64,8 +75,19 @@ namespace CoreBridge.Controllers
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(appUser);
-                //await _context.SaveChangesAsync();
+                //タイトルコードの重複は防ぐ.
+                //if(appUser.TitleCode != null)
+                //{
+                //    var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
+                //    if (check == false)
+                //    {
+                //        //エラーメッセージ
+                //        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
+                //        return View();
+                //    }
+                //}
+
+                //登録する
                 await _appUserService.AddAsync(appUser);
                 return RedirectToAction(nameof(Index));
             }
