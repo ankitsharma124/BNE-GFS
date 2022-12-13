@@ -106,14 +106,18 @@ namespace CoreBridge.Services
         {
             get
             {
-                return JsonSerializer.Serialize(MessagePackSerializer.Deserialize<object[]>(MsgPackRequest));
+                if (MsgPackRequest != null)
+                    return JsonSerializer.Serialize(MessagePackSerializer.Deserialize<object[]>(MsgPackRequest));
+                else return "";
             }
         }
         public string MsgPackResponseInJson
         {
             get
             {
-                return JsonSerializer.Serialize(MessagePackSerializer.Deserialize<object[]>(MsgPackResponse));
+                if (MsgPackResponse != null)
+                    return JsonSerializer.Serialize(MessagePackSerializer.Deserialize<object[]>(MsgPackResponse));
+                else return "";
             }
         }
 
@@ -145,10 +149,11 @@ namespace CoreBridge.Services
 #if DEBUG
         public async Task SaveSessionDebugInfo()
         {
-            string reqBody;
-            if (Query == null) //for BnIdController calls
+            string reqBody, resBody;
+            if (Query != null) //for BnIdController calls
             {
                 reqBody = JsonSerializer.Serialize(Query);
+
             }
             else
             {
@@ -164,8 +169,10 @@ namespace CoreBridge.Services
                 RequestPath = this.ReqPath
             };
             info.SetPrimaryKey();
+
             await _unit.DebugInfoRepository.AddAsync(info);
             await _unit.CommitAsync();
+
         }
 #endif
 
