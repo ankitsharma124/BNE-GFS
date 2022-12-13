@@ -85,6 +85,9 @@ namespace CoreBridge.Migrations
                     b.Property<string>("DevUrl")
                         .HasColumnType("STRING");
 
+                    b.Property<string>("HashKey")
+                        .HasColumnType("STRING");
+
                     b.Property<string>("ProdUrl")
                         .HasColumnType("STRING");
 
@@ -135,6 +138,18 @@ namespace CoreBridge.Migrations
                     b.HasIndex("TitleCode");
 
                     b.ToTable("TitleInfo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "TestTitleId",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ptype = 0,
+                            TitleCode = "TestTitleCode",
+                            TitleName = "testTitleName",
+                            TrialTitleCode = "TestTrialTitleCode",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 #pragma warning restore 612, 618
         }

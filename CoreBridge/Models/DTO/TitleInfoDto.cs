@@ -60,6 +60,16 @@ namespace CoreBridge.Models.DTO
         public String? QaUrl { get; set; }
         [Key(13)]
         public String? ProdUrl { get; set; }
+        [IgnoreMember]
+        public String? HashKey { get; set; } = null;
+        [IgnoreMember]
+        public object[]? ApiList { get; set; } //Dictionary<string, string>[]?
+        //[Key(13)]
+        //[System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        //public DateTime CreateAt { get; set; }
+        //[Key(14)]
+        //[System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        //public DateTime UpdateAt { get; set; }
 
         public bool IsValid()
         {

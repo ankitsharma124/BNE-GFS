@@ -8,33 +8,67 @@ using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Mvc;
 using MessagePack.AspNetCoreMvcFormatter;
 using CoreBridge.Models.Middleware;
+using CoreBridge.Models;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using NLog.Web;
 
 ThreadPool.SetMinThreads(200, 200);
 
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 try
 {
     // Add services to the container.
     //builder.Services.AddControllersWithViews();
+
     builder.Services.AddMvc().AddMvcOptions(option =>
     {
-        option.OutputFormatters.Clear();
+        //option.OutputFormatters.Clear(); 
         option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
-        option.InputFormatters.Clear();
-        option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+        SystemTextJsonInputFormatter jsonFormatter = (SystemTextJsonInputFormatter)option.InputFormatters.First();
+        var inputFormatter = new MessagePackInputFormatter(ContractlessStandardResolver.Options);
+        inputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/x-messagepack"));
+        option.InputFormatters.Add(inputFormatter);
+
+
     });
     builder.Services.AddRazorPages();
+
+    //for RemoteIP
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
+
+    // NLog: Setup NLog for Dependency injection
+    builder.Host.ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddConsole();
+    }).UseNLog();
+
 
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);
     // Hangfuire Service Add
     builder.Services.AddHangfireServices(builder.Configuration);
+
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = AppSetting.GetConnectStringRedis(builder.Configuration);
+        options.InstanceName = "redis";
+    });
+
+
     // CustomServices
     builder.Services.AddCustomServices();
-
-
 
     // Session(Cookie)
     builder.Services.AddSession(options =>
@@ -66,17 +100,25 @@ try
         app.UseStaticFiles();
         app.UseRouting();
         app.UseSession();
+
+        //custom middleware
+        app.UseMiddleware<ExceptionMiddleware>();
+        app.UseMiddleware<SessionStatusAdminMiddleware>();
+
+        //app.UseMiddleware<HashAdminMiddleware>();
+        //app.UseMiddleware<DebugMiddleware>();
+
         //app.UseAuthorization();
 
         // HangFire Dashbord
+
         app.UseHangfireServer();
         app.UseHangfireDashboard("/hangfire", new DashboardOptions
         {
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
-        //Middleware
-        app.UseMiddleware<ExceptionMiddleware>();
+
 
         // Api Routing Add
         app.MapControllerRoute(

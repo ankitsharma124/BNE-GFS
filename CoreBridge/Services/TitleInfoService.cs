@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
 using CoreBridge.Models.DTO;
 using CoreBridge.Models.Entity;
+using CoreBridge.Models.Exceptions;
+using CoreBridge.Models.Extensions;
 using CoreBridge.Models.Interfaces;
 using CoreBridge.Models.Repositories;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Specifications;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.IO.Enumeration;
+using System.Reflection.Emit;
 using System.Transactions;
 
 namespace CoreBridge.Services
@@ -16,23 +20,52 @@ namespace CoreBridge.Services
     public class TitleInfoService : ITitleInfoService
     {
         private readonly IUnitOfWork _unitOfWork;
-
+        private readonly IDistributedCache _cache;
         private readonly ILogger<TitleInfoService> _logger;
         private readonly IMapper _mapper;
+        private readonly ISessionStatusService _sss;
 
-        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger)
+        public TitleInfoService(IUnitOfWork unitOfWork, ILogger<TitleInfoService> logger,
+            IMapper mapper, IDistributedCache cache, ISessionStatusService sss)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             //Auto Mapper Setting.
-            var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<TitleInfoDto, TitleInfo>());
-            _mapper = new Mapper(mapConfig);
+            _mapper = mapper;
+            _cache = cache;
+            _sss = sss;
         }
 
-        public async Task<TitleInfoDto> GetByCodeAsync(string titleCode)
+        public async Task LoadStatus_TitleInfo(string titleCode)
         {
-            var entity = await _unitOfWork.TitleInfoRepository.GetByIdAsync(titleCode);
+            _sss.TitleInfo = await GetByCodeAsync(titleCode);
+            if (_sss.TitleInfo == null)
+            {
+                throw new BNException(_sss.ApiCode, BNException.BNErrorCode.TitleCodeInvalid,
+                    BNException.ErrorLevel.Error, $"不正なタイトルコードが指定されました。title_cd[{_sss.TitleCode}]");
+            }
+        }
+        public async Task<TitleInfoDto> GetByCodeAsync(string titlecode)
+        {
+            TitleInfoDto title;
+            var success = _cache.TryGetValue<TitleInfoDto>(titlecode, out title);
+            if (title == null)
+            {
+                title = await GetByCodeInnerAsync(titlecode);
+                if (title != null)
+                {
+                    await _cache.SetAsync(titlecode, title);
+                }
+            }
+            return title;
+        }
+
+        private async Task<TitleInfoDto> GetByCodeInnerAsync(string titleCode)
+        {
+            TitleInfoSpecification spec = new();
+            spec.GetByCode(titleCode);
+            var entity = await _unitOfWork.TitleInfoRepository.GetBySpecAsync(spec);
             return _mapper.Map<TitleInfoDto>(entity);
         }
 
@@ -47,7 +80,7 @@ namespace CoreBridge.Services
             //タイトルコードの重複は阻止する
             var titleInfos = await _unitOfWork.TitleInfoRepository.ListAsync();
             var targetTitleCode = titleInfos.Find(e => e.TitleCode == dto.TitleCode);
-            if(targetTitleCode != null)
+            if (targetTitleCode != null)
             {
                 return null;
             }
@@ -66,7 +99,7 @@ namespace CoreBridge.Services
         {
             var titleInfos = await _unitOfWork.TitleInfoRepository.ListAsync();
             var targetInfo = titleInfos.Find(e => e.TitleCode == id);
-            if(targetInfo == null)
+            if (targetInfo == null)
             {
                 return null;
             }
@@ -77,7 +110,7 @@ namespace CoreBridge.Services
         {
             var titleInfos = await _unitOfWork.TitleInfoRepository.ListAsync();
             var targetInfo = titleInfos.Find(e => e.TitleCode == dto.TitleCode);
-            if(titleInfos == null)
+            if (titleInfos == null)
             {
                 return null;
             }

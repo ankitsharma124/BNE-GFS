@@ -20,10 +20,18 @@ namespace CoreBridge.Models.Repositories
         //Entry List
         private readonly CoreBridgeRepository<AdminUser> _adminUserRepository = null;
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get { return GetInstance(_adminUserRepository); } }
+
         private readonly CoreBridgeRepository<TitleInfo> _titleInfoRepository = null;
         public ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get { return GetInstance(_titleInfoRepository); } }
         private readonly CoreBridgeRepository<AppUser> _appUserRepository = null;
         public ICoreBridgeRepository<AppUser> AppUserRepository { get { return GetInstance(_appUserRepository); } }
+
+        private readonly CoreBridgeRepository<DebugInfo> _debugInfoRepository = null;
+        public ICoreBridgeRepository<DebugInfo> DebugInfoRepository { get { return GetInstance(_debugInfoRepository); } }
+
+        private readonly CoreBridgeRepository<GFSUser> _userRepository = null;
+        public ICoreBridgeRepository<GFSUser> UserRepository { get { return GetInstance(_userRepository); } }
+
 
         private CoreBridgeRepository<T> GetInstance<T>(CoreBridgeRepository<T> repository) where T : CoreBridgeEntity, IAggregateRoot
         {

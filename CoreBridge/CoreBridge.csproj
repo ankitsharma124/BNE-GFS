@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>b8c0f911-9b05-4eff-822b-f3450ebad878</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,8 +29,10 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.11" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
 		<PackageReference Include="NLog.Config" Version="4.7.15" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.70" />
 		<PackageReference Include="Ardalis.Specification" Version="6.1.0" />
 		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
@@ -37,13 +40,14 @@
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
 		<PackageReference Include="HangFire.Autofac" Version="2.3.1" />
 		<PackageReference Include="Hangfire.Redis.StackExchange" Version="1.8.6" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
 		<PackageReference Include="Google.Cloud.EntityFrameworkCore.Spanner" Version="2.0.3" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="XAct.Core.PCL" Version="0.0.5014" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Controllers\api\NewFolder\" />
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\Headers\" />
 		<Folder Include="Views\TitleInfo\" />
