@@ -2,13 +2,14 @@
 
 namespace CoreBridge.Models.Entity
 {
+
     //タイトルコード管理テーブル（仮）
     public class TitleInfo : CoreBridgeEntity, IAggregateRoot
     {
-        private TitleInfo() { }
+        internal TitleInfo() { }
 
-        public TitleInfo(string titleName, string titleCode, string trialTitleCode, int pType, 
-            string switchAppId, string xboxTitleId, string psClientId, string psClientSecret, 
+        public TitleInfo(string titleName, string titleCode, string trialTitleCode, int pType,
+            string switchAppId, string xboxTitleId, string psClientId, string psClientSecret,
             string steamAppId, string steamPublisherKey, string devUrl, string qaUrl, string prodUrl)
         {
             TitleName = titleName;
@@ -24,10 +25,13 @@ namespace CoreBridge.Models.Entity
             DevUrl = devUrl;
             QaUrl = qaUrl;
             ProdUrl = prodUrl;
+            //CreatedAt = createTime;
+            //UpdatedAt = updateTime;
+            //Id = id;
         }
 
         public string TitleName { get; set; }
-        public string TitleCode{ get; set; }
+        public string TitleCode { get; set; }
         public string TrialTitleCode { get; set; }
         public int Ptype { get; set; }
         public string? SwitchAppId { get; set; }
@@ -40,7 +44,17 @@ namespace CoreBridge.Models.Entity
         public string? TestUrl { get; set; }
         public string? QaUrl { get; set; }
         public string? ProdUrl { get; set; }
+
+        public string? HashKey { get; set; } = null;
+
+        //public object[]? ApiList { get; set; } //Dictionary<string, string>[]?
+
+
+        //public DateTime CreateAt { get; set; }
+        //public DateTime UpdateAt { get; set; }
+        //public string Id { get; set; }
     }
+
 
 
 }

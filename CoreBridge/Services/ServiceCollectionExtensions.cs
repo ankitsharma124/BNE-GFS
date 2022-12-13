@@ -46,12 +46,21 @@ namespace CoreBridge.Services
         }
 
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
+        //IConfiguration configuration, string path)
         {
-            services.AddScoped<ILoggerService, LoggerService>();
-            services.AddScoped<IResponseService, ResponseService>();
+
             services.TryAddScoped<IAdminUserService, AdminUserService>();
             services.TryAddScoped<ITitleInfoService, TitleInfoService>();
+            services.TryAddScoped<IResponseService, ResponseService>();
+            services.TryAddScoped<ITitleInfoService, TitleInfoService>();
+            services.TryAddScoped<IRequestService, RequestService>();
+            services.TryAddScoped<ISessionStatusService, SessionStatusService>();
+            services.TryAddScoped<ISessionDataService, SessionDataService>();
+            services.TryAddScoped<IHashService, HashService>();
+            services.TryAddScoped<IUserService, UserService>();
+            services.TryAddScoped<IMaintenanceService, MaintenanceService>();
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
 
