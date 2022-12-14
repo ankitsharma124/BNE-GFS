@@ -16,7 +16,9 @@ namespace CoreBridge.Models.Context
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<GFSUser> Users { get; set; }
+        public DbSet<GFSUser> GFSUsers { get; set; }
+
+
 #if DEBUG
         public DbSet<DebugInfo> DebugInfoList { get; set; }
 #endif
@@ -26,8 +28,6 @@ namespace CoreBridge.Models.Context
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
             modelBuilder.Entity<AppUser>().HasIndex(a => a.UserId);
-            modelBuilder.Entity<IdentityUser>().HasIndex(a => a.Id);
-            modelBuilder.Entity<IdentityRole>().HasIndex(a => a.Id);
 #if DEBUG
             ContextSeedForTest.Seed(modelBuilder).Wait();
 #endif

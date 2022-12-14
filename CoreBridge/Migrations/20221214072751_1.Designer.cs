@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreBridge.Migrations
 {
     [DbContext(typeof(CoreBridgeContext))]
-    [Migration("20221214051841_1")]
+    [Migration("20221214072751_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,7 +127,7 @@ namespace CoreBridge.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("GFSUsers");
 
                     b.HasData(
                         new

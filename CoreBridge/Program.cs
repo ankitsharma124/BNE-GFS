@@ -21,6 +21,7 @@ ThreadPool.SetMinThreads(200, 200);
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
 
+
 try
 {
     // Add services to the container.
@@ -79,7 +80,6 @@ try
 
     builder.Services.AddAuthorization(options =>
     {
-
     });
 
 

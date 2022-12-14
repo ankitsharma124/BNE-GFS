@@ -125,7 +125,7 @@ namespace CoreBridge.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("GFSUsers");
 
                     b.HasData(
                         new
