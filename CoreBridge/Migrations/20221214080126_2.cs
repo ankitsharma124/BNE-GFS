@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CoreBridge.Migrations
 {
-    public partial class _1 : Migration
+    public partial class _2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -96,21 +96,6 @@ namespace CoreBridge.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DebugInfoList", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GFSUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "STRING", nullable: false),
-                    Platform = table.Column<int>(type: "INT64", nullable: false),
-                    TitleCode = table.Column<string>(type: "STRING", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GFSUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -246,11 +231,6 @@ namespace CoreBridge.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "GFSUsers",
-                columns: new[] { "Id", "CreatedAt", "Platform", "TitleCode", "UpdatedAt" },
-                values: new object[] { "TestUserId", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "TestTitleCode", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
-
-            migrationBuilder.InsertData(
                 table: "TitleInfo",
                 columns: new[] { "Id", "CreatedAt", "DevUrl", "HashKey", "ProdUrl", "PsClientId", "PsClientSecoret", "Ptype", "QaUrl", "SteamAppId", "SteamPublisherKey", "SwitchAppId", "TestUrl", "TitleCode", "TitleName", "TrialTitleCode", "UpdatedAt", "XboxTitleId" },
                 values: new object[] { "TestTitleId", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "TEST111111111111", null, null, null, 0, null, null, null, null, null, "TestTitleCode", "testTitleName", "TestTrialTitleCode", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null });
@@ -308,9 +288,6 @@ namespace CoreBridge.Migrations
 
             migrationBuilder.DropTable(
                 name: "DebugInfoList");
-
-            migrationBuilder.DropTable(
-                name: "GFSUsers");
 
             migrationBuilder.DropTable(
                 name: "TitleInfo");

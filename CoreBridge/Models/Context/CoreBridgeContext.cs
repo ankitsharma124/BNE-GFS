@@ -16,7 +16,7 @@ namespace CoreBridge.Models.Context
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<GFSUser> GFSUsers { get; set; }
+        //public DbSet<GFSUser> GFSUsers { get; set; }
 
 
 #if DEBUG

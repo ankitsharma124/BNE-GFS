@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreBridge.Migrations
 {
     [DbContext(typeof(CoreBridgeContext))]
-    [Migration("20221214072751_1")]
-    partial class _1
+    [Migration("20221214080126_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -105,39 +105,6 @@ namespace CoreBridge.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DebugInfoList");
-                });
-
-            modelBuilder.Entity("CoreBridge.Models.Entity.GFSUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("STRING");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TIMESTAMP");
-
-                    b.Property<int>("Platform")
-                        .HasColumnType("INT64");
-
-                    b.Property<string>("TitleCode")
-                        .IsRequired()
-                        .HasColumnType("STRING");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GFSUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "TestUserId",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Platform = 1,
-                            TitleCode = "TestTitleCode",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("CoreBridge.Models.Entity.TitleInfo", b =>
