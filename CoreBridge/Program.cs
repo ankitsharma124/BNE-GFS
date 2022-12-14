@@ -14,13 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using NLog.Web;
+using Microsoft.AspNetCore.Identity;
 
 ThreadPool.SetMinThreads(200, 200);
 
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 try
 {
@@ -55,6 +54,7 @@ try
     }).UseNLog();
 
 
+
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);
     // Hangfuire Service Add
@@ -70,10 +70,23 @@ try
     // CustomServices
     builder.Services.AddCustomServices();
 
+
+    // IdentityRole
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+        options => options.SignIn.RequireConfirmedAccount = false)
+        .AddEntityFrameworkStores<CoreBridgeContext>()
+        .AddDefaultTokenProviders();
+
+    builder.Services.AddAuthorization(options =>
+    {
+
+    });
+
+
     // Session(Cookie)
     builder.Services.AddSession(options =>
     {
-        // ƒZƒbƒVƒ‡ƒ“ƒNƒbƒL[‚Ì–¼‘O‚ğ•Ï‚¦‚é‚È‚ç
+        // ï¿½Zï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½bï¿½Lï¿½[ï¿½Ì–ï¿½ï¿½Oï¿½ï¿½Ï‚ï¿½ï¿½ï¿½È‚ï¿½
         options.Cookie.Name = "session";
     });
 
@@ -133,12 +146,12 @@ try
 }
 catch (Exception exception)
 {
-    logger.Error(exception, "—áŠO‚Ì‚½‚ß‚ÉƒvƒƒOƒ‰ƒ€‚ğ’â~‚µ‚Ü‚µ‚½B");
+    logger.Error(exception, "ï¿½ï¿½Oï¿½Ì‚ï¿½ï¿½ß‚Éƒvï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½B");
     throw;
 }
 finally
 {
-    // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğI—¹‚·‚é‘O‚ÉA“à•”ƒ^ƒCƒ}[/ƒXƒŒƒbƒh‚ğƒtƒ‰ƒbƒVƒ…‚µ‚Ä’â~‚·‚é‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢
-    // (Linux ‚Å‚ÌƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚ğ‰ñ”ğ‚µ‚Ä‚­‚¾‚³‚¢j
+    // ï¿½Aï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ÉAï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[/ï¿½Xï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½tï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ä’ï¿½~ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // (Linux ï¿½Å‚ÌƒZï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½eï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½á”½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½j
     LogManager.Shutdown();
 }

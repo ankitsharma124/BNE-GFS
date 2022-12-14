@@ -2,6 +2,7 @@
 using CoreBridge.Models.Entity;
 
 using CoreBridge.Models.Ext;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreBridge.Models.Context
@@ -25,6 +26,8 @@ namespace CoreBridge.Models.Context
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
             modelBuilder.Entity<AppUser>().HasIndex(a => a.UserId);
+            modelBuilder.Entity<IdentityUser>().HasIndex(a => a.Id);
+            modelBuilder.Entity<IdentityRole>().HasIndex(a => a.Id);
 #if DEBUG
             ContextSeedForTest.Seed(modelBuilder).Wait();
 #endif
