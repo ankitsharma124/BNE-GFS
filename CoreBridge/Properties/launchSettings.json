@@ -6,7 +6,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "GOOGLE_APPLICATION_CREDENTIALS": "C:\\msc\\bne-gfs-06ffad36d463.json",
-        "ConnectionStrings_Spanner": "Data Source=projects/bne-gfs/instances/trial-instance/databases/corebridge"
+        "ConnectionStrings_Spanner": "Data Source=projects/bne-gfs/instances/corebridge-development/databases/corebridge"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7271;http://localhost:5271"
@@ -17,7 +17,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Msc\\bne-gfs-06ffad36d462.json",
-        "ConnectionStrings_Spanner": "Data Source=projects/bne-gfs/instances/trial-instance/databases/corebridge"
+        "ConnectionStrings_Spanner": "Data Source=projects/bne-gfs/instances/corebridge-development/databases/corebridge"
       }
     },
     "Docker": {
