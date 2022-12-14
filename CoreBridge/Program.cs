@@ -20,15 +20,6 @@ ThreadPool.SetMinThreads(200, 200);
 
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("CoreBridgeContextConnection") ?? throw new InvalidOperationException("Connection string 'CoreBridgeContextConnection' not found.");
-
-builder.Services.AddDbContext<CoreBridgeContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CoreBridgeContext>();
-app.UseAuthentication();;
-
 
 try
 {
