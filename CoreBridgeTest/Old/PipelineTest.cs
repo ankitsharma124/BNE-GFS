@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreBridgeTest
+namespace CoreBridgeTest.Old
 {
     public class PipelineTest
     {
@@ -59,7 +59,7 @@ namespace CoreBridgeTest
             //change config to UseJson = false
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-messagepack"));
+                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
             ClientTestParam param = new ClientTestParam() { Name = "Test" };
             var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = _header, Param = param };
             var content = new ByteArrayContent(MessagePackSerializer.Serialize(body));
@@ -79,7 +79,7 @@ namespace CoreBridgeTest
             var body = new ReqBag<ReqBaseClientServerParamHeader, ServerTestParam> { Header = _header, Param = param };
             var hash = TestHelpers.GetHashWithKey("TEST111111111111", Newtonsoft.Json.JsonConvert.SerializeObject(body));
 
-            var content = new StringContent(System.Text.Encoding.UTF8.GetString(hash) + Newtonsoft.Json.JsonConvert.SerializeObject(body),
+            var content = new StringContent(Encoding.UTF8.GetString(hash) + Newtonsoft.Json.JsonConvert.SerializeObject(body),
                          Encoding.UTF8, "application/json");
             // Act.
             var response = await _httpClient.PostAsync("/api/server/ServerTest/TestServerApiJson",
@@ -95,7 +95,7 @@ namespace CoreBridgeTest
             //change config to UseJson = false
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-messagepack"));
+                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
             ServerTestParam param = new ServerTestParam() { Name = "Test" };
             var body = new ReqBag<ReqBaseClientServerParamHeader, ServerTestParam> { Header = _header, Param = param };
             var serialized = MessagePackSerializer.Serialize(body);
@@ -106,6 +106,25 @@ namespace CoreBridgeTest
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-messagepack");
             // Act.
             var response = await _httpClient.PostAsync("/api/server/ServerTest/TestServerMsgpack",
+                content);
+            // Assert.
+            var reqStream = await content.ReadAsStringAsync();
+            var resStream = await response.Content.ReadAsStringAsync();
+        }
+
+        [Fact]
+        public async Task TestClientApiRouteWithTitleCode()
+        {
+            //change config to UseJson = false
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
+            ClientTestParam param = new ClientTestParam() { Name = "Test" };
+            var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = _header, Param = param };
+            var content = new ByteArrayContent(MessagePackSerializer.Serialize(body));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-messagepack");
+            // Act.
+            var response = await _httpClient.PostAsync("/api/TestTitleCode/client/ClientTester/TestClientMsgpack",
                 content);
             // Assert.
             var reqStream = await content.ReadAsStringAsync();

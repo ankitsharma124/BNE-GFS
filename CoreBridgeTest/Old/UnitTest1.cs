@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 
-namespace CoreBridgeTest
+namespace CoreBridgeTest.Old
 {
     //public class UnitTest1 : IDisposable
     //{

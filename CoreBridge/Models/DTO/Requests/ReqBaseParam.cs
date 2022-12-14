@@ -5,8 +5,7 @@ namespace CoreBridge.Models.DTO.Requests
     [MessagePackObject]
     public class ReqBaseParam : ReqBase
     {
-        [Key(30)]
-        public Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
+        private Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {
             { "code", 9999 },
             {  "notCollectParamApi", null },
@@ -17,12 +16,16 @@ namespace CoreBridge.Models.DTO.Requests
         {
 
         }
+
+        public virtual Dictionary<string, object> GetApiSetting()
+        { return this.ApiSetting; }
+
         [IgnoreMember]
-        public override int ApiCode { get { return (int)ApiSetting["code"]; } }
+        public int ApiCode { get { return (int)GetApiSetting()["code"]; } }
         [IgnoreMember]
-        public bool? NotCollectParamApi { get { return (bool?)ApiSetting["notCollectParamApi"]; } }
+        public bool? NotCollectParamApi { get { return (bool?)GetApiSetting()["notCollectParamApi"]; } }
         [IgnoreMember]
-        public bool? MaintenanceAvoid { get { return (bool?)ApiSetting["maintenanceAvoid"]; } }
+        public bool? MaintenanceAvoid { get { return (bool?)GetApiSetting()["maintenanceAvoid"]; } }
     }
 
 }

@@ -13,7 +13,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreBridgeApiTest
+namespace CoreBridgeTest.Old
 {
     public class MsgPackTEst : IDisposable
     {
@@ -63,7 +63,7 @@ namespace CoreBridgeApiTest
             // Act.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-messagepack"));
+                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
             var content = new ByteArrayContent(MessagePackSerializer.Serialize(new { name = "testName" }));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-messagepack");
             // Act.
@@ -80,7 +80,7 @@ namespace CoreBridgeApiTest
             // Act.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
             var content = new StringContent(JsonConvert.SerializeObject(new TestParam { name = "testName" }),
                 Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -99,7 +99,7 @@ namespace CoreBridgeApiTest
             // Act.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
             var content = new StringContent(@"{""testParam""}", Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             // Act.
@@ -116,7 +116,7 @@ namespace CoreBridgeApiTest
             // Arrange.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
             // Act.
             var response = await _httpClient.PostAsync("/api/Test2/PostTestStr?testParam=Test", null);
 
@@ -133,7 +133,7 @@ namespace CoreBridgeApiTest
             // Arrange.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
             var content = new StringContent(JsonConvert.SerializeObject(new { name = "testNameValue" }), Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             // Act.
@@ -152,7 +152,7 @@ namespace CoreBridgeApiTest
             // Arrange.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
             var content = new StringContent("testParam");
 
             // Act.
@@ -172,7 +172,7 @@ namespace CoreBridgeApiTest
             // Arrange.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
 
             // Act.
@@ -190,7 +190,7 @@ namespace CoreBridgeApiTest
             // Arrange.
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, "/api/Test/TestMsgPackLoad");
             msg.Content = new ByteArrayContent(MessagePackSerializer.Serialize(new { name = "Test" }));

@@ -7,12 +7,13 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static CoreBridgeApiTest.MsgPackTEst;
+using static CoreBridgeTest.Old.MsgPackTEst;
 
-namespace CoreBridgeApiTest
+namespace CoreBridgeTest.Old
 {
     public class JsonTest
     {
+        /*
         private readonly HttpClient _httpClient = new() { BaseAddress = new Uri("https://localhost:44389") };
 
 
@@ -73,6 +74,6 @@ namespace CoreBridgeApiTest
             var reqStream = await content.ReadAsStringAsync();
             var resStream = await response.Content.ReadAsStringAsync();
             Assert.Equal(reqStream, resStream);
-        }
+        }*/
     }
 }

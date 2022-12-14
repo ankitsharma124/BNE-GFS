@@ -19,6 +19,8 @@ namespace CoreBridge.Services
         {
             // Connect String
             string connectionStrings = configuration.GetConnectionString(AppSetting.ConnectionStringMySQL);
+            //get from env_var
+
             string redis_connection = AppSetting.GetConnectStringRedis(configuration);
 
             // DBContextPool
