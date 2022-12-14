@@ -1,11 +1,12 @@
 ﻿using Google.Cloud.EntityFrameworkCore.Spanner.Extensions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CoreBridge.Models.Ext
 {
-    public class SpannerContext : DbContext
+    public class SpannerContext : IdentityDbContext
     {
         public SpannerContext(DbContextOptions<SpannerContext> options) : base(options)
         {
