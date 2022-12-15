@@ -2,6 +2,7 @@
 using CoreBridge.Models.Entity;
 
 using CoreBridge.Models.Ext;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreBridge.Models.Context
@@ -15,7 +16,9 @@ namespace CoreBridge.Models.Context
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<GFSUser> Users { get; set; }
+        //public DbSet<GFSUser> GFSUsers { get; set; }
+
+
 #if DEBUG
         public DbSet<DebugInfo> DebugInfoList { get; set; }
 #endif

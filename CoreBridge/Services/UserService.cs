@@ -85,7 +85,7 @@ namespace CoreBridge.Services
 
         private async Task<GFSUserDto> GetByIdAsyncInner(string id)
         {
-            var entity = await _unit.UserRepository.GetByIdAsync(id);
+            var entity = new GFSUserDto(); //todo!!!!!!: change back!!!!!!!!!!!! await _unit.UserRepository.GetByIdAsync(id);
             return _mapper.Map<GFSUserDto>(entity);
         }
 

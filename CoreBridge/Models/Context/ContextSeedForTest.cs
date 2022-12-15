@@ -11,7 +11,7 @@ namespace CoreBridge.Models.Context
         {
             _modelBuilder = modelBuilder;
             await SeedTestTitleInfo();
-            await SeedTestUserlinkedTotitleInfo();
+            //await SeedTestUserlinkedTotitleInfo();
         }
 
         public static async Task SeedTestTitleInfo()
@@ -30,8 +30,9 @@ namespace CoreBridge.Models.Context
 
         public static async Task SeedTestUserlinkedTotitleInfo()
         {
-            GFSUser user = new GFSUser { Platform = 1, TitleCode = "TestTitleCode", Id = "TestUserId" };
-            _modelBuilder.Entity<GFSUser>().HasData(user);
+            //GFSUser user = new GFSUser { Platform = 1, TitleCode = "TestTitleCode", Id = "TestUserId" };
+            //_modelBuilder.Entity<GFSUser>().HasData(user);
+
         }
 
     }

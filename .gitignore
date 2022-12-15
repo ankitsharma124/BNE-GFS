@@ -78,10 +78,4 @@ terraform.rc
 terraform/.terraform/modules/
 
 *.tfplan
-/CoreBridge/docker-compose.yml
-/docker-compose.yml
-/CoreBridge/Ctempinternallog.txt
-/CoreBridge/CoreBridge.csproj.user
-/.gitignore
-/CoreBridge/bne-gfs-06ffad36d462.json
-/CoreBridgeTest/CoreBridgeTest1.sln
+
