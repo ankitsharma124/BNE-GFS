@@ -44,6 +44,8 @@
 		<PackageReference Include="Google.Cloud.EntityFrameworkCore.Spanner" Version="2.0.3" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="XAct.Core.PCL" Version="0.0.5014" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
