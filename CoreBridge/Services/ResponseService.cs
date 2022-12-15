@@ -130,6 +130,7 @@ namespace CoreBridge.Services
             {
                 return status;
             }
+            if (status > 9999) return status;
 
             return Convert.ToInt32(_sss.ApiCode.ToString("0000") + status.ToString("0000"));
         }

@@ -14,21 +14,23 @@ namespace CoreBridge.Controllers.api.client
         private readonly ISessionStatusService _sss;
         private readonly IRequestService _req;
         private readonly IResponseService _res;
+        private readonly IUserPlatformService _userPlaform;
 
-        public UserController(ISessionStatusService sss, IRequestService req, IResponseService res)
+
+        public UserController(ISessionStatusService sss, IRequestService req, IResponseService res, IUserPlatformService userPlaform)
         {
             _sss = sss;
             _req = req;
             _res = res;
+            _userPlaform = userPlaform;
         }
 
         [HttpPost]
         public async Task GetCountry([FromBody] ReqBag<ReqClientHeader, ClientUserGetCountryParam> bag)
         {
             await _req.ProcessRequest(Request, bag.Header, bag.Param);
-            //do service
-            await _res.ReturnBNResponseAsync(Response, new Dictionary<string, string> { { "responseParamName1", "responseParamVal" } });
-
+            var userPf = await _userPlaform.GetByUserIdAsync(_sss.UserId);
+            await _res.ReturnBNResponseAsync(Response, new object[] { _res.ResultOK + "", userPf.CountryCode });
         }
     }
 }

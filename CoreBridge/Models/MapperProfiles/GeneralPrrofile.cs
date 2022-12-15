@@ -10,6 +10,7 @@ namespace CoreBridge.Models.MapperProfiles
         {
             CreateMap<TitleInfo, TitleInfoDto>().ReverseMap();
             CreateMap<GFSUser, GFSUserDto>().ReverseMap();
+            CreateMap<UserPlatform, UserPlatformDto>().ReverseMap();
         }
     }
 }

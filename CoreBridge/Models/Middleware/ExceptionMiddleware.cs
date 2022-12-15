@@ -66,6 +66,7 @@ namespace CoreBridge.Models.Middleware
                 _logger.LogError(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
 #endif
                 await HandleExceptionAsync(httpContext, bnx.StatusCode);
+                return;
             }
             catch (Manual404 m404)
             {

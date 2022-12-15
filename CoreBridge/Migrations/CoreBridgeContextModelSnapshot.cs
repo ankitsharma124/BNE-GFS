@@ -15,7 +15,7 @@ namespace CoreBridge.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.11");
 
             modelBuilder.Entity("CoreBridge.Models.Entity.AdminUser", b =>
                 {
@@ -178,12 +178,56 @@ namespace CoreBridge.Migrations
                         new
                         {
                             Id = "TestTitleId",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Ptype = 0,
+                            CreatedAt = new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5387),
+                            HashKey = "TEST111111111111",
+                            Ptype = 1,
                             TitleCode = "TestTitleCode",
                             TitleName = "testTitleName",
                             TrialTitleCode = "TestTrialTitleCode",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5388)
+                        });
+                });
+
+            modelBuilder.Entity("CoreBridge.Models.Entity.UserPlatform", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("STRING");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<int>("PlatformType")
+                        .HasColumnType("INT64");
+
+                    b.Property<string>("PlatformUserId")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("STRING");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlatforms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "UserPlatformId",
+                            CountryCode = "ja",
+                            CreatedAt = new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5503),
+                            PlatformType = 1,
+                            PlatformUserId = "PlatformUserId",
+                            UpdatedAt = new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5504),
+                            UserId = "TestUserId"
                         });
                 });
 #pragma warning restore 612, 618

@@ -30,6 +30,9 @@ namespace CoreBridge.Models.Repositories
         private readonly CoreBridgeRepository<GFSUser> _userRepository = null;
         public ICoreBridgeRepository<GFSUser> UserRepository { get { return GetInstance(_userRepository); } }
 
+        private readonly CoreBridgeRepository<UserPlatform> _userPlatformRepository = null;
+        public ICoreBridgeRepository<UserPlatform> UserPlatformRepository { get { return GetInstance(_userPlatformRepository); } }
+
 
         private CoreBridgeRepository<T> GetInstance<T>(CoreBridgeRepository<T> repository) where T : CoreBridgeEntity, IAggregateRoot
         {

@@ -12,6 +12,7 @@ namespace CoreBridge.Models.Interfaces
         ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get; }
 
         ICoreBridgeRepository<GFSUser> UserRepository { get; }
+        ICoreBridgeRepository<UserPlatform> UserPlatformRepository { get; }
 
         ICoreBridgeRepository<DebugInfo> DebugInfoRepository { get; }
 

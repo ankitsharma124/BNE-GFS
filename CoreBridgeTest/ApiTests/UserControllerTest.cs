@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models.DTO.Requests;
+using Google.Cloud.Spanner.V1;
 using MessagePack;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using static CoreBridge.Models.SysConsts;
+using XAct.Users;
+using Newtonsoft.Json;
 
 namespace CoreBridgeTest.ApiTests
 {
@@ -18,51 +22,42 @@ namespace CoreBridgeTest.ApiTests
         [Fact]
         public async Task TestGetCountry_Success()
         {
-            //change config to UseJson = false
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
             ClientTestParam param = new ClientTestParam() { Name = "Test" };
             var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = _header, Param = param };
-            var content = new ByteArrayContent(MessagePackSerializer.Serialize(body));
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-messagepack");
+            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body),
+                         Encoding.UTF8, "application/json");
+
             // Act.
             var response = await _httpClient.PostAsync("/api/TestTitleCode/client/User/GetCountry",
                 content);
             // Assert.
-            var reqStream = await content.ReadAsStringAsync();
-            var resStream = await response.Content.ReadAsStringAsync();
+
+            var resStream = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
         }
 
         [Fact]
         public async Task TestGetCountry_UserNotRegisteredErr()
         {
             ClientTestParam param = new ClientTestParam() { Name = "Test" };
-            var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = _header, Param = param };
+            var header = new ReqBaseClientServerParamHeader { UserId = "UnregId", Session = "testsessionkey", Platform = 1, TitleCode = "TestTitleCode", SkuType = 0 };
+            var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = header, Param = param };
             var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body),
                          Encoding.UTF8, "application/json");
             // Act.
-            var response = await _httpClient.PostAsync("/api/client/ClientTester/TestClientApiJson",
-                content);
-            // Assert.
-            var reqStream = await content.ReadAsStringAsync();
-            var resStream = await response.Content.ReadAsStringAsync();
 
-            //change config to UseJson = false
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/x-messagepack"));
-            ClientTestParam param = new ClientTestParam() { Name = "Test" };
-            ReqBaseClientServerParamHeader header = new ReqBaseClientServerParamHeader { UserId = "NonRegisteredUser", Session = "testsessionkey", Platform = 1, TitleCode = "TestTitleCode", SkuType = 0 };
-
-            var body = new ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> { Header = header, Param = param };
-            var content = new ByteArrayContent(MessagePackSerializer.Serialize(body));
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-messagepack");
-            // Act.
-            var response = await _httpClient.PostAsync("/api/TestTitleCode/client/User/GetCountry", content);
+            try
+            {
+                var response = await _httpClient.PostAsync("/api/TestTitleCode/client/User/GetCountry",
+                    content);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
             // Assert.
-            var reqStream = await content.ReadAsStringAsync();
-            var resStream = await response.Content.ReadAsStringAsync();
+
+            throw new Exception();
+
         }
     }
 }

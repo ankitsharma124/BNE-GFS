@@ -72,6 +72,23 @@ namespace CoreBridge.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserPlatforms",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "STRING", nullable: false),
+                    UserId = table.Column<string>(type: "STRING", nullable: false),
+                    PlatformType = table.Column<int>(type: "INT64", nullable: false),
+                    PlatformUserId = table.Column<string>(type: "STRING", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
+                    CountryCode = table.Column<string>(type: "STRING", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPlatforms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -89,7 +106,12 @@ namespace CoreBridge.Migrations
             migrationBuilder.InsertData(
                 table: "TitleInfo",
                 columns: new[] { "Id", "CreatedAt", "DevUrl", "HashKey", "ProdUrl", "PsClientId", "PsClientSecoret", "Ptype", "QaUrl", "SteamAppId", "SteamPublisherKey", "SwitchAppId", "TestUrl", "TitleCode", "TitleName", "TrialTitleCode", "UpdatedAt", "XboxTitleId" },
-                values: new object[] { "TestTitleId", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, null, 0, null, null, null, null, null, "TestTitleCode", "testTitleName", "TestTrialTitleCode", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null });
+                values: new object[] { "TestTitleId", new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5387), null, "TEST111111111111", null, null, null, 1, null, null, null, null, null, "TestTitleCode", "testTitleName", "TestTrialTitleCode", new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5388), null });
+
+            migrationBuilder.InsertData(
+                table: "UserPlatforms",
+                columns: new[] { "Id", "CountryCode", "CreatedAt", "PlatformType", "PlatformUserId", "UpdatedAt", "UserId" },
+                values: new object[] { "UserPlatformId", "ja", new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5503), 1, "PlatformUserId", new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5504), "TestUserId" });
 
             migrationBuilder.InsertData(
                 table: "Users",
@@ -112,6 +134,9 @@ namespace CoreBridge.Migrations
 
             migrationBuilder.DropTable(
                 name: "TitleInfo");
+
+            migrationBuilder.DropTable(
+                name: "UserPlatforms");
 
             migrationBuilder.DropTable(
                 name: "Users");

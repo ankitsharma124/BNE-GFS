@@ -1,8 +1,7 @@
-﻿using CoreBridge.Models.Interfaces;
-
-namespace CoreBridge.Models.Entity
+﻿namespace CoreBridge.Models.DTO
 {
-    public class UserPlatform : CoreBridgeEntity, IAggregateRoot
+
+    public class UserPlatformDto
     {
         public string UserId { get; set; }
         public int PlatformType { get; set; }
@@ -14,6 +13,5 @@ namespace CoreBridge.Models.Entity
         /// ip_iso_code
         /// </summary>
         public string CountryCode { get; set; }
-
     }
 }
