@@ -37,6 +37,8 @@ namespace CoreBridge.Services.Interfaces
 
         void CopyBnIdUserInfo(BnIdTempInfo info);
 
+#if DEBUG
         Task SaveSessionDebugInfo();
+#endif
     }
 }
