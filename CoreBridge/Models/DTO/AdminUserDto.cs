@@ -15,6 +15,9 @@ namespace CoreBridge.Models.DTO
             ConfirmPassword = confirm_password;
         }
 
+        //ここがユーザー情報になる
+        //TitleCodeとかをここへ追加するのか！？
+
         [Key(0)]
         public String Name { get; set; }
         [Key(1)]

@@ -14,19 +14,25 @@ using CoreBridge.Services;
 using Google.Api;
 using CoreBridge.Models.lib;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace CoreBridge.Controllers
 {
+    //ユーザーアカウントに関する制御コントローラーにするつもり
+
     public class AccountsController : Controller
     {
         private readonly CoreBridgeContext _context;
         private readonly IAppUserService _appUserService;
         private readonly IMapper _mapper;
 
-        public AccountsController(CoreBridgeContext coreBridgeContext, IAppUserService appUserService)
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public AccountsController(CoreBridgeContext coreBridgeContext, IAppUserService appUserService, SignInManager<IdentityUser> signInManager)
         {
             _context = coreBridgeContext;
             _appUserService = appUserService;
+            _signInManager = signInManager;
 
             var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
             _mapper = new Mapper(mapConfig);
@@ -35,6 +41,8 @@ namespace CoreBridge.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
+            //一覧表示.
+            //表示されるのは管理ユーザー or 一般ユーザーになる！？
             return View(await _appUserService.FindAsync());
         }
 
