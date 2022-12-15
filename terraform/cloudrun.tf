@@ -1,6 +1,6 @@
 locals {
   repository_id = "${google_artifact_registry_repository.corebridge.location}-docker.pkg.dev/${local.project}/${google_artifact_registry_repository.corebridge.repository_id}"
-  image_tag     = "test"
+  image_tag     = "test3"
   image_uri     = "${local.repository_id}/corebridge:${local.image_tag}"
 
   # NOTE:
@@ -10,8 +10,9 @@ locals {
 
 
 resource "google_cloud_run_service" "corebridge-seconda" {
-  location = "asia-northeast1"
-  name     = "corebridge"
+  location                   = "asia-northeast1"
+  name                       = "corebridge"
+  autogenerate_revision_name = true
 
   template {
     metadata {
@@ -26,8 +27,8 @@ resource "google_cloud_run_service" "corebridge-seconda" {
     spec {
       container_concurrency = 80
       # Compute Engine default service account
-      service_account_name  = "116615950553-compute@developer.gserviceaccount.com"
-      timeout_seconds       = 300
+      service_account_name = "116615950553-compute@developer.gserviceaccount.com"
+      timeout_seconds      = 300
 
       containers {
         image = local.image_uri
@@ -59,8 +60,15 @@ resource "google_cloud_run_service" "corebridge-seconda" {
   }
 
   traffic {
-    latest_revision = true
-    percent         = 100
+    percent       = 0
+    revision_name = "corebridge-7tjm5"
+    tag           = "green"
+  }
+
+  traffic {
+    percent       = 100
+    revision_name = "corebridge-lr4vl"
+    tag           = "blue"
   }
 
   # NOTE: Add hidden dependency
