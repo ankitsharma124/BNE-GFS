@@ -2,6 +2,8 @@
 using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace CoreBridge.Controllers
 {
@@ -11,13 +13,16 @@ namespace CoreBridge.Controllers
         private readonly IAdminUserService _adminUserService;
 
         // サインイン必須
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public LoginController(ILogger<LoginController> logger, IAdminUserService adminUserService, SignInManager<IdentityUser> signInManager)
+        public LoginController(ILogger<LoginController> logger, IAdminUserService adminUserService, SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _adminUserService = adminUserService;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -39,31 +44,37 @@ namespace CoreBridge.Controllers
             //}
             //else
             //{
+            //    var resultSign = await _signInManager.PasswordSignInAsync(dto.EMail, dto.Password, false, false);
             //    return LocalRedirect("/Dashboard");
             //}
 
             string returnUrl = Url.Content("~/");
 
-            var result = await _signInManager.PasswordSignInAsync(dto.EMail, dto.Password, false, lockoutOnFailure: false);
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation("User logged in.");
-                return LocalRedirect("/Dashboard");
+                var result = await _signInManager.PasswordSignInAsync(dto.EMail, dto.Password, false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect("/Dashboard");
+                }
+                if (result.RequiresTwoFactor) //二段階認証
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
+                }
+                if (result.IsLockedOut) //ログアウト確認
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "E-Mailまたは、パスワードが不正です");
+                    return View(dto);
+                }
             }
-            if (result.RequiresTwoFactor) //二段階認証
-            {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
-            }
-            if (result.IsLockedOut) //ログアウト確認
-            {
-                _logger.LogWarning("User account locked out.");
-                return RedirectToPage("./Lockout");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(dto);
-            }
+
+            return View(dto);
         }
     }
 }

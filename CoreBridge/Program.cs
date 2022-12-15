@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using NLog.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using CoreBridge.Utility;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -76,6 +78,10 @@ try
         options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<CoreBridgeContext>()
         .AddDefaultTokenProviders();
+
+    builder.Services.AddSingleton<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
+
 
     builder.Services.AddAuthorization(options =>
     {

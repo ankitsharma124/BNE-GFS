@@ -2,7 +2,7 @@
 
 namespace CoreBridge.Models.DTO
 {
-    [MessagePackObject]
+    //[MessagePackObject]
     public class AdminUserDto
     {
         public AdminUserDto() { }
