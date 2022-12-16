@@ -1,4 +1,5 @@
 ﻿using CoreBridge.Models.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreBridge.Models.Entity
 {
@@ -14,7 +15,12 @@ namespace CoreBridge.Models.Entity
         }
 
         public string Name { get; set; }
+
+        [EmailAddress]
         public string EMail { get; set; }
+
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
     }
 }

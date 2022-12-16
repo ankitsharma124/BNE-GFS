@@ -3,6 +3,7 @@ using System;
 using CoreBridge.Models.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreBridge.Migrations
 {
     [DbContext(typeof(CoreBridgeContext))]
-    partial class CoreBridgeContextModelSnapshot : ModelSnapshot
+    [Migration("20221215231300_AddAdminUser")]
+    partial class AddAdminUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.12");

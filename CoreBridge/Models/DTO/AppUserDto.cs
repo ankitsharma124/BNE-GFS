@@ -7,11 +7,12 @@ namespace CoreBridge.Models.DTO
     {
         public AppUserDto() { }
 
-        public AppUserDto(string userId, string titleCode, string password)
+        public AppUserDto(string userId, string titleCode, string password, string confirempassword)
         {
             UserId = userId;
             TitleCode = titleCode;
             Password = password;
+            ConfirmPassword = confirempassword;
         }
 
         [Key(0)]
@@ -20,5 +21,13 @@ namespace CoreBridge.Models.DTO
         public String? TitleCode { get; set; }
         [Key(2)]
         public String Password { get; set; }
+        [Key(3)]
+        public String ConfirmPassword { get; set; }
+
+        public bool IsValid()
+        {
+            return true;
+        }
+
     }
 }

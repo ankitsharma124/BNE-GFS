@@ -5,36 +5,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CoreBridge.Migrations
 {
-    public partial class AddAppUserTable : Migration
+    public partial class AddAdminUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AppUsers",
+                name: "AdminUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "STRING", nullable: false),
-                    UserId = table.Column<string>(type: "STRING", nullable: false),
-                    TitleCode = table.Column<string>(type: "STRING", nullable: true),
+                    Name = table.Column<string>(type: "STRING", nullable: false),
+                    EMail = table.Column<string>(type: "STRING", nullable: false),
                     Password = table.Column<string>(type: "STRING", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppUsers", x => x.Id);
+                    table.PrimaryKey("PK_AdminUsers", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppUsers_UserId",
-                table: "AppUsers",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppUsers");
+                name: "AdminUsers");
         }
     }
 }

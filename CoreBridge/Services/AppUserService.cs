@@ -118,5 +118,15 @@ namespace CoreBridge.Services
             }
             return false;
         }
+
+        public async Task<AppUserDto> GenerateAdminUser(AppUserDto dto)
+        {
+            AppUser entity = new(dto.UserId, dto.TitleCode, dto.Password);
+
+            await _unitOfWork.AppUserRepository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+
+            return dto;
+        }
     }
 }

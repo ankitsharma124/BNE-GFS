@@ -1,44 +1,31 @@
 ﻿using CoreBridge.Models.DTO;
+using CoreBridge.Models.Entity;
+using CoreBridge.Services;
 using CoreBridge.Services.Interfaces;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
-using System.Text.Encodings.Web;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace CoreBridge.Controllers
 {
-    public class UserRegisterController : Controller
+    public class UserLoginController : Controller
     {
-        private readonly IAdminUserService _adminUserService;
+        private readonly IAppUserService _appUserSerice;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
-        //private readonly IUserEmailStore<IdentityUser> _emailStore;
-        private readonly ILogger<UserRegisterController> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly ILogger<UserLoginController> _logger;
 
-        public UserRegisterController(ILogger<UserRegisterController> logger, IAdminUserService adminUserService, UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager, IUserStore<IdentityUser> userStore, /*IUserEmailStore<IdentityUser> userEmailStore,*/ IEmailSender emailSender)
+        public UserLoginController(IAppUserService appUserSerice, SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ILogger<UserLoginController> logger)
         {
-            _logger = logger;
-            _adminUserService = adminUserService;
-            _userManager = userManager;
+            _appUserSerice = appUserSerice;
             _signInManager = signInManager;
+            _userManager = userManager;
             _userStore = userStore;
-            //_emailStore = userEmailStore;
-            _emailSender = emailSender;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -46,17 +33,8 @@ namespace CoreBridge.Controllers
             return View();
         }
 
-        public string ReturnUrl { get; set; }
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        //public async Task OnGetAsync(string returnUrl = null)
-        //{
-        //    ReturnUrl = returnUrl;
-        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        //}
-
         [HttpPost]
-        public async Task<IActionResult> Confirm(AdminUserDto dto)
+        public async Task<IActionResult> Confirm(AppUserDto dto)
         {
 
             //if (dto.IsValid())
@@ -74,7 +52,7 @@ namespace CoreBridge.Controllers
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, dto.EMail, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, dto.UserId, CancellationToken.None);
                 //await _emailStore.SetEmailAsync(user, dto.EMail, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
@@ -84,6 +62,7 @@ namespace CoreBridge.Controllers
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -96,7 +75,7 @@ namespace CoreBridge.Controllers
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = dto.EMail, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterUserLoginConfirmation", new { userId = dto.UserId, returnUrl = returnUrl });
                     }
                     else
                     {
@@ -111,16 +90,15 @@ namespace CoreBridge.Controllers
             }
 
             return View(dto);
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AdminUserDto dto)
+        public async Task<IActionResult> Create(AppUserDto dto)
         {
 
             if (dto.IsValid())
             {
-                await _adminUserService.GenerateAdminUser(dto);
+                await _appUserSerice.GenerateAdminUser(dto);
                 return View(dto);
             }
             else
@@ -142,6 +120,7 @@ namespace CoreBridge.Controllers
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
+
 
     }
 }

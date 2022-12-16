@@ -17,6 +17,7 @@ using NLog.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CoreBridge.Utility;
+using Microsoft.Extensions.Options;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -91,7 +92,7 @@ try
     // Session(Cookie)
     builder.Services.AddSession(options =>
     {
-        // �Z�b�V�����N�b�L�[�̖��O��ς���Ȃ�
+        // セッションクッキーの名前を変えるなら
         options.Cookie.Name = "session";
     });
 
@@ -123,6 +124,9 @@ try
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseMiddleware<SessionStatusAdminMiddleware>();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         //app.UseMiddleware<HashAdminMiddleware>();
         //app.UseMiddleware<DebugMiddleware>();
 
@@ -151,12 +155,12 @@ try
 }
 catch (Exception exception)
 {
-    logger.Error(exception, "��O�̂��߂Ƀv���O�������~���܂����B");
+    logger.Error(exception, "例外のためにプログラムを停止しました。");
     throw;
 }
 finally
 {
-    // �A�v���P�[�V�������I������O�ɁA�����^�C�}�[/�X���b�h���t���b�V�����Ē�~����悤�ɂ��Ă�������
-    // (Linux �ł̃Z�O�����e�[�V�����ᔽ��������Ă��������j
+    // アプリケーションを終了する前に、内部タイマー/スレッドをフラッシュして停止するようにしてください
+    // (Linux でのセグメンテーション違反を回避してください）
     LogManager.Shutdown();
 }
