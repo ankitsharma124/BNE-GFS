@@ -67,6 +67,11 @@ namespace CoreBridge.Controllers
             return View(appUser);
         }
 
+        public async Task<IActionResult> UserList()
+        {
+            return View(await _appUserService.FindAsync());
+        }
+
         // GET: Accounts/Create
         //public async Task<IActionResult> Create()
         //{
