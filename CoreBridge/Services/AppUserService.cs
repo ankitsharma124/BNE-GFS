@@ -36,9 +36,12 @@ namespace CoreBridge.Services
             return dto;
         }
 
-        public async Task<AppUser> DeleteAsync(AppUser dto)
+        public async Task<AppUserDto> DeleteAsync(AppUserDto dto)
         {
-            await _unitOfWork.AppUserRepository.DeleteAsync(_mapper.Map<AppUser>(dto));
+            var appUserInfo = await _unitOfWork.AppUserRepository.ListAsync();
+            var targetInfo = appUserInfo.Find(e => e.UserId == dto.UserId);
+
+            await _unitOfWork.AppUserRepository.DeleteAsync(_mapper.Map<AppUser>(targetInfo));
             await _unitOfWork.CommitAsync();
             return dto;
         }
@@ -77,16 +80,20 @@ namespace CoreBridge.Services
         /// </summary>
         /// <param name="id">UserID</param>
         /// <returns>True:新規 False:既存</returns>
-        public async Task<bool> GetByUserIdAsync(string id)
+        public async Task<AppUserDto?> GetByUserIdAsync(string id)
         {
             var appUserInfo = await _unitOfWork.AppUserRepository.ListAsync();
             var targetInfo = appUserInfo.Find(e => e.UserId == id);
             if(targetInfo == null)
             {
-                return true;
+                return null;
             }
 
-            return false;
+            var entry = await _unitOfWork.AppUserRepository.GetByIdAsync(targetInfo.Id);
+            var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUser, AppUserDto>());
+            var retMapper = new Mapper(mapConfig);
+
+            return retMapper.Map<AppUserDto>(entry) ;
         }
 
         public async Task<AppUserDto?> UpdateAsync(AppUserDto dto)
@@ -101,7 +108,7 @@ namespace CoreBridge.Services
             //データ更新
             targetInfo.UserId = dto.UserId;
             targetInfo.TitleCode = dto.TitleCode;
-            targetInfo.Password = targetInfo.Password;
+            targetInfo.Password = dto.Password;
 
             await _unitOfWork.AppUserRepository.UpdateAsync(targetInfo);
             await _unitOfWork.CommitAsync();

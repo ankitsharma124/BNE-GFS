@@ -1,4 +1,8 @@
-﻿using CoreBridge.Models.DTO;
+﻿using AutoMapper;
+using CoreBridge.Models.DTO;
+using CoreBridge.Models.Entity;
+using CoreBridge.Models.lib;
+using CoreBridge.Services;
 using CoreBridge.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,24 +13,34 @@ namespace CoreBridge.Controllers
 {
     public class AppUserRegisterController : Controller
     {
-        private readonly IAppUserService _appUserSerice;
+        private readonly IAppUserService _appUserService;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly ILogger<UserLoginController> _logger;
 
-        public AppUserRegisterController(IAppUserService appUserSerice, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ILogger<UserLoginController> logger)
+        public AppUserRegisterController(IAppUserService appUserSerice, SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, ILogger<UserLoginController> logger)
         {
-            _appUserSerice = appUserSerice;
+            _appUserService = appUserSerice;
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            AppUserDto appUser = new();
+            UserOperation userManager = new(_appUserService);
+
+            appUser.UserId = await userManager.CreateUserId();
+            if (appUser.UserId == String.Empty)
+            {
+                return View();
+            }
+            return View(appUser);
+            //return View();
         }
 
         [HttpPost]
@@ -36,6 +50,20 @@ namespace CoreBridge.Controllers
 
             if (ModelState.IsValid)
             {
+                //タイトルコードの重複は防ぐ.
+                if (dto.TitleCode != null)
+                {
+                    var check = await _appUserService.FindTitleCode(dto.TitleCode);
+                    if (check == false)
+                    {
+                        //エラーメッセージ
+                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
+                        //return RedirectToPage("/", dto);
+                        //return RedirectToPage("/AppUserRegister", new { userId = dto.UserId, returnUrl = returnUrl });
+                        return View(dto);
+                    }
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, dto.UserId, CancellationToken.None);
@@ -86,7 +114,7 @@ namespace CoreBridge.Controllers
 
             if (dto.IsValid())
             {
-                await _appUserSerice.GenerateAdminUser(dto);
+                await _appUserService.GenerateAdminUser(dto);
                 return View(dto);
             }
             else

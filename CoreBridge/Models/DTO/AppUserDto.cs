@@ -22,7 +22,7 @@ namespace CoreBridge.Models.DTO
         [Key(2)]
         public String Password { get; set; }
         [Key(3)]
-        public String ConfirmPassword { get; set; }
+        public String? ConfirmPassword { get; set; }
 
         public bool IsValid()
         {

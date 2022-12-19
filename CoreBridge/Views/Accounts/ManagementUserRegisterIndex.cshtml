@@ -1,15 +1,8 @@
-﻿@model CoreBridge.Models.DTO.AppUserDto
+﻿@model CoreBridge.Models.DTO.ManagementUserDto
 @{
     Layout = "_TopLayout";
 }
-<h1>ユーザー情報登録</h1>
-@if (ViewBag.Alert != null)
-{
-    <div class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600">
-        <p class="self-center">@ViewBag.Alert</p>
-        <strong class="text-xl align-center cursor-pointer alert-del">&times;</strong>
-    </div>
-}
+<!-- ユーザー登録 -->
 <div class="w-full flex flex-wrap">
     <!-- Register Section -->
     <div class="w-full md:w-1/2 flex flex-col">
@@ -19,11 +12,12 @@
         <div class="flex flex-col justify-center md:justify-start my-auto pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
             <p class="text-center text-3xl">Join Us.</p>
             @Html.Partial("_FormError")
+            <!-- コントローラー変更 → 管理ユーザー登録できるコントローラーへ -->
             <form class="flex flex-col pt-3 md:pt-8" asp-controller="AppUserRegister" asp-action="Confirm" method="post">
                 @Html.AntiForgeryToken()
                 <div class="flex flex-col pt-4">
                     <label for="name" class="text-lg">User ID</label>
-                    <input asp-for="@Model.UserId" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" readonly/>
+                    <input asp-for="@Model.UserId" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
 
                 <div class="flex flex-col pt-4">
@@ -49,17 +43,46 @@
         </div>
 
     </div>
-
-    <!-- Image Section -->
-    <div class="w-1/2 shadow-2xl">
-        <img class="object-cover w-full h-screen hidden md:block" src="https://source.unsplash.com/IXUM4cJynP0" alt="Background" />
-    </div>
 </div>
-<script>
-    var alert_del = document.querySelectorAll('.alert-del');
-    alert_del.forEach((x) =>
-        x.addEventListener('click', function () {
-            x.parentElement.classList.add('hidden');
-        })
-    );
-</script>
+
+<!-- ユーザー検索 -->
+
+
+<!-- ユーザー一覧 -->
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TitleCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>*@

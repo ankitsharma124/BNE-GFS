@@ -58,7 +58,7 @@ namespace CoreBridge.Controllers
                 return NotFound();
             }
 
-            var appUser = await _appUserService.GetByIdAsync(id);
+            var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -73,46 +73,49 @@ namespace CoreBridge.Controllers
         }
 
         // GET: Accounts/Create
-        //public async Task<IActionResult> Create()
-        //{
-        //    AppUser appUser = new();
-        //    UserOperation userManager = new(_appUserService);
+        public async Task<IActionResult> Create()
+        {
+            //AppUserDto appUser = new();
+            //UserOperation userManager = new(_appUserService);
 
-        //    appUser.UserId = await userManager.CreateUserId();
-        //    if(appUser.UserId == String.Empty)
-        //    {
-        //        return View();
-        //    }
-        //    return View(appUser);
-        //}
+            //appUser.UserId = await userManager.CreateUserId();
+            //if (appUser.UserId == String.Empty)
+            //{
+            //    return View();
+            //}
+            //return View(appUser);
+            return LocalRedirect("/AppUserRegister");
+        }
 
-        //// POST: Accounts/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("UserId,TitleCode,Password")] AppUserDto appUser)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        //タイトルコードの重複は防ぐ.
-        //        if (appUser.TitleCode != null)
-        //        {
-        //            var check = await _appUserService.FindTitleCode(appUser.TitleCode);
-        //            if (check == false)
-        //            {
-        //                //エラーメッセージ
-        //                ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
-        //                return View(_mapper.Map<AppUser>(appUser));
-        //            }
-        //        }
+        // POST: Accounts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("UserId,TitleCode,Password")] AppUserDto appUser)
+        {
+            if (ModelState.IsValid)
+            {
+                //タイトルコードの重複は防ぐ.
+                if (appUser.TitleCode != null)
+                {
+                    var check = await _appUserService.FindTitleCode(appUser.TitleCode);
+                    if (check == false)
+                    {
+                        //エラーメッセージ
+                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
+                        return RedirectToPage("/AppUserRegister", appUser);
+                    }
+                }
 
-        //        //登録する
-        //        await _appUserService.AddAsync(appUser);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(appUser);
-        //}
+                //登録する
+                //await _appUserService.AddAsync(appUser);
+                //return RedirectToAction(nameof(Index));
+                await _appUserService.GenerateAdminUser(appUser);
+                return View();
+            }
+            return View(appUser);
+        }
 
 
 
@@ -124,7 +127,7 @@ namespace CoreBridge.Controllers
                 return NotFound();
             }
 
-            var appUser = await _appUserService.GetByIdAsync(id);
+            var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -161,8 +164,10 @@ namespace CoreBridge.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return LocalRedirect("/Accounts/UserList");
             }
+            //return View(appUser);
             return View(appUser);
         }
 
@@ -174,7 +179,7 @@ namespace CoreBridge.Controllers
                 return NotFound();
             }
 
-            var appUser = await _appUserService.GetByIdAsync(id);
+            var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -192,13 +197,14 @@ namespace CoreBridge.Controllers
             {
                 return Problem("Entity set 'CoreBridgeContext.AppUsers'  is null.");
             }
-            var appUser = await _appUserService.GetByIdAsync(id);
+            var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser != null)
             {
                 await _appUserService.DeleteAsync(appUser);
             }
             
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return LocalRedirect("/Accounts/UserList");
         }
 
         private bool AppUserExists(string id)

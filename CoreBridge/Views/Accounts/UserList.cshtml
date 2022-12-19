@@ -4,7 +4,7 @@
     ViewData["Title"] = "List";
 }
 
-<h1>ユーザー情報一覧</h1>
+<h1>GFS 管理</h1>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -35,12 +35,12 @@
                     @Html.DisplayFor(modelItem => item.TitleCode)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Password)
+                    <input type="password" value="@Html.DisplayFor(modelItem => item.Password)">
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
                 </td>
             </tr>
         }

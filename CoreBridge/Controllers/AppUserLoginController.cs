@@ -42,6 +42,7 @@ namespace CoreBridge.Controllers
                 {
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect("/Accounts/UserList");
+                    //return LocalRedirect("/AppManagementUser");
                 }
                 if (result.RequiresTwoFactor) //二段階認証
                 {

@@ -22,6 +22,14 @@
         EditReference
     }
 
+    //管理ユーザー(COSMOSより)
+    public enum ManagementRoleEnum
+    {
+        DataLake権限,
+        参照権限,
+        編集権限参照権限
+    }
+
     /// <summary>
     /// プラットフォーム
     /// </summary>
