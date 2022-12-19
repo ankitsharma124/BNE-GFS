@@ -8,8 +8,8 @@ namespace CoreBridge.Models.DTO.Requests
     [MessagePackObject]
     public class ReqBaseClient : ReqBaseParamHeader
     {
-        [Key(20)]
-        public new Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
+        [IgnoreMember]
+        private new Dictionary<string, object> ApiSetting = new Dictionary<string, object>()
         {
             { "code", 9999 },
             {  "notCollectParamApi" , null },
@@ -21,19 +21,22 @@ namespace CoreBridge.Models.DTO.Requests
             {  "mirrorSession", null},
         };
 
+        public override Dictionary<string, object> GetApiSetting()
+        { return this.ApiSetting; }
+
         public bool? SessionCheckPass()
         {
-            return (bool?)ApiSetting["sessionCheckPass"];
+            return (bool?)GetApiSetting()["sessionCheckPass"];
         }
 
         public bool? SessionAvoid()
         {
-            return (bool?)ApiSetting["sessionAvoid"];
+            return (bool?)GetApiSetting()["sessionAvoid"];
         }
 
         public bool? NotSessionUpdate()
         {
-            return (bool?)ApiSetting["notSessionUpdate"];
+            return (bool?)GetApiSetting()["notSessionUpdate"];
         }
 
 

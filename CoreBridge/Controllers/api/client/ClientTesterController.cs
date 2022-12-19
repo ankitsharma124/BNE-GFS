@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreBridge.Controllers.api.client
 {
-    [Route("api/client/[controller]/[action]")]
+    [Route("api/{titleCode}/client/[controller]/[action]")]
     [ApiController]
     public class ClientTesterController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace CoreBridge.Controllers.api.client
         }
 
         [HttpPost]
-        public async Task TestClientMsgpack([FromBody] ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> bag)
+        public async Task TestClientMsgpack([FromBody] ReqBag<ReqBaseClientServerParamHeader, ClientTestParam> bag, string titleCode)
         {
             _sss.ApiCode = 9999;
             await _req.ProcessRequest(Request, bag.Header, bag.Param);

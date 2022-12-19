@@ -5,13 +5,13 @@ using System.Collections;
 namespace CoreBridge.Models.DTO.Requests
 {
     [MessagePackObject]
-    public class TestParam : ReqBase
+    public class TestParam : ReqBaseParam
     {
         [Key(100)]
         public string name { get; set; }
     }
     [MessagePackObject]
-    public class BnIdTestParam : ReqBase
+    public class BnIdTestParam : ReqBaseParam
     {
         [Key(100)]
         [FromQuery]

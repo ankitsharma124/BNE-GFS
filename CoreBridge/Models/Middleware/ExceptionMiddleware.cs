@@ -61,10 +61,12 @@ namespace CoreBridge.Models.Middleware
                 {
                     _logger.LogDebug(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
                 }
-#endif
+#else
 
                 _logger.LogError(bnx, bnx.Code.ToString() + $" | StatusCode[{bnx.StatusCode}]");
+#endif
                 await HandleExceptionAsync(httpContext, bnx.StatusCode);
+                return;
             }
             catch (Manual404 m404)
             {
@@ -86,7 +88,7 @@ namespace CoreBridge.Models.Middleware
             catch (Exception ex)
             {
                 _logger.LogError("Raw error", ex);
-                throw ex;
+                throw;
                 //await HandleExceptionAsync(httpContext, 99990001);
             }
         }

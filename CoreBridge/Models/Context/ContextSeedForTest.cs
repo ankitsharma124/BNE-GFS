@@ -12,17 +12,39 @@ namespace CoreBridge.Models.Context
             _modelBuilder = modelBuilder;
             await SeedTestTitleInfo();
             await SeedTestUserlinkedTotitleInfo();
+            await SeedUserPlatform();
+        }
+
+        public static async Task SeedUserPlatform()
+        {
+            var info = new UserPlatform
+            {
+                Id = "UserPlatformId",
+                CountryCode = "ja",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                PlatformType = 1,
+                PlatformUserId = "PlatformUserId",
+                UserId = "TestUserId"
+            };
+
+            _modelBuilder.Entity<UserPlatform>().HasData(info);
         }
 
         public static async Task SeedTestTitleInfo()
         {
-            var info = new TitleInfo
+            var info = new TitleInfo()
             {
                 Id = "TestTitleId",
+                Ptype = 1,
                 TitleCode = "TestTitleCode",
                 TitleName = "testTitleName",
                 TrialTitleCode = "TestTrialTitleCode",
-                HashKey = "TEST111111111111"
+                HashKey = "TEST111111111111",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+
+
             };
 
             _modelBuilder.Entity<TitleInfo>().HasData(info);

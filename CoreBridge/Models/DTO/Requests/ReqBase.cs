@@ -21,8 +21,7 @@ namespace CoreBridge.Models.DTO.Requests
         {
             //todo? log validation complete
         }
-        [Key(0)]
-        public virtual int ApiCode { get { return 9999; } }
+
 
         //public HttpRequest? HttpReqObj { get; set; } = null;
     }
