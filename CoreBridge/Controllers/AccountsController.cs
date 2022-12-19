@@ -11,10 +11,16 @@ using CoreBridge.Models.Interfaces;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Models.DTO;
 using CoreBridge.Services;
-using Google.Api;
-using CoreBridge.Models.lib;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Authentication;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreBridge.Controllers
 {
@@ -103,8 +109,11 @@ namespace CoreBridge.Controllers
                     if (check == false)
                     {
                         //エラーメッセージ
-                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
-                        return RedirectToPage("/AppUserRegister", appUser);
+                        string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
+                        ViewBag.Alert = errorMsg;
+                        //return RedirectToPage("/AppUserRegister", appUser);
+                        ModelState.AddModelError(string.Empty, errorMsg);
+                        return View();
                     }
                 }
 

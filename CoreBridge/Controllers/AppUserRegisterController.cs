@@ -11,6 +11,7 @@ using System.Text;
 
 namespace CoreBridge.Controllers
 {
+
     public class AppUserRegisterController : Controller
     {
         private readonly IAppUserService _appUserService;
@@ -46,7 +47,7 @@ namespace CoreBridge.Controllers
         [HttpPost]
         public async Task<IActionResult> Confirm(AppUserDto dto)
         {
-            string returnUrl = Url.Content("~/");
+            string returnUrl = Url.Content("~/AppUserRegister");
 
             if (ModelState.IsValid)
             {
@@ -57,11 +58,22 @@ namespace CoreBridge.Controllers
                     if (check == false)
                     {
                         //エラーメッセージ
-                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
-                        //return RedirectToPage("/", dto);
-                        //return RedirectToPage("/AppUserRegister", new { userId = dto.UserId, returnUrl = returnUrl });
+                        string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
+                        ViewBag.Alert = errorMsg;
+
+                        ModelState.AddModelError(string.Empty, errorMsg);
                         return View(dto);
                     }
+                }
+
+                if(dto.Password != dto.ConfirmPassword)
+                {
+                    //エラーメッセージ
+                    string errorMsg = "パスワードが一致しませんでした。一致するパスワードを使用してください";
+                    ViewBag.Alert = errorMsg;
+
+                    ModelState.AddModelError(string.Empty, errorMsg);
+                    return View(dto);
                 }
 
                 var user = CreateUser();

@@ -2,7 +2,7 @@
 @{
     Layout = "_TopLayout";
 }
-<h1>ユーザー情報登録</h1>
+
 @if (ViewBag.Alert != null)
 {
     <div class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600">
@@ -17,7 +17,7 @@
         @Html.Partial("_logo")
 
         <div class="flex flex-col justify-center md:justify-start my-auto pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
-            <p class="text-center text-3xl">Join Us.</p>
+            <p class="text-center text-3xl">ユーザー情報登録</p>
             @Html.Partial("_FormError")
             <form class="flex flex-col pt-3 md:pt-8" asp-controller="AppUserRegister" asp-action="Confirm" method="post">
                 @Html.AntiForgeryToken()
