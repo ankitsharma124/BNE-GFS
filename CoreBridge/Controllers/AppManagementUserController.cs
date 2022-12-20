@@ -33,16 +33,18 @@ namespace CoreBridge.Controllers
             _userStore = userStore;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var AppUser = new AppUser();
-            return View();
+            //var AppUser = new AppUser();
+            //return View();
+            return View(await _appUserService.FindAsync());
         }
 
         public async Task<IActionResult> UserList()
         {
             return View(await _appUserService.FindAsync());
         }
+
         // GET: Accounts/Create
         public async Task<IActionResult> Create()
         {
@@ -71,7 +73,7 @@ namespace CoreBridge.Controllers
                 }
 
                 //登録する
-                await _appUserService.GenerateAdminUser(appUser);
+                await _appUserService.GenerateAppUser(appUser);
                 return View();
             }
             return View(appUser);
@@ -137,7 +139,8 @@ namespace CoreBridge.Controllers
                     }
                 }
 
-                return LocalRedirect("/Accounts/UserList");
+                //return LocalRedirect("/Accounts/UserList");
+                return View();
             }
 
             return View(appUser);
@@ -225,7 +228,8 @@ namespace CoreBridge.Controllers
             }
 
             //return RedirectToAction(nameof(Index));
-            return LocalRedirect("/Accounts/UserList");
+            //return LocalRedirect("/Accounts/UserList");
+            return View();
         }
 
         private bool AppUserExists(string id)

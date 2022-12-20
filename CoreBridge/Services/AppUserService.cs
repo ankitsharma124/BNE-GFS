@@ -108,7 +108,10 @@ namespace CoreBridge.Services
             //データ更新
             targetInfo.UserId = dto.UserId;
             targetInfo.TitleCode = dto.TitleCode;
+            targetInfo.Role = dto.Role;
+            targetInfo.Email = dto.Email;
             targetInfo.Password = dto.Password;
+            targetInfo.UpdateUser = dto.UpdateUser;
 
             await _unitOfWork.AppUserRepository.UpdateAsync(targetInfo);
             await _unitOfWork.CommitAsync();
@@ -126,9 +129,9 @@ namespace CoreBridge.Services
             return false;
         }
 
-        public async Task<AppUserDto> GenerateAdminUser(AppUserDto dto)
+        public async Task<AppUserDto> GenerateAppUser(AppUserDto dto)
         {
-            AppUser entity = new(dto.UserId, dto.TitleCode, dto.Password);
+            AppUser entity = new(dto.UserId, dto.TitleCode, dto.Role, dto.Email, dto.Password, dto.UpdateUser);
 
             await _unitOfWork.AppUserRepository.AddAsync(entity);
             await _unitOfWork.CommitAsync();

@@ -98,7 +98,7 @@ namespace CoreBridge.Controllers
 
             if (dto.IsValid())
             {
-                await _appUserSerice.GenerateAdminUser(dto);
+                await _appUserSerice.GenerateAppUser(dto);
                 return View(dto);
             }
             else

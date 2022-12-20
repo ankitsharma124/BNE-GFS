@@ -7,19 +7,21 @@ namespace CoreBridge.Models.Entity
     {
         public AppUser() { }
 
-        public AppUser(string userId, string? titleCode, string password)
+        public AppUser(string userId, string? titleCode, AdminUserRoleEnum role, string email, string password, string? updateUser)
         {
             UserId = userId;
             TitleCode = titleCode;
+            Role = role;
+            Email = email;
             Password = password;
+            UpdateUser = updateUser;
         }
 
-        [Required]
         public string UserId { get; set; }
-
         public string? TitleCode { get; set; }
-
-        [Required]
+        public AdminUserRoleEnum Role { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
+        public string? UpdateUser { get; set; }
     }
 }

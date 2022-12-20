@@ -2,13 +2,6 @@
 @{
     Layout = "_TopLayout";
 }
-@*@if (ViewBag.Alert != null)
-{
-    <div class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600">
-        <p class="self-center">@ViewBag.Alert</p>
-        <strong class="text-xl align-center cursor-pointer alert-del">&times;</strong>
-    </div>
-}*@
 <div class="w-full flex flex-wrap">
     <!-- Register Section -->
     <div class="w-full md:w-1/2 flex flex-col">
@@ -30,6 +23,18 @@
                     <label for="titel code" class="text-lg">Title Code</label>
                     @Model.TitleCode
                     <input asp-for="@Model.TitleCode" type="hidden" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                </div>
+
+                <div class="flex flex-col pt-4">
+                    <label for="titel code" class="text-lg">Role</label>
+                    @Model.Role
+                    <input asp-for="@Model.Role" type="hidden" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                </div>
+
+                <div class="flex flex-col pt-4">
+                    <label for="titel code" class="text-lg">Email</label>
+                    @Model.Email
+                    <input asp-for="@Model.Email" type="hidden" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
 
                 <div class="flex flex-col pt-4">

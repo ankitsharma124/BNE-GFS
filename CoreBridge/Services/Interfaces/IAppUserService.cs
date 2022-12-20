@@ -5,7 +5,7 @@ namespace CoreBridge.Services.Interfaces
 {
     public interface IAppUserService
     {
-        public Task<AppUserDto> GenerateAdminUser(AppUserDto dto);
+        public Task<AppUserDto> GenerateAppUser(AppUserDto dto);
         public Task<List<AppUser>> FindAsync();
         public Task<AppUserDto?> AddAsync(AppUserDto dto);
         public Task<AppUser?> GetByIdAsync(string id);

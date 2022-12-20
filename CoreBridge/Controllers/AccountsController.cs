@@ -21,6 +21,9 @@ using Microsoft.AspNetCore.Authentication;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
+using CoreBridge.Models;
+using CoreBridge.Attributes;
 
 namespace CoreBridge.Controllers
 {
@@ -28,17 +31,18 @@ namespace CoreBridge.Controllers
 
     public class AccountsController : Controller
     {
-        private readonly CoreBridgeContext _context;
         private readonly IAppUserService _appUserService;
+        private readonly ITitleInfoService _titleInfoService;
         private readonly IMapper _mapper;
         private readonly ILogger<AccountsController> _logger;
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AccountsController(CoreBridgeContext coreBridgeContext, IAppUserService appUserService, SignInManager<IdentityUser> signInManager, ILogger<AccountsController> logger)
+        public AccountsController(IAppUserService appUserService, ITitleInfoService titleInfoService,
+            SignInManager<IdentityUser> signInManager, ILogger<AccountsController> logger)
         {
-            _context = coreBridgeContext;
             _appUserService = appUserService;
+            _titleInfoService = titleInfoService;
             _signInManager = signInManager;
 
             var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
@@ -53,7 +57,8 @@ namespace CoreBridge.Controllers
             //表示されるのは管理ユーザー or 一般ユーザーになる！？
             //return View(await _appUserService.FindAsync());
             //return RedirectToAction("UserLogin", "index");
-            return View();
+            //return View();
+            return View(await _appUserService.FindAsync());
         }
 
         // GET: Accounts/Details/5
@@ -81,15 +86,6 @@ namespace CoreBridge.Controllers
         // GET: Accounts/Create
         public async Task<IActionResult> Create()
         {
-            //AppUserDto appUser = new();
-            //UserOperation userManager = new(_appUserService);
-
-            //appUser.UserId = await userManager.CreateUserId();
-            //if (appUser.UserId == String.Empty)
-            //{
-            //    return View();
-            //}
-            //return View(appUser);
             return LocalRedirect("/AppUserRegister");
         }
 
@@ -102,25 +98,31 @@ namespace CoreBridge.Controllers
         {
             if (ModelState.IsValid)
             {
-                //タイトルコードの重複は防ぐ.
+                //タイトルコードの確認をする
                 if (appUser.TitleCode != null)
                 {
-                    var check = await _appUserService.FindTitleCode(appUser.TitleCode);
+                    var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
                     if (check == false)
                     {
-                        //エラーメッセージ
-                        string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
+                        string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
                         ViewBag.Alert = errorMsg;
-                        //return RedirectToPage("/AppUserRegister", appUser);
                         ModelState.AddModelError(string.Empty, errorMsg);
                         return View();
                     }
+
+                    //var check = await _appUserService.FindTitleCode(appUser.TitleCode);
+                    //if (check == false)
+                    //{
+                    //    //エラーメッセージ
+                    //    string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
+                    //    ViewBag.Alert = errorMsg;
+                    //    ModelState.AddModelError(string.Empty, errorMsg);
+                    //    return View();
+                    //}
                 }
 
                 //登録する
-                //await _appUserService.AddAsync(appUser);
-                //return RedirectToAction(nameof(Index));
-                await _appUserService.GenerateAdminUser(appUser);
+                await _appUserService.GenerateAppUser(appUser);
                 return View();
             }
             return View(appUser);
@@ -129,6 +131,7 @@ namespace CoreBridge.Controllers
 
 
         // GET: Accounts/Edit/5
+        //[AuthorizeRoles(AdminUserRoleEnum.AdminUser)]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _appUserService == null)
@@ -149,7 +152,7 @@ namespace CoreBridge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("UserId,TitleCode,Password")] AppUserDto appUser)
+        public async Task<IActionResult> Edit(string id, [Bind("UserId,TitleCode,Role,Email,Password")] AppUserDto appUser)
         {
             //if (id != appUser.UserId)
             //{
@@ -173,8 +176,10 @@ namespace CoreBridge.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
-                return LocalRedirect("/Accounts/UserList");
+
+                return RedirectToAction(nameof(Index));
+                //return LocalRedirect("/Accounts/UserList");
+                //return View();
             }
             //return View(appUser);
             return View(appUser);
@@ -206,14 +211,16 @@ namespace CoreBridge.Controllers
             {
                 return Problem("Entity set 'CoreBridgeContext.AppUsers'  is null.");
             }
+
             var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser != null)
             {
                 await _appUserService.DeleteAsync(appUser);
             }
-            
+
             //return RedirectToAction(nameof(Index));
-            return LocalRedirect("/Accounts/UserList");
+            //return LocalRedirect("/Accounts/UserList");
+            return View();
         }
 
         private bool AppUserExists(string id)
