@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CoreBridge.Utility;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 ThreadPool.SetMinThreads(200, 200);
 
@@ -88,6 +91,23 @@ try
     {
     });
 
+    //多言語対応
+    builder.Services.AddMvc()
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; });
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var culture = new List<CultureInfo>
+        {
+            // Localization Add
+            new CultureInfo("ja"),
+            new CultureInfo("en")
+        };
+        options.DefaultRequestCulture = new RequestCulture("ja");
+        options.SupportedCultures = culture;
+        options.SupportedUICultures = culture;
+    });
+
 
     // Session(Cookie)
     builder.Services.AddSession(options =>
@@ -127,6 +147,9 @@ try
         app.UseAuthentication();
         app.UseAuthorization();
 
+        //言語切り替え機能を有効
+        app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
         //app.UseMiddleware<HashAdminMiddleware>();
         //app.UseMiddleware<DebugMiddleware>();
 
@@ -140,10 +163,6 @@ try
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
-        // Api Routing Add
-        //app.MapControllerRoute(
-        //   name: "AppManagementUser",
-        //   pattern: "{id?}/{controller=AppManagementUser}/{action=Index}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

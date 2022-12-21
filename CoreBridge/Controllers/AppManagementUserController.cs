@@ -12,10 +12,11 @@ using CoreBridge.ViewModels;
 using CoreBridge.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace CoreBridge.Controllers
 {
-    [Route("{titleCode}/[controller]/[action]")]
+    //[Route("{titleCode}/[controller]/[action]")]
     public class AppManagementUserController : Controller
     {
         private readonly IAppUserService _appUserService;
@@ -24,20 +25,21 @@ namespace CoreBridge.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly ILogger<UserLoginController> _logger;
-
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public AppManagementUserController(IAppUserService appUserService, ITitleInfoService titleInfoService, SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore)
+            UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, IStringLocalizer<SharedResource> stringLocalizer)
         {
             _appUserService = appUserService;
             _titleInfoService = titleInfoService;
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
+            _localizer = stringLocalizer;
         }
 
         //[Area("AppManagementUser")]
-        [ActionName("top")]
+        //[ActionName("top")]
         public async Task<IActionResult> Index(string? titleCode)
         {
             //var AppUser = new AppUser();
