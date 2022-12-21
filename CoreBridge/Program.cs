@@ -140,12 +140,10 @@ try
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
-
-
         // Api Routing Add
         //app.MapControllerRoute(
         //   name: "AppManagementUser",
-        //   pattern: "{area:exists}/{controller=Home}/{id?}/{action=Index}");
+        //   pattern: "{id?}/{controller=AppManagementUser}/{action=Index}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

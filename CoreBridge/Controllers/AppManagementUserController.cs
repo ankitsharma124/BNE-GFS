@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreBridge.Controllers
 {
+    [Route("{titleCode}/[controller]/[action]")]
     public class AppManagementUserController : Controller
     {
         private readonly IAppUserService _appUserService;
@@ -35,7 +36,9 @@ namespace CoreBridge.Controllers
             _userStore = userStore;
         }
 
-        public async Task<IActionResult> Index()
+        //[Area("AppManagementUser")]
+        [ActionName("top")]
+        public async Task<IActionResult> Index(string? titleCode)
         {
             //var AppUser = new AppUser();
             //return View();
