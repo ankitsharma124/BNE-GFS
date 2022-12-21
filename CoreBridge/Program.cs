@@ -143,9 +143,14 @@ try
 
 
         // Api Routing Add
+        //app.MapControllerRoute(
+        //   name: "AppManagementUser",
+        //   pattern: "{area:exists}/{controller=Home}/{id?}/{action=Index}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
     }
 
     // TODO Job Scheduler

@@ -103,38 +103,9 @@ namespace CoreBridge.Controllers
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-
-                    //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                    //var roleExist = await RoleManager.RoleExistsAsync("Admin");
-                    //if (!roleExist)
-                    //{
-                    //    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
-                    //}
-
                     //ロール管理追加.
-                    //var appUser = await _userManager.FindByIdAsync(userId);
                     await CheckAppRole(dto.Role.ToString());
                     var role = await _userManager.AddToRoleAsync(user, dto.Role.ToString());
-
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
-
-                    //await _emailSender.SendEmailAsync(dto.EMail, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    //if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    //{
-                    //    return RedirectToPage("RegisterUserLoginConfirmation", new { userId = dto.UserId, returnUrl = returnUrl });
-                    //}
-                    //else
-                    //{
-                    //    await _signInManager.SignInAsync(user, isPersistent: false);
-                    //    return LocalRedirect(returnUrl);
-                    //}
 
                     return View(dto);
                 }

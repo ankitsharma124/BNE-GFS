@@ -12,10 +12,58 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>*@
-            <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
-                <i class="fas fa-tachometer-alt mr-3"></i>
-                管理
-            </a>
+
+            @if(User.IsInRole(AdminUserRoleEnum.AdminUser.ToString()))
+            {
+                <a href="/Accounts" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    ゲーム制作ユーザー管理
+                </a>
+
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="Accounts" asp-action="Signout" class="btn">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        サインアウト
+                    </a>
+                }
+            }
+            @if(!User.IsInRole(AdminUserRoleEnum.AdminUser.ToString()))
+            {
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    管理
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    KPU
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    ユーザー情報
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    NGワード(タイトル)
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    リワード機能管理
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    課金管理
+                </a>
+
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="AppManagementUser" asp-action="Signout" class="btn">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        サインアウト
+                    </a>
+                }
+            }
+
 @*            <a href="/hangfire" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-calendar mr-3"></i>
                 Job Scheduler

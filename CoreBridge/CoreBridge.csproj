@@ -54,6 +54,7 @@
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\Headers\" />
 		<Folder Include="Views\TitleInfo\" />
+		<Folder Include="Views\Logout\" />
 	</ItemGroup>
 
 

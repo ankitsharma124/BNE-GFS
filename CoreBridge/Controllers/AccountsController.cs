@@ -27,8 +27,10 @@ using CoreBridge.Attributes;
 
 namespace CoreBridge.Controllers
 {
-    //ユーザーアカウントに関する制御コントローラーにするつもり
-
+    /// <summary>
+    /// スーパーユーザー向け画面コントローラー
+    /// ゲーム制作ユーザーの初期登録、ゲーム制作ユーザーアカウントの一覧表示等を制御
+    /// </summary>
     public class AccountsController : Controller
     {
         private readonly IAppUserService _appUserService;
@@ -51,13 +53,10 @@ namespace CoreBridge.Controllers
         }
 
         // GET: Accounts
+        [AuthorizeRoles(AdminUserRoleEnum.AdminUser)]
         public async Task<IActionResult> Index()
         {
             //一覧表示.
-            //表示されるのは管理ユーザー or 一般ユーザーになる！？
-            //return View(await _appUserService.FindAsync());
-            //return RedirectToAction("UserLogin", "index");
-            //return View();
             return View(await _appUserService.FindAsync());
         }
 
@@ -131,7 +130,6 @@ namespace CoreBridge.Controllers
 
 
         // GET: Accounts/Edit/5
-        //[AuthorizeRoles(AdminUserRoleEnum.AdminUser)]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _appUserService == null)
@@ -154,11 +152,6 @@ namespace CoreBridge.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("UserId,TitleCode,Role,Email,Password")] AppUserDto appUser)
         {
-            //if (id != appUser.UserId)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
                 try
@@ -232,6 +225,20 @@ namespace CoreBridge.Controllers
             }
 
             return true;
+        }
+
+        // Sign In View
+        [AllowAnonymous]
+        public async Task<IActionResult> SignIn()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Signout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+            //return View();
         }
     }
 }

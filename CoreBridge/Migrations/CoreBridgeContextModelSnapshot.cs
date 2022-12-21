@@ -55,7 +55,6 @@ namespace CoreBridge.Migrations
                         .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("STRING");
 
                     b.Property<string>("Password")

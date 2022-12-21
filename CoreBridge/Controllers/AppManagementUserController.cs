@@ -18,16 +18,18 @@ namespace CoreBridge.Controllers
     public class AppManagementUserController : Controller
     {
         private readonly IAppUserService _appUserService;
+        private readonly ITitleInfoService _titleInfoService;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly ILogger<UserLoginController> _logger;
 
 
-        public AppManagementUserController(IAppUserService appUserService, SignInManager<IdentityUser> signInManager, 
+        public AppManagementUserController(IAppUserService appUserService, ITitleInfoService titleInfoService, SignInManager<IdentityUser> signInManager, 
             UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore)
         {
             _appUserService = appUserService;
+            _titleInfoService = titleInfoService;
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
@@ -37,10 +39,11 @@ namespace CoreBridge.Controllers
         {
             //var AppUser = new AppUser();
             //return View();
-            return View(await _appUserService.FindAsync());
+            //return View(await _appUserService.FindAsync());
+            return View();
         }
 
-        public async Task<IActionResult> UserList()
+        public async Task<IActionResult> UserList(string Title)
         {
             return View(await _appUserService.FindAsync());
         }
@@ -48,6 +51,7 @@ namespace CoreBridge.Controllers
         // GET: Accounts/Create
         public async Task<IActionResult> Create()
         {
+            //ここではゲーム管理ユーザー用の登録画面へ移動させる.
             return LocalRedirect("/AppUserRegister");
         }
 
@@ -60,16 +64,21 @@ namespace CoreBridge.Controllers
         {
             if (ModelState.IsValid)
             {
-                //タイトルコードの重複は防ぐ.
-                if (appUser.TitleCode != null)
+                ////タイトルコードの重複は防ぐ.
+                var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
+                if (check == false)
                 {
-                    var check = await _appUserService.FindTitleCode(appUser.TitleCode);
-                    if (check == false)
-                    {
-                        //エラーメッセージ
-                        ViewBag.Alert = "同一のタイトルコードがありました！一意のものを使用してください";
-                        //return RedirectToPage("/AppUserRegister", appUser);
-                    }
+                    //エラーメッセージ
+                    //string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
+                    //ViewBag.Alert = errorMsg;
+
+                    //ModelState.AddModelError(string.Empty, errorMsg);
+                    //return View(dto);
+
+                    string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
+                    ViewBag.Alert = errorMsg;
+                    ModelState.AddModelError(string.Empty, errorMsg);
+                    return View();
                 }
 
                 //登録する
@@ -241,6 +250,13 @@ namespace CoreBridge.Controllers
             }
 
             return true;
+        }
+
+        public async Task<IActionResult> Signout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "AppManagementUser");
+            //return View();
         }
     }
 }

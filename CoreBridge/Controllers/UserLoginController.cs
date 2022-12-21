@@ -36,16 +36,6 @@ namespace CoreBridge.Controllers
         [HttpPost]
         public async Task<IActionResult> Confirm(AppUserDto dto)
         {
-
-            //if (dto.IsValid())
-            //{
-            //    return View(dto);
-            //}
-            //else
-            //{
-            //    return View("/");
-            //}
-
             string returnUrl = Url.Content("~/");
 
             if (ModelState.IsValid)

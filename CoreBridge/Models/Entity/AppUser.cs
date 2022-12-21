@@ -7,7 +7,7 @@ namespace CoreBridge.Models.Entity
     {
         public AppUser() { }
 
-        public AppUser(string userId, string? titleCode, AdminUserRoleEnum role, string email, string password, string? updateUser)
+        public AppUser(string userId, string? titleCode, AdminUserRoleEnum role, string? email, string password, string? updateUser)
         {
             UserId = userId;
             TitleCode = titleCode;
@@ -20,7 +20,7 @@ namespace CoreBridge.Models.Entity
         public string UserId { get; set; }
         public string? TitleCode { get; set; }
         public AdminUserRoleEnum Role { get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public string Password { get; set; }
         public string? UpdateUser { get; set; }
     }

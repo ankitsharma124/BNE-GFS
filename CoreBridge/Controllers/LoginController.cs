@@ -69,7 +69,7 @@ namespace CoreBridge.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect("/Accounts/UserList");
+                    return LocalRedirect("/Accounts");
                 }
                 if (result.RequiresTwoFactor) //二段階認証
                 {

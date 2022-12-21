@@ -7,7 +7,7 @@ namespace CoreBridge.Models.DTO
     {
         public AppUserDto() { }
 
-        public AppUserDto(string userId, string? titleCode, AdminUserRoleEnum role, string password, string eMail, string? confirempassword, string? updateUser)
+        public AppUserDto(string userId, string? titleCode, AdminUserRoleEnum role, string password, string? eMail, string? confirempassword, string? updateUser)
         {
             UserId = userId;
             TitleCode = titleCode;
@@ -25,7 +25,7 @@ namespace CoreBridge.Models.DTO
         [Key(2)]
         public AdminUserRoleEnum Role { get; set; }
         [Key(3)]
-        public String Email { get; set; }
+        public String? Email { get; set; }
         [Key(4)]
         public String Password { get; set; }
         [Key(5)]

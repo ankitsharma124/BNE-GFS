@@ -25,9 +25,9 @@
     //管理ユーザー(COSMOSより)
     public enum ManagementRoleEnum
     {
-        DataLake権限,
+        DataLake権限 = 2,
         参照権限,
-        編集権限参照権限
+        編集権限_参照権限
     }
 
     /// <summary>
