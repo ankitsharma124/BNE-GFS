@@ -1,6 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@inject NavigationManager NavigationManager
 @{
 }
     <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
@@ -17,14 +18,14 @@
             {
                 <a href="/Accounts" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
                     <i class="fas fa-tachometer-alt mr-3"></i>
-                    ゲーム制作ユーザー管理
+                    <p>@Localizer["GameManagementTitle"]</p>
                 </a>
 
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
                     <a asp-controller="Accounts" asp-action="Signout" class="btn">
                         <i class="fas fa-tachometer-alt mr-3"></i>
-                        サインアウト
+                        <p>@Localizer["LogOut"]</p>
                     </a>
                 }
             }
@@ -59,7 +60,7 @@
                 {
                     <a asp-controller="AppManagementUser" asp-action="Signout" class="btn">
                         <i class="fas fa-tachometer-alt mr-3"></i>
-                        サインアウト
+                        <p>@Localizer["LogOut"]</p>
                     </a>
                 }
             }

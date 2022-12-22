@@ -167,30 +167,6 @@ namespace CoreBridge.Controllers
 
             if (ModelState.IsValid)
             {
-                //if (dto.TitleCode != null)
-                //{
-                //    //タイトルコードの存在は確認する.
-                //    //var check = await _appUserService.FindTitleCode(dto.TitleCode);
-                //    var check = await _titleInfoService.FindTitleCode(dto.TitleCode);
-                //    if (check == false)
-                //    {
-                //        string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
-                //        ViewBag.Alert = errorMsg;
-                //        ModelState.AddModelError(string.Empty, errorMsg);
-                //        return View();
-                //    }
-                //}
-
-                //if (dto.Password != dto.ConfirmPassword)
-                //{
-                //    //エラーメッセージ
-                //    string errorMsg = "パスワードが一致しませんでした。一致するパスワードを使用してください";
-                //    ViewBag.Alert = errorMsg;
-
-                //    ModelState.AddModelError(string.Empty, errorMsg);
-                //    return View(dto);
-                //}
-
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, dto.UserId, CancellationToken.None);
@@ -219,17 +195,6 @@ namespace CoreBridge.Controllers
             }
 
             return View(dto);
-
-
-            //if (dto.IsValid())
-            //{
-            //    await _appUserService.GenerateAppUser(dto);
-            //    return View(dto);
-            //}
-            //else
-            //{
-            //    return View("/");
-            //}
         }
 
         private IdentityUser CreateUser()

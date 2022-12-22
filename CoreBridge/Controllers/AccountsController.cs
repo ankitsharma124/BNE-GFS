@@ -31,6 +31,7 @@ namespace CoreBridge.Controllers
     /// スーパーユーザー向け画面コントローラー
     /// ゲーム制作ユーザーの初期登録、ゲーム制作ユーザーアカウントの一覧表示等を制御
     /// </summary>
+    [AuthorizeRoles(AdminUserRoleEnum.AdminUser)]
     public class AccountsController : Controller
     {
         private readonly IAppUserService _appUserService;
@@ -52,8 +53,7 @@ namespace CoreBridge.Controllers
             _logger = logger;
         }
 
-        // GET: Accounts
-        [AuthorizeRoles(AdminUserRoleEnum.AdminUser)]
+        // GET: Accounts        
         public async Task<IActionResult> Index()
         {
             //一覧表示.
@@ -108,16 +108,6 @@ namespace CoreBridge.Controllers
                         ModelState.AddModelError(string.Empty, errorMsg);
                         return View();
                     }
-
-                    //var check = await _appUserService.FindTitleCode(appUser.TitleCode);
-                    //if (check == false)
-                    //{
-                    //    //エラーメッセージ
-                    //    string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
-                    //    ViewBag.Alert = errorMsg;
-                    //    ModelState.AddModelError(string.Empty, errorMsg);
-                    //    return View();
-                    //}
                 }
 
                 //登録する
@@ -171,10 +161,8 @@ namespace CoreBridge.Controllers
                 }
 
                 return RedirectToAction(nameof(Index));
-                //return LocalRedirect("/Accounts/UserList");
-                //return View();
             }
-            //return View(appUser);
+
             return View(appUser);
         }
 
@@ -212,8 +200,8 @@ namespace CoreBridge.Controllers
             }
 
             //return RedirectToAction(nameof(Index));
-            //return LocalRedirect("/Accounts/UserList");
-            return View();
+            return LocalRedirect("/Accounts/UserList");
+            //return View();
         }
 
         private bool AppUserExists(string id)
@@ -238,7 +226,6 @@ namespace CoreBridge.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
-            //return View();
         }
     }
 }

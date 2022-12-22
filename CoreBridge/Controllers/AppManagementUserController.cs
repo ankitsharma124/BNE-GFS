@@ -13,6 +13,8 @@ using CoreBridge.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using CoreBridge.Attributes;
+using CoreBridge.Models;
 
 namespace CoreBridge.Controllers
 {
@@ -42,12 +44,11 @@ namespace CoreBridge.Controllers
         //[ActionName("top")]
         public async Task<IActionResult> Index(string? titleCode)
         {
-            //var AppUser = new AppUser();
-            //return View();
-            //return View(await _appUserService.FindAsync());
             return View();
         }
 
+        [AuthorizeRoles(AdminUserRoleEnum.AdminUser, AdminUserRoleEnum.BneManager, AdminUserRoleEnum.Manager,
+            AdminUserRoleEnum.Reference, AdminUserRoleEnum.EditReference)]
         public async Task<IActionResult> UserList(string Title)
         {
             return View(await _appUserService.FindAsync());
@@ -73,13 +74,6 @@ namespace CoreBridge.Controllers
                 var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
                 if (check == false)
                 {
-                    //エラーメッセージ
-                    //string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
-                    //ViewBag.Alert = errorMsg;
-
-                    //ModelState.AddModelError(string.Empty, errorMsg);
-                    //return View(dto);
-
                     string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
                     ViewBag.Alert = errorMsg;
                     ModelState.AddModelError(string.Empty, errorMsg);
@@ -241,8 +235,6 @@ namespace CoreBridge.Controllers
                 await _appUserService.DeleteAsync(appUser);
             }
 
-            //return RedirectToAction(nameof(Index));
-            //return LocalRedirect("/Accounts/UserList");
             return View();
         }
 
@@ -261,7 +253,6 @@ namespace CoreBridge.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "AppManagementUser");
-            //return View();
         }
     }
 }

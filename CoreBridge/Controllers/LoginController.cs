@@ -46,21 +46,7 @@ namespace CoreBridge.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(AdminUserDto dto)
         {
-            //サインインの処理を書く
-
-            //AdminUserDto result = await _adminUserService.LoginAdminUser(dto);
-            //if (result == null)
-            ////if(false)
-            //{
-            //    ModelState.AddModelError(string.Empty, "E-Mailまたは、パスワードが不正です");
-            //    return View(dto);
-            //}
-            //else
-            //{
-            //    var resultSign = await _signInManager.PasswordSignInAsync(dto.EMail, dto.Password, false, false);
-            //    return LocalRedirect("/Dashboard");
-            //}
-
+            //サインイン
             string returnUrl = Url.Content("~/");
 
             if (ModelState.IsValid)

@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GameManagementTitle" xml:space="preserve">
+    <value>ゲーム制作ユーザー側管理</value>
+  </data>
   <data name="KPITitle" xml:space="preserve">
     <value>KPI</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>ログアウト</value>
   </data>
   <data name="ManagementTitle" xml:space="preserve">
     <value>管理</value>
