@@ -36,7 +36,6 @@ namespace CoreBridge.Services
 
         public async Task<AdminUserDto> GenerateAdminUser(AdminUserDto dto)
         {
-
             AdminUser entity = new(dto.Name, dto.EMail, dto.Password);
 
             await _unitOfWork.AdminUserRepository.AddAsync(entity);

@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CoreBridge.Models;
+using XAct.Users;
+
 
 namespace CoreBridge.Controllers
 {
@@ -27,12 +29,12 @@ namespace CoreBridge.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<IdentityUser> _userStore;
-        //private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<UserRegisterController> _logger;
         private readonly IEmailSender _emailSender;
 
         public UserRegisterController(ILogger<UserRegisterController> logger, IAdminUserService adminUserService, UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, IUserStore<IdentityUser> userStore, /*IUserEmailStore<IdentityUser> userEmailStore,*/ IEmailSender emailSender)
+            SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, IUserStore<IdentityUser> userStore, IEmailSender emailSender)
         {
             _logger = logger;
             _adminUserService = adminUserService;
@@ -40,7 +42,7 @@ namespace CoreBridge.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userStore = userStore;
-            //_emailStore = userEmailStore;
+            _emailStore = GetEmailStore();
             _emailSender = emailSender;
         }
 
@@ -51,16 +53,19 @@ namespace CoreBridge.Controllers
 
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        //public async Task OnGetAsync(string returnUrl = null)
-        //{
-        //    ReturnUrl = returnUrl;
-        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        //}
+        public bool DisplayConfirmAccountLink { get; set; }
+        public string EmailConfirmationUrl { get; set; }
 
         [HttpPost]
         public async Task<IActionResult> Confirm(AdminUserDto dto)
         {
+            var user = await _userManager.FindByEmailAsync(dto.EMail);
+            if (user != null)
+            {
+                ViewBag.Alert = "既に利用されているEmailアドレスです！";
+                ModelState.AddModelError(string.Empty, "既に利用されているEmailアドレスです！");
+                return View(dto);
+            }
 
             if (dto.IsValid())
             {
@@ -83,9 +88,9 @@ namespace CoreBridge.Controllers
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, dto.EMail, CancellationToken.None);
-                //await _emailStore.SetEmailAsync(user, dto.EMail, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, dto.Password);
+                await _emailStore.SetEmailAsync(user, dto.EMail, CancellationToken.None);
 
+                var result = await _userManager.CreateAsync(user, dto.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
@@ -95,18 +100,14 @@ namespace CoreBridge.Controllers
 
                     //ロール追加(強制的にAdminUserのみ)
                     await _roleManager.CreateAsync(new IdentityRole(AdminUserRoleEnum.AdminUser.ToString()));
-                    var role = await _userManager.AddToRoleAsync(user, AdminUserRoleEnum.AdminUser.ToString());
+                    await _userManager.AddToRoleAsync(user, AdminUserRoleEnum.AdminUser.ToString());
 
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
+                    //Email設定
+                    await _userManager.SetEmailAsync(user, dto.EMail);
 
-                    //await _emailSender.SendEmailAsync(dto.EMail, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    //パスワードをハッシュ化
+                    var passwordHash = _userManager.PasswordHasher.HashPassword(user, dto.Password);
+                    dto.Password = passwordHash;
 
                     //DB登録
                     await _adminUserService.GenerateAdminUser(dto);
@@ -121,6 +122,7 @@ namespace CoreBridge.Controllers
                         return LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -144,5 +146,13 @@ namespace CoreBridge.Controllers
             }
         }
 
+        private IUserEmailStore<IdentityUser> GetEmailStore()
+        {
+            if (!_userManager.SupportsUserEmail)
+            {
+                throw new NotSupportedException("The default UI requires a user store with email support.");
+            }
+            return (IUserEmailStore<IdentityUser>)_userStore;
+        }
     }
 }

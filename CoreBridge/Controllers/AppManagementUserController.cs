@@ -124,11 +124,6 @@ namespace CoreBridge.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("UserId,TitleCode,Password")] AppUserDto appUser)
         {
-            //if (id != appUser.UserId)
-            //{
-            //    return NotFound();
-            //}
-
             if (ModelState.IsValid)
             {
                 try
@@ -147,7 +142,6 @@ namespace CoreBridge.Controllers
                     }
                 }
 
-                //return LocalRedirect("/Accounts/UserList");
                 return View();
             }
 
@@ -170,10 +164,6 @@ namespace CoreBridge.Controllers
                         //エラーメッセージ
                         string errorMsg = "同一のタイトルコードがありました！一意のものを使用してください";
                         ViewBag.Alert = errorMsg;
-                        //return RedirectToPage("/", dto);
-                        //return RedirectToPage("/AppUserRegister", new { userId = dto.UserId, returnUrl = returnUrl });
-                        //return View(dto);
-
                         ModelState.AddModelError(string.Empty, errorMsg);
                     }
                 }
@@ -181,7 +171,6 @@ namespace CoreBridge.Controllers
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, dto.UserId, CancellationToken.None);
-                //await _emailStore.SetEmailAsync(user, dto.EMail, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, dto.Password);
 
                 if (result.Succeeded)

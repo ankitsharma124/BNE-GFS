@@ -31,12 +31,25 @@ namespace CoreBridge.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(AppUserDto dto)
         {
-            //サインインの処理を書く
+            var info = await _appUserSerice.GetByUserIdAsync(dto.UserId);
+            //UserID確認
+            if(info == null)
+            {
+                ModelState.AddModelError(string.Empty, "正しいUserIDを指定してください。");
+                return View(dto);
+            }
+
+            //タイトルコード確認
+            if (dto.TitleCode != info.TitleCode)
+            {
+                ModelState.AddModelError(string.Empty, "タイトルコードが不正です。");
+                return View(dto);
+            }
 
             string returnUrl = Url.Content("~/");
-
             if (ModelState.IsValid)
             {
+                //サインイン処理
                 var result = await _signInManager.PasswordSignInAsync(dto.UserId, dto.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

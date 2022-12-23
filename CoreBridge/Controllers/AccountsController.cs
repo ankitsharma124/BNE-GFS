@@ -24,6 +24,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using CoreBridge.Models;
 using CoreBridge.Attributes;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using XAct.Users;
 
 namespace CoreBridge.Controllers
 {
@@ -40,13 +42,17 @@ namespace CoreBridge.Controllers
         private readonly ILogger<AccountsController> _logger;
 
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountsController(IAppUserService appUserService, ITitleInfoService titleInfoService,
-            SignInManager<IdentityUser> signInManager, ILogger<AccountsController> logger)
+            SignInManager<IdentityUser> signInManager,UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AccountsController> logger)
         {
             _appUserService = appUserService;
             _titleInfoService = titleInfoService;
             _signInManager = signInManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
 
             var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
             _mapper = new Mapper(mapConfig);
@@ -132,6 +138,7 @@ namespace CoreBridge.Controllers
             {
                 return NotFound();
             }
+
             return View(appUser);
         }
 
@@ -144,8 +151,37 @@ namespace CoreBridge.Controllers
         {
             if (ModelState.IsValid)
             {
+                //エラーチェック
+                var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
+                if (check == false)
+                {
+                    string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
+                    ViewBag.Alert = errorMsg;
+                    ModelState.AddModelError(string.Empty, errorMsg);
+                    return View(appUser);
+                }
+
                 try
                 {
+                    //サインイン情報のアップデート
+
+                    //EmailからUserインスタンス取得
+                    var user = await _userManager.FindByEmailAsync(appUser.Email);
+
+                    //ロール管理アップデート.
+                    var roleName = appUser.Role.ToString();
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                    await _userManager.AddToRoleAsync(user, roleName);
+
+                    //UserManagerのパスワード更新
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var ret = await _userManager.ResetPasswordAsync(user, token, appUser.Password);
+
+                    //パスワードをハッシュ化
+                    var new_passwordHash = _userManager.PasswordHasher.HashPassword(user, appUser.Password);
+                    appUser.Password = new_passwordHash;
+
+                    //DB更新
                     await _appUserService.UpdateAsync(appUser);
                 }
                 catch (DbUpdateConcurrencyException)
