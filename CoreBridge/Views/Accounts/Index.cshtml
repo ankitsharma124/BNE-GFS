@@ -7,6 +7,14 @@
 <h1>GFS 管理</h1>
 <p>
     <a asp-action="Create">Create New</a>
+    <form method="post" class="float-end">
+        <input name="IsDeleteView" type="checkbox" value="true" asp-action="Index" @ViewData["IsDeleteTab"] />
+        <label>削除項目を表示する　</label>
+
+        <button class="border" type="submit"> 切り替える</button>
+
+        <input name="IsDeleteView" type="hidden" value="false" />
+    </form>
 </p>
 <!-- スーパーユーザーのゲームタイトル毎のユーザー一覧 -->
 <table class="table">

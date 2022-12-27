@@ -10,8 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Text;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace CoreBridge.Controllers
 {
@@ -55,6 +57,8 @@ namespace CoreBridge.Controllers
         [HttpPost]
         public async Task<IActionResult> Confirm(AppUserDto dto)
         {
+            ViewBag.Alert = null;
+
             //タイトルコードの存在は確認する.
             if (dto.TitleCode != null)
             {
@@ -64,6 +68,26 @@ namespace CoreBridge.Controllers
                 {
                     string errorMsg = "同一のタイトルコードがあませんでした！登録済みタイトルコードを利用してください。";
                     ViewBag.Alert = errorMsg;
+                    ModelState.AddModelError(string.Empty, errorMsg);
+                }
+            }
+
+            //パスワードの手動でのバリテーション
+            if(dto.Password != null)
+            {
+                var hasNumber = new Regex(@"[0-9]+");
+                var hasUpperChar = new Regex(@"[A-Z]+");
+                var hasMinimum8Chars = new Regex(@".{8,}");
+                var hasOtherChar= new Regex(@"[^a-zA-Z0-9]+");
+
+                var isValidated = hasNumber.IsMatch(dto.Password) && hasUpperChar.IsMatch(dto.Password)
+                    && hasMinimum8Chars.IsMatch(dto.Password) && hasOtherChar.IsMatch(dto.Password);
+                if (isValidated == false)
+                {
+                    //エラーにする
+                    string errorMsg = "パスワードに使われている文字列が正しくありません！8文字以上の大文字・小文字・数値・数値以外の値が入ったパスワードを使用してください";
+                    ViewBag.Alert = errorMsg;
+
                     ModelState.AddModelError(string.Empty, errorMsg);
                 }
             }
@@ -120,6 +144,7 @@ namespace CoreBridge.Controllers
                     return View(dto);
                 }
 
+                ViewBag.Alert = "登録に失敗しました";
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

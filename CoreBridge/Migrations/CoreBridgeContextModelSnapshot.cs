@@ -57,6 +57,9 @@ namespace CoreBridge.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("STRING");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("BOOL");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("STRING");

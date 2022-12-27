@@ -110,8 +110,12 @@ namespace CoreBridge.Services
             targetInfo.TitleCode = dto.TitleCode;
             targetInfo.Role = dto.Role;
             targetInfo.Email = dto.Email;
-            targetInfo.Password = dto.Password;
+            if (dto.Password != null)
+            {
+                targetInfo.Password = dto.Password;
+            }
             targetInfo.UpdateUser = dto.UpdateUser;
+            targetInfo.IsDelete = dto.IsDelete;
 
             await _unitOfWork.AppUserRepository.UpdateAsync(targetInfo);
             await _unitOfWork.CommitAsync();

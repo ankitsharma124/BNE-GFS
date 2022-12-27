@@ -45,6 +45,11 @@ namespace CoreBridge.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        [ViewData]
+        public string IsDeleteTab { get; set; } = "";
+
+        public bool IsDeleteView { get; set; } = false;
+
         public AccountsController(IAppUserService appUserService, ITitleInfoService titleInfoService,
             SignInManager<IdentityUser> signInManager,UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AccountsController> logger)
         {
@@ -60,10 +65,19 @@ namespace CoreBridge.Controllers
         }
 
         // GET: Accounts        
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool IsDeleteView = false)
         {
-            //一覧表示.
-            return View(await _appUserService.FindAsync());
+            if (IsDeleteView)
+            {
+                //すべて表示する
+                ViewData["IsDeleteTab"] = "checked";
+                return View(await _appUserService.FindAsync());
+            }
+
+            ViewData["IsDeleteTab"] = "";
+            var getInfo = await _appUserService.FindAsync();
+            var viewInfo = getInfo.Where(d => d.IsDelete == false);
+            return View(viewInfo);
         }
 
         // GET: Accounts/Details/5
@@ -139,6 +153,8 @@ namespace CoreBridge.Controllers
                 return NotFound();
             }
 
+            appUser.Password = String.Empty;
+
             return View(appUser);
         }
 
@@ -152,6 +168,7 @@ namespace CoreBridge.Controllers
             if (ModelState.IsValid)
             {
                 //エラーチェック
+                ViewBag.Alert = null;
                 var check = await _titleInfoService.FindTitleCode(appUser.TitleCode);
                 if (check == false)
                 {
@@ -163,23 +180,42 @@ namespace CoreBridge.Controllers
 
                 try
                 {
-                    //サインイン情報のアップデート
+                    //DBに保存されている情報を取得
+                    var info = await _appUserService.GetByUserIdAsync(appUser.UserId);
+                    if(info == null) 
+                    {
+                        return View(appUser); 
+                    }
 
                     //EmailからUserインスタンス取得
-                    var user = await _userManager.FindByEmailAsync(appUser.Email);
+                    var user = await _userManager.FindByEmailAsync(info.Email);
+
+                    //Emailの変更確認.
+                    if (info.Email != appUser.Email)
+                    {
+                        //トークン生成
+                        var email_token = await _userManager.GenerateChangeEmailTokenAsync(user, appUser.Email);
+
+                        //ユーザーのEmail情報を更新
+                        await _userManager.ChangeEmailAsync(user, appUser.Email, email_token);
+                    }
+
+                    //サインイン情報のアップデート
+                    if (appUser.Password != null)
+                    {
+                        //UserManagerのパスワード更新
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        var ret = await _userManager.ResetPasswordAsync(user, token, appUser.Password);
+
+                        //パスワードをハッシュ化
+                        var new_passwordHash = _userManager.PasswordHasher.HashPassword(user, appUser.Password);
+                        appUser.Password = new_passwordHash;
+                    }
 
                     //ロール管理アップデート.
                     var roleName = appUser.Role.ToString();
                     await _roleManager.CreateAsync(new IdentityRole(roleName));
                     await _userManager.AddToRoleAsync(user, roleName);
-
-                    //UserManagerのパスワード更新
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var ret = await _userManager.ResetPasswordAsync(user, token, appUser.Password);
-
-                    //パスワードをハッシュ化
-                    var new_passwordHash = _userManager.PasswordHasher.HashPassword(user, appUser.Password);
-                    appUser.Password = new_passwordHash;
 
                     //DB更新
                     await _appUserService.UpdateAsync(appUser);
@@ -232,12 +268,33 @@ namespace CoreBridge.Controllers
             var appUser = await _appUserService.GetByUserIdAsync(id);
             if (appUser != null)
             {
+                //削除フラグをON！
+                appUser.IsDelete = true;
+
+                //DB更新
+                await _appUserService.UpdateAsync(appUser);
+
+                /* Spannerの場合リレーショナルを組んでいると削除がロジックでやろうとすると難航する可能性あり
+                 * 今回は下記の処理は行わず、削除フラグにて表示を切り替えるようにする
+                 * 削除する必要がある場合は、運用でカバーする流れにする（ 12/26 根本さんと相談済み：野竹）
+
+                //EmailからUserインスタンス取得
+                var user = await _userManager.FindByEmailAsync(appUser.Email);
+
+                //ロール情報の削除 <- 情報を取ってこれない.
+                var role = await _roleManager.FindByIdAsync(user.Id);
+                await _roleManager.DeleteAsync(role);
+
+                //ユーザー情報の削除
+                var deluser = await _userManager.FindByIdAsync(user.Id);
+                await _userManager.DeleteAsync(deluser);
+
+                //ユーザーDBの削除
                 await _appUserService.DeleteAsync(appUser);
+                */
             }
 
-            //return RedirectToAction(nameof(Index));
-            return LocalRedirect("/Accounts/UserList");
-            //return View();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool AppUserExists(string id)
