@@ -14,13 +14,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using NLog.Web;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using CoreBridge.Utility;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 ThreadPool.SetMinThreads(200, 200);
 
 var logger = LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config")).GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 try
 {
@@ -55,6 +60,7 @@ try
     }).UseNLog();
 
 
+
     // Data Accessser Service Add
     builder.Services.AddDataAccessServices(builder.Configuration);
     // Hangfuire Service Add
@@ -70,10 +76,43 @@ try
     // CustomServices
     builder.Services.AddCustomServices();
 
+
+    // IdentityRole
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+        options => options.SignIn.RequireConfirmedAccount = false)
+        .AddEntityFrameworkStores<CoreBridgeContext>()
+        .AddDefaultTokenProviders();
+
+    builder.Services.AddSingleton<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
+
+
+    builder.Services.AddAuthorization(options =>
+    {
+    });
+
+    //å¤šè¨€èªå¯¾å¿œ
+    builder.Services.AddMvc()
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; });
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var culture = new List<CultureInfo>
+        {
+            // Localization Add
+            new CultureInfo("ja"),
+            new CultureInfo("en")
+        };
+        options.DefaultRequestCulture = new RequestCulture("ja");
+        options.SupportedCultures = culture;
+        options.SupportedUICultures = culture;
+    });
+
+
     // Session(Cookie)
     builder.Services.AddSession(options =>
     {
-        // ƒZƒbƒVƒ‡ƒ“ƒNƒbƒL[‚Ì–¼‘O‚ğ•Ï‚¦‚é‚È‚ç
+        // ã‚»ãƒƒã‚·ãƒ§ãƒ³ã‚¯ãƒƒã‚­ãƒ¼ã®åå‰ã‚’å¤‰ãˆã‚‹ãªã‚‰
         options.Cookie.Name = "session";
     });
 
@@ -105,6 +144,12 @@ try
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseMiddleware<SessionStatusAdminMiddleware>();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        //è¨€èªåˆ‡ã‚Šæ›¿ãˆæ©Ÿèƒ½ã‚’æœ‰åŠ¹
+        app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
         //app.UseMiddleware<HashAdminMiddleware>();
         //app.UseMiddleware<DebugMiddleware>();
 
@@ -118,12 +163,11 @@ try
             Authorization = new[] { new HungfireAuthorizationFilter() }
         });
 
-
-
-        // Api Routing Add
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
     }
 
     // TODO Job Scheduler
@@ -133,12 +177,12 @@ try
 }
 catch (Exception exception)
 {
-    logger.Error(exception, "—áŠO‚Ì‚½‚ß‚ÉƒvƒƒOƒ‰ƒ€‚ğ’â~‚µ‚Ü‚µ‚½B");
+    logger.Error(exception, "ä¾‹å¤–ã®ãŸã‚ã«ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’åœæ­¢ã—ã¾ã—ãŸã€‚");
     throw;
 }
 finally
 {
-    // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğI—¹‚·‚é‘O‚ÉA“à•”ƒ^ƒCƒ}[/ƒXƒŒƒbƒh‚ğƒtƒ‰ƒbƒVƒ…‚µ‚Ä’â~‚·‚é‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢
-    // (Linux ‚Å‚ÌƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚ğ‰ñ”ğ‚µ‚Ä‚­‚¾‚³‚¢j
+    // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’çµ‚äº†ã™ã‚‹å‰ã«ã€å†…éƒ¨ã‚¿ã‚¤ãƒãƒ¼/ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã—ã¦åœæ­¢ã™ã‚‹ã‚ˆã†ã«ã—ã¦ãã ã•ã„
+    // (Linux ã§ã®ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã‚’å›é¿ã—ã¦ãã ã•ã„ï¼‰
     LogManager.Shutdown();
 }

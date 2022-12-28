@@ -6,6 +6,31 @@
     }
 
     /// <summary>
+    /// ユーザー権限
+    /// AdminUser:スーパーユーザー
+    /// BneManager:BNE管理ユーザー
+    /// Manager:ゲーム制作者側管理ユーザー
+    /// Reference:参照のみ
+    /// EditReference:編集権限＋参照
+    /// </summary>
+    public enum AdminUserRoleEnum
+    {
+        AdminUser,
+        BneManager,
+        Manager,
+        Reference,
+        EditReference
+    }
+
+    //管理ユーザー(COSMOSより)
+    public enum ManagementRoleEnum
+    {
+        DataLake権限 = 2,
+        参照権限,
+        編集権限_参照権限
+    }
+
+    /// <summary>
     /// プラットフォーム
     /// </summary>
     public enum PType

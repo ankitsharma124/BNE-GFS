@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CoreBridge.Models.Entity.AppUser>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>GFS 管理</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<!-- スーパーユーザーのゲームタイトル毎のユーザー一覧 -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TitleCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleCode)
+                </td>
+                <td>
+                    <input type="password" value="@Html.DisplayFor(modelItem => item.Password)">
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

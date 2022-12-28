@@ -14,6 +14,9 @@
                 @Html.DisplayNameFor(model => model.TitleName)
             </th>
             <th scope="col">
+                @Html.DisplayNameFor(model => model.TitleCode)
+            </th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.TrialTitleCode)
             </th>
             <th scope="col">
@@ -56,6 +59,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.TitleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TitleCode)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TrialTitleCode)

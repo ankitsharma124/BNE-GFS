@@ -7,6 +7,7 @@ using CoreBridge.Models.Interfaces;
 using CoreBridge.Models.Repositories;
 using CoreBridge.Services.Interfaces;
 using CoreBridge.Specifications;
+using Google.Rpc;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
@@ -147,6 +148,22 @@ namespace CoreBridge.Services
             await _unitOfWork.TitleInfoRepository.DeleteAsync(_mapper.Map<TitleInfo>(dto));
             await _unitOfWork.CommitAsync();
             return dto;
+        }
+
+        /// <summary>
+        /// タイトルコード検索
+        /// </summary>
+        /// <param name="titlecode"></param>
+        /// <returns>True:あり/False：なし</returns>
+        public async Task<bool> FindTitleCode(string titlecode)
+        {
+            var targetInfo = await _unitOfWork.TitleInfoRepository.ListAsync();
+            var judge = targetInfo.Find(e => e.TitleCode == titlecode);
+            if (judge == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

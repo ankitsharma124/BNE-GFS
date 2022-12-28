@@ -2,6 +2,7 @@
 using CoreBridge.Models.Entity;
 
 using CoreBridge.Models.Ext;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreBridge.Models.Context
@@ -14,7 +15,8 @@ namespace CoreBridge.Models.Context
         // Entity Entry
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<TitleInfo> TitleInfo { get; set; }
-        public DbSet<GFSUser> Users { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+        //public DbSet<GFSUser> GFSUsers { get; set; }
 
         public DbSet<UserPlatform> UserPlatforms { get; set; }
 
@@ -27,7 +29,7 @@ namespace CoreBridge.Models.Context
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TitleInfo>().HasIndex(t => t.TitleCode);
-
+            modelBuilder.Entity<AppUser>().HasIndex(a => a.UserId);
 #if DEBUG
             ContextSeedForTest.Seed(modelBuilder).Wait();
 #endif

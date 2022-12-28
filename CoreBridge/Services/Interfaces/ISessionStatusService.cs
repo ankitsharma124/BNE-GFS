@@ -40,6 +40,5 @@ namespace CoreBridge.Services.Interfaces
 #if DEBUG
         Task SaveSessionDebugInfo();
 #endif
-
     }
 }

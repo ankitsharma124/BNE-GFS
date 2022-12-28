@@ -1,6 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@inject NavigationManager NavigationManager
 @{
 }
     <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
@@ -8,13 +9,65 @@
             <a href="index.html" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">Logo</a>
         </div>
         <nav class="text-white text-base font-semibold pt-3">
-            <a href="/Dashboard" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+@*            <a href="/Dashboard" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
-            </a>
-            <a href="/hangfire" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            </a>*@
+
+            @if(User.IsInRole(AdminUserRoleEnum.AdminUser.ToString()))
+            {
+                <a href="/Accounts" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["GameManagementTitle"]</p>
+                </a>
+
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="Accounts" asp-action="Signout" class="btn">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <p>@Localizer["LogOut"]</p>
+                    </a>
+                }
+            }
+            @if(!User.IsInRole(AdminUserRoleEnum.AdminUser.ToString()))
+            {
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["ManagementTitle"]</p>
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["KPITitle"]</p>
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["UserInfoTitle"]</p>
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["NgWordTitle"]</p>
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["RewardTitle"]</p>
+                </a>
+                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <p>@Localizer["PurchaseTitle"]</p>
+                </a>
+
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="AppManagementUser" asp-action="Signout" class="btn">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <p>@Localizer["LogOut"]</p>
+                    </a>
+                }
+            }
+
+@*            <a href="/hangfire" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-calendar mr-3"></i>
                 Job Scheduler
-            </a>
+            </a>*@
         </nav>
     </aside>

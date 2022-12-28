@@ -24,15 +24,18 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.12">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.11" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
 		<PackageReference Include="NLog.Config" Version="4.7.15" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="5.2.0" />
+		<PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.70" />
 		<PackageReference Include="Ardalis.Specification" Version="6.1.0" />
 		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
@@ -51,6 +54,7 @@
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\Headers\" />
 		<Folder Include="Views\TitleInfo\" />
+		<Folder Include="Views\Logout\" />
 	</ItemGroup>
 
 
