@@ -10,7 +10,8 @@ namespace CoreBridge.Models.Interfaces
         public ICoreBridgeRepository<AdminUser> AdminUserRepository { get; }
         public ICoreBridgeRepository<TitleInfo> TitleInfoRepository { get; }
         public ICoreBridgeRepository<AppUser> AppUserRepository { get; }
-        //ICoreBridgeRepository<GFSUser> UserRepository { get; }
+        ICoreBridgeRepository<GFSUser> UserRepository { get; }
+        ICoreBridgeRepository<UserPlatform> UserPlatformRepository { get; }
         ICoreBridgeRepository<DebugInfo> DebugInfoRepository { get; }
 
         public Task<bool> CommitAsync();

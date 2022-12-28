@@ -16,6 +16,7 @@ using static CoreBridge.Models.SysConsts;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Reflection.PortableExecutable;
 using XAct.Users;
+using XAct;
 
 namespace CoreBridge.Services
 {
@@ -43,8 +44,9 @@ namespace CoreBridge.Services
             _title = title;
         }
 
-        public async Task ProcessRequest(HttpRequest req, ReqBase reqHeader, ReqBase reqParam)
+        public async Task ProcessRequest(HttpRequest req, ReqBase reqHeader, ReqBaseParam reqParam)
         {
+            _sss.ApiCode = reqParam.ApiCode;
             _sss.ReqHeader = reqHeader;
             _sss.ReqParam = reqParam;
             if (_sss.ReqParam == null)

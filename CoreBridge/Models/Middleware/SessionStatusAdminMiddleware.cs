@@ -33,8 +33,8 @@ namespace CoreBridge.Models.Middleware
         {
             _sss.UseJson = _config.GetValue<bool>("DebugConfig:UseJson");
             var path = httpContext.Request.Path.ToString().ToLower();
-            _sss.IsClientApi = path.Contains("api/client/");
-            _sss.IsServerApi = path.ToLower().Contains("api/server/");
+            _sss.IsClientApi = path.Contains("/client/");
+            _sss.IsServerApi = path.ToLower().Contains("/server/");
 #if DEBUG
             await _req.LoadStatus_RequestBody(httpContext.Request);
 #else

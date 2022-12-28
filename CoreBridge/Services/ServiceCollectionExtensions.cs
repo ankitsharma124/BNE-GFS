@@ -19,6 +19,8 @@ namespace CoreBridge.Services
         {
             // Connect String
             string connectionStrings = configuration.GetConnectionString(AppSetting.ConnectionStringMySQL);
+            //get from env_var
+
             string redis_connection = AppSetting.GetConnectStringRedis(configuration);
 
             // DBContextPool
@@ -59,6 +61,7 @@ namespace CoreBridge.Services
             services.TryAddScoped<IHashService, HashService>();
             services.TryAddScoped<IUserService, UserService>();
             services.TryAddScoped<IMaintenanceService, MaintenanceService>();
+            services.TryAddScoped<IUserPlatformService, UserPlatformService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;

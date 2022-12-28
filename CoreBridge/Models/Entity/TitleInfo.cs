@@ -33,7 +33,7 @@ namespace CoreBridge.Models.Entity
         public string TitleName { get; set; }
         public string TitleCode { get; set; }
         public string TrialTitleCode { get; set; }
-        public int Ptype { get; set; }
+        public int Ptype { get; set; } = 0;
         public string? SwitchAppId { get; set; }
         public string? XboxTitleId { get; set; }
         public string? PsClientId { get; set; }

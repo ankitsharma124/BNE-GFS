@@ -106,6 +106,10 @@ namespace CoreBridge.Services
             response.Headers.ContentType = "application/x-messagepack";
             response.Headers.ContentLength = ((byte[])responseContentConverted).Length;
             await response.Body.WriteAsync((byte[])responseContentConverted);
+
+#if DEBUG
+            await CopyResponseBody(response);
+#endif
         }
 
         protected void CustomizeResponseInnerHeader(List<KeyValuePair<string, object>> customHeader)
@@ -126,6 +130,7 @@ namespace CoreBridge.Services
             {
                 return status;
             }
+            if (status > 9999) return status;
 
             return Convert.ToInt32(_sss.ApiCode.ToString("0000") + status.ToString("0000"));
         }
@@ -142,6 +147,7 @@ namespace CoreBridge.Services
             response.Headers.AccessControlAllowOrigin = "*";
             var body = $"<div>server error</div><div>status:{statusCode}</div>";
             await response.WriteAsync(body);
+            await CopyResponseBody(response);
         }
 
 

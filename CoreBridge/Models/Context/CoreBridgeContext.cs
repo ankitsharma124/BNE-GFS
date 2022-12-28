@@ -18,6 +18,8 @@ namespace CoreBridge.Models.Context
         public DbSet<AppUser> AppUsers { get; set; }
         //public DbSet<GFSUser> GFSUsers { get; set; }
 
+        public DbSet<UserPlatform> UserPlatforms { get; set; }
+
 
 #if DEBUG
         public DbSet<DebugInfo> DebugInfoList { get; set; }
