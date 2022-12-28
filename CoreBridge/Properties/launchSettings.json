@@ -5,7 +5,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\msc\\bne-gfs-06ffad36d463.json",
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\msc\\bne-gfs-06ffad36d462.json",
         "ConnectionStrings_Spanner": "Data Source=projects/bne-gfs/instances/corebridge-development/databases/corebridge"
       },
       "dotnetRunMessages": true,

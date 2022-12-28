@@ -30,8 +30,8 @@ namespace CoreBridge.Models.Repositories
         private readonly CoreBridgeRepository<DebugInfo> _debugInfoRepository = null;
         public ICoreBridgeRepository<DebugInfo> DebugInfoRepository { get { return GetInstance(_debugInfoRepository); } }
 
-        //private readonly CoreBridgeRepository<GFSUser> _userRepository = null;
-        //public ICoreBridgeRepository<GFSUser> UserRepository { get { return GetInstance(_userRepository); } }
+        private readonly CoreBridgeRepository<GFSUser> _userRepository = null;
+        public ICoreBridgeRepository<GFSUser> UserRepository { get { return GetInstance(_userRepository); } }
 
         private readonly CoreBridgeRepository<UserPlatform> _userPlatformRepository = null;
         public ICoreBridgeRepository<UserPlatform> UserPlatformRepository { get { return GetInstance(_userPlatformRepository); } }

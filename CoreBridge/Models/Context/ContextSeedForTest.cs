@@ -11,9 +11,6 @@ namespace CoreBridge.Models.Context
         {
             _modelBuilder = modelBuilder;
             await SeedTestTitleInfo();
-<<<<<<< HEAD
-            //await SeedTestUserlinkedTotitleInfo();
-=======
             await SeedTestUserlinkedTotitleInfo();
             await SeedUserPlatform();
         }
@@ -32,7 +29,6 @@ namespace CoreBridge.Models.Context
             };
 
             _modelBuilder.Entity<UserPlatform>().HasData(info);
->>>>>>> remotes/origin/develop
         }
 
         public static async Task SeedTestTitleInfo()

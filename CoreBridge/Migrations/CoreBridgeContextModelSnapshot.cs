@@ -238,6 +238,7 @@ namespace CoreBridge.Migrations
                             UpdatedAt = new DateTime(2022, 12, 15, 9, 54, 25, 885, DateTimeKind.Utc).AddTicks(5504),
                             UserId = "TestUserId"
                         });
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
