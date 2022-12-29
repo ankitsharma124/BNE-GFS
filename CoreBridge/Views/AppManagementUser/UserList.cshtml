@@ -1,7 +1,154 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CoreBridge.ViewModels.MUserIndexViewModel
 @{
+    ViewData["Title"] = "User Manager";
+}
+@if (!User.IsInRole(AdminUserRoleEnum.Reference.ToString())){
+<div class="w-full flex flex-wrap">
+    <div class="flex flex-col justify-center md:justify-start my-auto pt-8 md:pt-0 px-8">
+        @*@Html.Partial("_FormError")*@
+
+        <p class="text-center text-3xl">管理ユーザー登録</p>
+        <form class="flex flex-col pt-3 p-2 bg-light border" asp-controller="AppManagementUser" asp-action="Confirm" method="post">
+            @Html.AntiForgeryToken()
+            <div class="flex flex-col pt-4">
+                <label for="name" class="text-lg">User ID</label>
+                <input asp-for="@Model.AppUserDto.UserId" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" readonly/>
+            </div>
+
+            <div class="flex flex-col pt-4">
+                <label for="Role" class="text-lg">Role</label>
+                <select asp-for="@Model.RoleIndex"
+                        asp-items="Html.GetEnumSelectList<CoreBridge.ViewModels.MUserIndexViewModel.RoleEnum>()" class="form-control">
+                </select>
+            </div>
+            <div class="flex flex-col pt-4">
+                <label for="title Code" class="text-lg">Title Code</label>
+                <input asp-for="@Model.AppUserDto.TitleCode" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex flex-col pt-4">
+                <label for="email" class="text-lg">Email</label>
+                <input asp-for="@Model.AppUserDto.Email" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex flex-col pt-4">
+                <label for="password" class="text-lg">Password</label>
+                <input asp-for="@Model.AppUserDto.Password" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex flex-col pt-4">
+                <label for="confirm-password" class="text-lg">Confirm Password</label>
+                <input asp-for="@Model.AppUserDto.ConfirmPassword" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <input type="submit" value="Register" class="bg-black text-white font-bold text-lg hover:bg-gray-700 p-2 mt-8" />
+        </form>
+
+    </div>
+</div>
 }
 
-COSMOS管理画面をここへ作る
+<!-- ユーザー検索 -->
+<p class="text-3xl ms-3 p-2">検索</p>
+<form class="flex flex-col pt-3 p-2 bg-light border w-50" asp-controller="AppManagementUser" asp-action="UserList">
+    <p>
+        ユーザーID: <input class="border" type="text" asp-for="@Model.AppUserSearchDto.UserId" />
+    </p>
+    <p>
+        ユーザー権限: 
+        <select asp-for="@Model.RoleSearchIndex"
+                asp-items="Html.GetEnumSelectList<CoreBridge.ViewModels.MUserIndexViewModel.RoleSearchEnum>()"
+                class="form-control">
+        </select>
+    </p>
+    <p>
+        タイトルコード: <input class="border" type="text" asp-for="@Model.AppUserSearchDto.TitleCode" />
+    </p>
+    <p>
+        作成機関: <input class="border" type="date" asp-for="@Model.AppUserSearchDto.CreatedDate" />～<input class="border" type="date" asp-for="@Model.AppUserSearchDto.UpdatedDate" />
+    </p>
+    <div style="display: flex; justify-content: center;">
+        <input name="Search" class="w-50" type="submit" value="検索" />
+        <input name="Clear" class="w-50 ms-2" type="submit" value="リセット" />
+    </div>
+</form>
+
+<!-- ユーザー一覧 -->
+<p class="text-3xl ms-3 p-2">ユーザー一覧</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.TitleCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUserDto.UpdatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AppUserDtos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Role)*@
+                    @if(item.Role == AdminUserRoleEnum.Manager){
+                        ViewData["massage"] = "-1：DataLake権限";
+                    }
+                    @if (item.Role == AdminUserRoleEnum.Reference)
+                    {
+                        ViewData["massage"] = "1：参照権限";
+                    }
+                    @if (item.Role == AdminUserRoleEnum.EditReference)
+                    {
+                        ViewData["massage"] = "2：参照権限＋編集権限";
+                    }
+                    @ViewData["massage"]
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                <td >
+                    <input type="password" size="8" value="@Html.DisplayFor(modelItem => item.Password)" />
+                </td>
+                <td>
+                    <span>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                    </span>
+                </td>
+
+                <td>
+                    @if (!User.IsInRole(AdminUserRoleEnum.Reference.ToString()))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.UserId">編集</a> 
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.UserId">削除</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

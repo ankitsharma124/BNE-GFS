@@ -9,6 +9,7 @@ namespace CoreBridge.Models.MapperProfiles
         public GeneralPrrofile()
         {
             CreateMap<TitleInfo, TitleInfoDto>().ReverseMap();
+            CreateMap<AppUser, AppUserDto>().ReverseMap();
             CreateMap<GFSUser, GFSUserDto>().ReverseMap();
             CreateMap<UserPlatform, UserPlatformDto>().ReverseMap();
         }

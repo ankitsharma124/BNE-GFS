@@ -54,7 +54,16 @@ namespace CoreBridge.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect($"/AppManagementUser/UserList");
+
+                    if (dto.TitleCode != null)
+                    {
+                        CookieOptions cookieOptions = new CookieOptions();
+                        cookieOptions.Secure = true;
+                        cookieOptions.Expires = DateTime.UtcNow.AddDays(7);
+                        HttpContext.Response.Cookies.Append("TitleCode-Cookie", dto.TitleCode, cookieOptions);
+                    }
+
+                    return LocalRedirect($"/AppManagementUser/UserList"); 
                 }
                 if (result.RequiresTwoFactor) //二段階認証
                 {

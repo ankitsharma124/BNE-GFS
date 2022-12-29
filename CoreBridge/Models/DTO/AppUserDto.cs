@@ -7,7 +7,8 @@ namespace CoreBridge.Models.DTO
     {
         public AppUserDto() { }
 
-        public AppUserDto(string userId, string? titleCode, AdminUserRoleEnum role, string? password, string? eMail, string? confirempassword, string? updateUser, bool isDelete = false)
+        public AppUserDto(string userId, string? titleCode, AdminUserRoleEnum role, string? password, string? eMail, string? confirempassword, 
+            string? updateUser, bool isDelete = false, DateTime createdAt = default, DateTime updateAt = default)
         {
             UserId = userId;
             TitleCode = titleCode;
@@ -17,6 +18,8 @@ namespace CoreBridge.Models.DTO
             ConfirmPassword = confirempassword;
             UpdateUser = updateUser;
             IsDelete = isDelete;
+            CreatedAt = createdAt;
+            UpdatedAt = updateAt;
         }
 
         [Key(0)]
@@ -35,6 +38,10 @@ namespace CoreBridge.Models.DTO
         public String? UpdateUser { get; set; }
         [Key(7)]
         public bool IsDelete { get; set; }
+        [Key(8)]
+        public DateTime CreatedAt { get; set; }
+        [Key(9)]
+        public DateTime UpdatedAt { get; set; }
 
         public bool IsValid()
         {
