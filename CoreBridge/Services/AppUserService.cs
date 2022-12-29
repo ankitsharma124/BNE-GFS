@@ -12,13 +12,14 @@ namespace CoreBridge.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUnitOfWork unitOfWork)
+        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
             //Auto Mapper Setting.
-            var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
-            _mapper = new Mapper(mapConfig);
+            //var mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<AppUserDto, AppUser>());
+            //_mapper = new Mapper(mapConfig);
+            _mapper = mapper;
         }
 
         public async Task<AppUserDto?> AddAsync(AppUserDto dto)
@@ -62,6 +63,12 @@ namespace CoreBridge.Services
             var findMapper = new Mapper(mapConfig);
 
             return findMapper.Map<List<AppUser>>(list);
+        }
+
+        public async Task<List<AppUserDto>> ListAsync()
+        {
+            var list = await _unitOfWork.AppUserRepository.ListAsync();
+            return _mapper.Map<List<AppUserDto>>(list);
         }
 
         public async Task<AppUser?> GetByIdAsync(string id)

@@ -17,28 +17,28 @@
                 @Html.AntiForgeryToken()
                 <div class="flex flex-col pt-4">
                     <label for="name" class="text-lg">User ID</label>
-                    <input asp-for="@Model.ManagementUserDto.UserId" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <input asp-for="@Model.AppUserDto.UserId" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <div class="flex flex-col pt-4">
                     <label for="Role" class="text-lg">Title Code</label>
-                    <select asp-for="@Model.ManagementUserDto.UserRole" class="form-control" asp-items="Html.GetEnumSelectList<ManagementRoleEnum>()"></select>
-                    <input asp-for="@Model.ManagementUserDto.UserRole" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <select asp-for="@Model.AppUserDto.Role" class="form-control" asp-items="Html.GetEnumSelectList<ManagementRoleEnum>()"></select>
+                    <input asp-for="@Model.AppUserDto.Role" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <div class="flex flex-col pt-4">
                     <label for="title Code" class="text-lg">Title Code</label>
-                    <input asp-for="@Model.ManagementUserDto.TitleCode" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <input asp-for="@Model.AppUserDto.TitleCode" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <div class="flex flex-col pt-4">
                     <label for="email" class="text-lg">Title Code</label>
-                    <input asp-for="@Model.ManagementUserDto.Email" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <input asp-for="@Model.AppUserDto.Email" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <div class="flex flex-col pt-4">
                     <label for="password" class="text-lg">Password</label>
-                    <input asp-for="@Model.ManagementUserDto.Password" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <input asp-for="@Model.AppUserDto.Password" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <div class="flex flex-col pt-4">
                     <label for="confirm-password" class="text-lg">Confirm Password</label>
-                    <input asp-for="@Model.ManagementUserDto.ConfirmPassword" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
+                    <input asp-for="@Model.AppUserDto.ConfirmPassword" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
                 <input type="submit" value="Register" class="bg-black text-white font-bold text-lg hover:bg-gray-700 p-2 mt-8" />
             </form>
@@ -56,32 +56,32 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ManagementUserDto.UserId)
+                @Html.DisplayNameFor(model => model.AppUserDto.UserId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ManagementUserDto.UserRole)
+                @Html.DisplayNameFor(model => model.AppUserDto.Role)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ManagementUserDto.TitleCode)
+                @Html.DisplayNameFor(model => model.AppUserDto.TitleCode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ManagementUserDto.Email)
+                @Html.DisplayNameFor(model => model.AppUserDto.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ManagementUserDto.Password)
+                @Html.DisplayNameFor(model => model.AppUserDto.Password)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ManagementUserDtos)
+        @foreach (var item in Model.AppUserDtos)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.UserId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserRole)
+                    @Html.DisplayFor(modelItem => item.Role)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TitleCode)

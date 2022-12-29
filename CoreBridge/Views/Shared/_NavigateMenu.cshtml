@@ -31,7 +31,7 @@
             }
             @if(!User.IsInRole(AdminUserRoleEnum.AdminUser.ToString()))
             {
-                <a href="/AppManagementUser" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                <a href="/AppManagementUser/UserList" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     <p>@Localizer["ManagementTitle"]</p>
                 </a>
